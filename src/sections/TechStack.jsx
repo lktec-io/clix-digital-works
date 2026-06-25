@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import {
   FiCode, FiDatabase, FiServer, FiGitBranch,
-  FiMonitor, FiZap, FiLayers, FiGlobe
+  FiMonitor, FiZap, FiLayers, FiGlobe,
+  FiSliders, FiLink, FiTerminal, FiSave,
+  FiLock, FiActivity, FiCloud, FiUploadCloud, FiShield
 } from 'react-icons/fi';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import '../styles/techstack.css';
@@ -12,10 +14,10 @@ const TECH_CATEGORIES = [
     icon: FiMonitor,
     color: '#00E5FF',
     items: [
-      { name: 'React', detail: 'UI Framework', icon: '⚛️' },
-      { name: 'Vite', detail: 'Build Tool', icon: '⚡' },
-      { name: 'HTML5', detail: 'Markup', icon: '🌐' },
-      { name: 'CSS3', detail: 'Styling', icon: '🎨' },
+      { name: 'React', detail: 'UI Framework', Icon: FiCode },
+      { name: 'Vite', detail: 'Build Tool', Icon: FiZap },
+      { name: 'HTML5', detail: 'Markup', Icon: FiGlobe },
+      { name: 'CSS3', detail: 'Styling', Icon: FiSliders },
     ],
   },
   {
@@ -23,10 +25,10 @@ const TECH_CATEGORIES = [
     icon: FiServer,
     color: '#39FF14',
     items: [
-      { name: 'Node.js', detail: 'Runtime', icon: '🟢' },
-      { name: 'Express', detail: 'Framework', icon: '🚂' },
-      { name: 'REST APIs', detail: 'Integration', icon: '🔗' },
-      { name: 'Linux', detail: 'Server OS', icon: '🐧' },
+      { name: 'Node.js', detail: 'Runtime', Icon: FiServer },
+      { name: 'Express', detail: 'Framework', Icon: FiLayers },
+      { name: 'REST APIs', detail: 'Integration', Icon: FiLink },
+      { name: 'Linux', detail: 'Server OS', Icon: FiTerminal },
     ],
   },
   {
@@ -34,10 +36,10 @@ const TECH_CATEGORIES = [
     icon: FiDatabase,
     color: '#00E5FF',
     items: [
-      { name: 'MySQL', detail: 'Relational DB', icon: '🗄️' },
-      { name: 'Backups', detail: 'Data Safety', icon: '💾' },
-      { name: 'Encryption', detail: 'Data Security', icon: '🔐' },
-      { name: 'Analytics', detail: 'Insights', icon: '📊' },
+      { name: 'MySQL', detail: 'Relational DB', Icon: FiDatabase },
+      { name: 'Backups', detail: 'Data Safety', Icon: FiSave },
+      { name: 'Encryption', detail: 'Data Security', Icon: FiLock },
+      { name: 'Analytics', detail: 'Insights', Icon: FiActivity },
     ],
   },
   {
@@ -45,10 +47,10 @@ const TECH_CATEGORIES = [
     icon: FiGlobe,
     color: '#39FF14',
     items: [
-      { name: 'Contabo VPS', detail: 'Cloud Hosting', icon: '☁️' },
-      { name: 'Git', detail: 'Version Control', icon: '🌿' },
-      { name: 'CI/CD', detail: 'Deployment', icon: '🚀' },
-      { name: 'SSL/TLS', detail: 'Security', icon: '🔒' },
+      { name: 'Contabo VPS', detail: 'Cloud Hosting', Icon: FiCloud },
+      { name: 'Git', detail: 'Version Control', Icon: FiGitBranch },
+      { name: 'CI/CD', detail: 'Deployment', Icon: FiUploadCloud },
+      { name: 'SSL/TLS', detail: 'Security', Icon: FiShield },
     ],
   },
 ];
@@ -90,7 +92,7 @@ export default function TechStack() {
             >
               <div className="tech-cat-header">
                 <div className="tech-cat-icon">
-                  <cat.icon size={18} />
+                  <cat.icon size={18} aria-hidden="true" />
                 </div>
                 <span className="tech-cat-label">{cat.label}</span>
               </div>
@@ -106,7 +108,9 @@ export default function TechStack() {
                     transition={{ delay: i * 0.1 + j * 0.06 }}
                     whileHover={{ x: 6 }}
                   >
-                    <span className="tech-item-emoji">{item.icon}</span>
+                    <span className="tech-item-icon" aria-hidden="true">
+                      <item.Icon size={14} />
+                    </span>
                     <div className="tech-item-info">
                       <span className="tech-item-name">{item.name}</span>
                       <span className="tech-item-detail">{item.detail}</span>
@@ -119,14 +123,15 @@ export default function TechStack() {
           ))}
         </div>
 
-        {/* Trust strip — uses useScrollAnimation hook */}
         <div
           ref={trustRef}
           className={`tech-trust sa-hidden sa-scale ${trustVisible ? 'sa-visible' : ''}`}
+          role="list"
+          aria-label="Technology trust indicators"
         >
           {['Enterprise-Grade Security', 'High Performance', '99.9% Uptime SLA', 'Scalable Architecture', 'Modern Standards', 'Regular Updates'].map(item => (
-            <div key={item} className="trust-item">
-              <span className="trust-dot">✦</span>
+            <div key={item} className="trust-item" role="listitem">
+              <span className="trust-dot" aria-hidden="true">✦</span>
               <span>{item}</span>
             </div>
           ))}

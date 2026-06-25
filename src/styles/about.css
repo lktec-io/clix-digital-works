@@ -79,17 +79,23 @@
 }
 
 .team-avatar {
-  font-size: 48px;
   width: 80px;
   height: 80px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  background: color-mix(in srgb, var(--tm-color, var(--secondary)) 12%, var(--glass-bg));
+  border: 1.5px solid color-mix(in srgb, var(--tm-color, var(--secondary)) 30%, transparent);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   margin-bottom: var(--space-xs);
+  color: var(--tm-color, var(--secondary));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--tm-color, var(--secondary)) 15%, transparent);
+  transition: box-shadow var(--transition-base);
+}
+
+.team-card:hover .team-avatar {
+  box-shadow: 0 0 32px color-mix(in srgb, var(--tm-color, var(--secondary)) 30%, transparent);
 }
 
 .team-name {

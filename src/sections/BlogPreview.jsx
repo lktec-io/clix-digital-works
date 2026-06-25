@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiArrowRight, FiClock, FiTag } from 'react-icons/fi';
+import { FiArrowRight, FiClock, FiTag, FiGlobe, FiTrendingUp, FiCpu, FiShield } from 'react-icons/fi';
 import '../styles/blog.css';
 
 const POSTS = [
   {
     id: 1,
-    emoji: '🌐',
+    Icon: FiGlobe,
     category: 'Digital Business',
     title: 'Why Every Business Needs a Professional Website in 2025',
     excerpt: 'In today\'s digital-first world, your website is your most powerful marketing tool. Discover why businesses without websites are losing customers daily.',
@@ -17,7 +17,7 @@ const POSTS = [
   },
   {
     id: 2,
-    emoji: '📊',
+    Icon: FiTrendingUp,
     category: 'Finance & Software',
     title: 'The Real Benefits of Accounting Software for SMEs',
     excerpt: 'Manual bookkeeping is costing your business more than you think. Learn how automated accounting software transforms financial management.',
@@ -27,7 +27,7 @@ const POSTS = [
   },
   {
     id: 3,
-    emoji: '🤖',
+    Icon: FiCpu,
     category: 'Artificial Intelligence',
     title: 'AI for Modern Businesses: Where to Start',
     excerpt: 'Artificial intelligence is no longer reserved for tech giants. Here\'s how small and medium businesses can leverage AI to automate, optimize, and grow.',
@@ -37,7 +37,7 @@ const POSTS = [
   },
   {
     id: 4,
-    emoji: '🔒',
+    Icon: FiShield,
     category: 'Cybersecurity',
     title: 'Cybersecurity Tips Every SME Must Know in 2025',
     excerpt: 'Cybercriminals are increasingly targeting small businesses. These actionable security tips will protect your business data and your reputation.',
@@ -81,7 +81,7 @@ export default function BlogPreview() {
             style={{ '--post-color': featured.color }}
           >
             <div className="blog-featured-img">
-              <span className="blog-emoji">{featured.emoji}</span>
+              <span className="blog-emoji" aria-hidden="true"><featured.Icon size={40} /></span>
               <span className="blog-category-badge" style={{ color: featured.color, borderColor: featured.color }}>
                 {featured.category}
               </span>
@@ -113,7 +113,7 @@ export default function BlogPreview() {
                 style={{ '--post-color': post.color }}
               >
                 <div className="blog-card-left">
-                  <span className="blog-card-emoji">{post.emoji}</span>
+                  <span className="blog-card-emoji" aria-hidden="true"><post.Icon size={22} /></span>
                 </div>
                 <div className="blog-card-content">
                   <div className="blog-meta small">

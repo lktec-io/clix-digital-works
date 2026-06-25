@@ -35,8 +35,8 @@
   --shadow-glow-blue: 0 0 30px rgba(10, 35, 66, 0.6);
 
   /* Typography */
-  --font-primary: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-display: 'Inter', sans-serif;
+  --font-primary: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Poppins', sans-serif;
   --fs-xs: 0.75rem;
   --fs-sm: 0.875rem;
   --fs-base: 1rem;

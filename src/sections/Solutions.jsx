@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiArrowRight, FiCheck } from 'react-icons/fi';
+import {
+  FiArrowRight, FiCheck,
+  FiBook, FiUsers, FiActivity, FiCreditCard,
+  FiBriefcase, FiGlobe, FiFlag, FiTruck
+} from 'react-icons/fi';
 import '../styles/solutions.css';
 
 const SOLUTIONS = [
   {
     id: 'schools',
-    emoji: '🎓',
+    Icon: FiBook,
     title: 'Schools & Universities',
     tagline: 'Smart Education Management',
     problem: 'Manual enrollment, scattered records, inefficient communication between staff, students, and parents.',
@@ -17,7 +21,7 @@ const SOLUTIONS = [
   },
   {
     id: 'churches',
-    emoji: '⛪',
+    Icon: FiUsers,
     title: 'Churches & Religious Orgs',
     tagline: 'Digital Ministry Management',
     problem: 'Poor member tracking, disorganized tithe/offering records, no communication system for congregation.',
@@ -27,7 +31,7 @@ const SOLUTIONS = [
   },
   {
     id: 'hospitals',
-    emoji: '🏥',
+    Icon: FiActivity,
     title: 'Hospitals & Clinics',
     tagline: 'Healthcare Information Systems',
     problem: 'Paper-based patient records, appointment chaos, billing errors, and no inventory control for medical supplies.',
@@ -37,7 +41,7 @@ const SOLUTIONS = [
   },
   {
     id: 'saccos',
-    emoji: '🏦',
+    Icon: FiCreditCard,
     title: 'SACCOs & MFIs',
     tagline: 'Financial Cooperative Systems',
     problem: 'Slow loan processing, manual savings records, no mobile access, difficult reporting for regulators.',
@@ -47,7 +51,7 @@ const SOLUTIONS = [
   },
   {
     id: 'businesses',
-    emoji: '🏢',
+    Icon: FiBriefcase,
     title: 'Businesses & Enterprises',
     tagline: 'End-to-End Business Software',
     problem: 'Fragmented tools, no real-time data, poor inventory control, and disconnected departments.',
@@ -57,7 +61,7 @@ const SOLUTIONS = [
   },
   {
     id: 'ngos',
-    emoji: '🌍',
+    Icon: FiGlobe,
     title: 'NGOs & Non-Profits',
     tagline: 'Impact Management Systems',
     problem: 'Difficulty tracking project impact, donor management, beneficiary records, and grant reporting.',
@@ -67,7 +71,7 @@ const SOLUTIONS = [
   },
   {
     id: 'government',
-    emoji: '🏛️',
+    Icon: FiFlag,
     title: 'Government Institutions',
     tagline: 'Digital Government Solutions',
     problem: 'Paper-based processes, citizen service delays, lack of transparency, and poor inter-department communication.',
@@ -77,7 +81,7 @@ const SOLUTIONS = [
   },
   {
     id: 'logistics',
-    emoji: '🚚',
+    Icon: FiTruck,
     title: 'Logistics Companies',
     tagline: 'Smart Logistics Platforms',
     problem: 'No real-time tracking, manual dispatch, poor route optimization, and difficult customer updates.',
@@ -122,7 +126,7 @@ export default function Solutions() {
                 aria-controls={`panel-${sol.id}`}
                 style={{ '--sol-color': sol.color }}
               >
-                <span className="sol-tab-emoji">{sol.emoji}</span>
+                <span className="sol-tab-emoji" aria-hidden="true"><sol.Icon size={16} /></span>
                 <span className="sol-tab-title">{sol.title.split('&')[0].trim()}</span>
                 {active.id === sol.id && (
                   <motion.div className="sol-tab-indicator" layoutId="solIndicator" />
@@ -145,7 +149,7 @@ export default function Solutions() {
               style={{ '--sol-color': active.color }}
             >
               <div className="panel-header">
-                <div className="panel-emoji">{active.emoji}</div>
+                <div className="panel-emoji" aria-hidden="true"><active.Icon size={28} /></div>
                 <div>
                   <div className="panel-tagline" style={{ color: active.color }}>{active.tagline}</div>
                   <h3 className="panel-title">{active.title}</h3>

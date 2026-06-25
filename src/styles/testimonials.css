@@ -120,8 +120,14 @@
 }
 
 .star {
-  color: rgba(255, 255, 255, 0.15);
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.star svg {
+  fill: currentColor;
+  stroke: currentColor;
 }
 
 .star-filled {

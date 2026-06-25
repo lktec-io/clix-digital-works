@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiStar } from 'react-icons/fi';
 import '../styles/testimonials.css';
 
 const TESTIMONIALS = [
@@ -76,7 +76,7 @@ function StarRating({ rating }) {
   return (
     <div className="star-rating" aria-label={`${rating} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, i) => (
-        <span key={i} className={i < rating ? 'star star-filled' : 'star'}>★</span>
+        <span key={i} className={i < rating ? 'star star-filled' : 'star'}><FiStar size={14} /></span>
       ))}
     </div>
   );

@@ -63,15 +63,24 @@
 }
 
 .portfolio-emoji {
-  font-size: 60px;
+  width: 88px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 2;
-  filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
-  transition: transform var(--transition-base);
+  color: var(--proj-color);
+  background: color-mix(in srgb, var(--proj-color) 12%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--proj-color) 28%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 24px color-mix(in srgb, var(--proj-color) 20%, transparent);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .portfolio-card:hover .portfolio-emoji {
   transform: scale(1.1);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--proj-color) 35%, transparent);
 }
 
 .portfolio-badge {

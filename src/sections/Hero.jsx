@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiArrowRight, FiPlay, FiCode, FiSmartphone, FiCpu, FiShield, FiCloud, FiDatabase, FiFileText } from 'react-icons/fi';
+import { FiArrowRight, FiPlay, FiCode, FiSmartphone, FiCpu, FiShield, FiCloud, FiDatabase, FiFileText, FiGlobe } from 'react-icons/fi';
 import { useCounter } from '../hooks/useCounter';
 import { useQuoteModal } from '../context/QuoteModalContext';
 import '../styles/hero.css';
@@ -207,13 +207,13 @@ export default function Hero() {
 
               {/* Orbit cards */}
               {[
-                { label: 'Web Dev', icon: '🌐', angle: 0 },
-                { label: 'Mobile', icon: '📱', angle: 60 },
-                { label: 'AI / ML', icon: '🤖', angle: 120 },
-                { label: 'Cloud', icon: '☁️', angle: 180 },
-                { label: 'ERP', icon: '⚙️', angle: 240 },
-                { label: 'Security', icon: '🔒', angle: 300 },
-              ].map(({ label, icon, angle }, i) => {
+                { label: 'Web Dev', Icon: FiGlobe, angle: 0 },
+                { label: 'Mobile', Icon: FiSmartphone, angle: 60 },
+                { label: 'AI / ML', Icon: FiCpu, angle: 120 },
+                { label: 'Cloud', Icon: FiCloud, angle: 180 },
+                { label: 'ERP', Icon: FiDatabase, angle: 240 },
+                { label: 'Security', Icon: FiShield, angle: 300 },
+              ].map(({ label, Icon, angle }, i) => {
                 const rad = (angle - 90) * (Math.PI / 180);
                 const r = 140;
                 const x = Math.cos(rad) * r;
@@ -228,7 +228,7 @@ export default function Hero() {
                     transition={{ delay: 0.8 + i * 0.1, type: 'spring' }}
                     whileHover={{ scale: 1.15, zIndex: 10 }}
                   >
-                    <span className="orbit-icon">{icon}</span>
+                    <span className="orbit-icon" aria-hidden="true"><Icon size={16} /></span>
                     <span className="orbit-label">{label}</span>
                   </motion.div>
                 );

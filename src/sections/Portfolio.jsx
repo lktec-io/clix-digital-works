@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiArrowRight, FiLayers } from 'react-icons/fi';
+import {
+  FiArrowRight, FiLayers,
+  FiUsers, FiDollarSign, FiCreditCard, FiGlobe,
+  FiShoppingCart, FiBook, FiCalendar, FiSettings, FiCpu
+} from 'react-icons/fi';
 import '../styles/portfolio.css';
 
 const CATEGORIES = ['All', 'Web', 'Mobile', 'ERP', 'AI', 'Management'];
@@ -16,7 +20,7 @@ const PROJECTS = [
     impact: 'Reduced admin workload by 70%',
     tech: ['React', 'Node.js', 'MySQL'],
     color: '#39FF14',
-    emoji: '⛪',
+    Icon: FiUsers,
     badge: 'Live System',
   },
   {
@@ -28,7 +32,7 @@ const PROJECTS = [
     impact: 'Eliminated manual bookkeeping errors',
     tech: ['React', 'Express', 'MySQL'],
     color: '#00E5FF',
-    emoji: '📊',
+    Icon: FiDollarSign,
     badge: 'Enterprise',
   },
   {
@@ -40,7 +44,7 @@ const PROJECTS = [
     impact: 'Loan processing time: days → minutes',
     tech: ['React', 'Node.js', 'MySQL'],
     color: '#39FF14',
-    emoji: '🏦',
+    Icon: FiCreditCard,
     badge: 'FinTech',
   },
   {
@@ -52,7 +56,7 @@ const PROJECTS = [
     impact: '+200% organic enquiries in 3 months',
     tech: ['React', 'Vite', 'CSS3'],
     color: '#00E5FF',
-    emoji: '🌐',
+    Icon: FiGlobe,
     badge: 'Featured',
   },
   {
@@ -64,7 +68,7 @@ const PROJECTS = [
     impact: '500+ orders processed at launch',
     tech: ['React', 'Node.js', 'MySQL'],
     color: '#39FF14',
-    emoji: '🛒',
+    Icon: FiShoppingCart,
     badge: 'E-Commerce',
   },
   {
@@ -76,7 +80,7 @@ const PROJECTS = [
     impact: '4 schools onboarded in year one',
     tech: ['React', 'Express', 'MySQL'],
     color: '#00E5FF',
-    emoji: '🎓',
+    Icon: FiBook,
     badge: 'EdTech',
   },
   {
@@ -88,7 +92,7 @@ const PROJECTS = [
     impact: 'No-show rate reduced by 55%',
     tech: ['React', 'Node.js', 'MySQL'],
     color: '#39FF14',
-    emoji: '📅',
+    Icon: FiCalendar,
     badge: 'SaaS',
   },
   {
@@ -100,7 +104,7 @@ const PROJECTS = [
     impact: '40% reduction in inventory losses',
     tech: ['React', 'Express', 'MySQL'],
     color: '#00E5FF',
-    emoji: '⚙️',
+    Icon: FiSettings,
     badge: 'Enterprise',
   },
   {
@@ -112,7 +116,7 @@ const PROJECTS = [
     impact: '90% faster document processing',
     tech: ['Python', 'React', 'TensorFlow'],
     color: '#39FF14',
-    emoji: '🤖',
+    Icon: FiCpu,
     badge: 'AI / ML',
   },
 ];
@@ -175,7 +179,9 @@ export default function Portfolio() {
               >
                 {/* Card image / hero area */}
                 <div className="portfolio-card-img">
-                  <div className="portfolio-emoji">{project.emoji}</div>
+                  <div className="portfolio-emoji" aria-hidden="true">
+                    <project.Icon size={32} />
+                  </div>
                   <span className="portfolio-badge">{project.badge}</span>
                   <div className="portfolio-img-glow" />
                   <button

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FiTwitter, FiLinkedin, FiFacebook, FiInstagram, FiYoutube, FiMapPin, FiPhone, FiMail, FiArrowRight } from 'react-icons/fi';
+import { FiTwitter, FiLinkedin, FiFacebook, FiInstagram, FiYoutube, FiMapPin, FiPhone, FiMail, FiArrowRight, FiHeart } from 'react-icons/fi';
 import COMPANY from '../config/company';
 import '../styles/footer.css';
 
@@ -178,7 +178,7 @@ export default function Footer() {
               <Link to="/terms" className="footer-bottom-link">Terms of Service</Link>
               <Link to="/sitemap" className="footer-bottom-link">Sitemap</Link>
             </div>
-            <p className="footer-made">Made with ❤️ in {COMPANY.address.city}, Tanzania 🇹🇿</p>
+            <p className="footer-made">Made with <FiHeart size={13} aria-label="love" style={{ color: '#ff4d6d', verticalAlign: 'middle', display: 'inline' }} /> in {COMPANY.address.city}, Tanzania</p>
           </div>
         </div>
       </div>

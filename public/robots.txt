@@ -4,4 +4,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://clixdigitalworks.co.tz/sitemap.xml
+Sitemap: https://clixworks.co.tz/sitemap.xml

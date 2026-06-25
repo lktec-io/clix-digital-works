@@ -13,10 +13,12 @@ export const COMPANY = {
     'A software engineering and digital transformation company based in Mbeya, Tanzania. We build powerful digital solutions that help organizations grow.',
 
   // ─── Contact ──────────────────────────────────────────────────────────────
-  email: 'info@clixdigitalworks.co.tz',
-  emailSupport: 'support@clixdigitalworks.co.tz',
-  phone: '+255 XXX XXX XXX',          // replace with real number
-  phoneWhatsApp: '+255XXX000000',     // used for wa.me links (digits only)
+  email: 'info@clixworks.co.tz',
+  emailSupport: 'support@clixworks.co.tz',
+  phone: '+255 674 022 265',
+  phone2: '+255 794 987 520',
+  phoneWhatsApp: '255674022265',    // digits only — used in wa.me links
+  phoneWhatsApp2: '255794987520',   // digits only — used in wa.me links
 
   // ─── Location ─────────────────────────────────────────────────────────────
   address: {
@@ -29,15 +31,15 @@ export const COMPANY = {
   },
 
   // ─── Online presence ──────────────────────────────────────────────────────
-  website: 'https://clixdigitalworks.co.tz',
+  website: 'https://clixworks.co.tz',
 
   social: {
-    facebook:  'https://facebook.com/clixdigitalworks',
-    twitter:   'https://twitter.com/clixdigitalworks',
-    linkedin:  'https://linkedin.com/company/clixdigitalworks',
-    instagram: 'https://instagram.com/clixdigitalworks',
+    facebook:  'https://facebook.com/clixworks.tz',
+    twitter:   'https://twitter.com/clixworks_tz',
+    linkedin:  'https://linkedin.com/company/clix-digital-works',
+    instagram: 'https://instagram.com/clixworks.tz',
     youtube:   'https://youtube.com/@clixdigitalworks',
-    whatsapp:  'https://wa.me/255XXX000000',  // replace phone digits
+    whatsapp:  'https://wa.me/255674022265',
   },
 
   // ─── Business hours ───────────────────────────────────────────────────────

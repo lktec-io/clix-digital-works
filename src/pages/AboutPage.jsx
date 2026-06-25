@@ -5,7 +5,10 @@ import TechStack from '../sections/TechStack';
 import Process from '../sections/Process';
 import Testimonials from '../sections/Testimonials';
 import Contact from '../sections/Contact';
-import { FiArrowRight, FiTarget, FiEye, FiHeart } from 'react-icons/fi';
+import {
+  FiArrowRight, FiTarget, FiEye, FiHeart,
+  FiCode, FiServer, FiMonitor, FiSmartphone, FiCpu, FiCheckSquare
+} from 'react-icons/fi';
 import '../styles/pages.css';
 import '../styles/about.css';
 
@@ -14,7 +17,7 @@ const TEAM = [
     name: 'Leonard Nkosi',
     role: 'Founder & CEO',
     bio: 'Full-stack engineer and visionary behind Clix Digital Works. Passionate about leveraging technology to solve real African business problems.',
-    emoji: '👨‍💻',
+    Icon: FiCode,
     color: '#39FF14',
     skills: ['React', 'Node.js', 'System Design'],
   },
@@ -22,7 +25,7 @@ const TEAM = [
     name: 'Amina Juma',
     role: 'Lead Backend Engineer',
     bio: 'Experienced in building scalable APIs, database architecture, and cloud infrastructure that power enterprise-grade applications.',
-    emoji: '⚙️',
+    Icon: FiServer,
     color: '#00E5FF',
     skills: ['Node.js', 'MySQL', 'DevOps'],
   },
@@ -30,7 +33,7 @@ const TEAM = [
     name: 'Baraka Mwenda',
     role: 'UI/UX & Frontend Lead',
     bio: 'Crafts pixel-perfect, accessible interfaces with a keen eye for design systems, user psychology, and modern web aesthetics.',
-    emoji: '🎨',
+    Icon: FiMonitor,
     color: '#39FF14',
     skills: ['React', 'Figma', 'CSS Architecture'],
   },
@@ -38,7 +41,7 @@ const TEAM = [
     name: 'Fatuma Rashid',
     role: 'Mobile App Engineer',
     bio: 'Specialises in cross-platform mobile applications delivering native-quality experiences for Android and iOS users.',
-    emoji: '📱',
+    Icon: FiSmartphone,
     color: '#00E5FF',
     skills: ['React Native', 'Flutter', 'API Integration'],
   },
@@ -46,7 +49,7 @@ const TEAM = [
     name: 'David Mwangi',
     role: 'AI & Data Engineer',
     bio: 'Builds machine learning pipelines, predictive models, and intelligent automation tools that give our clients a competitive edge.',
-    emoji: '🤖',
+    Icon: FiCpu,
     color: '#39FF14',
     skills: ['Python', 'TensorFlow', 'Data Analysis'],
   },
@@ -54,7 +57,7 @@ const TEAM = [
     name: 'Grace Luhanga',
     role: 'Project Manager & QA Lead',
     bio: 'Ensures every project is delivered on time, within scope, and exceeds quality standards through rigorous testing and clear communication.',
-    emoji: '📋',
+    Icon: FiCheckSquare,
     color: '#00E5FF',
     skills: ['Agile', 'QA Testing', 'Client Relations'],
   },
@@ -135,7 +138,7 @@ export default function AboutPage() {
                   transition={{ delay: i * 0.1 }}
                 >
                   <div className="value-icon">
-                    <v.icon size={20} />
+                    <v.icon size={20} aria-hidden="true" />
                   </div>
                   <div>
                     <h3 className="value-title">{v.title}</h3>
@@ -174,7 +177,9 @@ export default function AboutPage() {
                 whileHover={{ y: -6 }}
                 style={{ '--tm-color': member.color }}
               >
-                <div className="team-avatar">{member.emoji}</div>
+                <div className="team-avatar" aria-hidden="true">
+                  <member.Icon size={28} />
+                </div>
                 <h3 className="team-name">{member.name}</h3>
                 <p className="team-role" style={{ color: member.color }}>{member.role}</p>
                 <p className="team-bio">{member.bio}</p>

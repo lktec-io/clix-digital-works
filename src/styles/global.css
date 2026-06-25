@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 @import './variables.css';
 
 *, *::before, *::after {
@@ -384,6 +384,63 @@ ul, ol {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* ===== FOCUS VISIBLE ===== */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ===== MOBILE TOUCH FEEDBACK ===== */
+
+@media (hover: none) and (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+
+  button,
+  .btn,
+  a,
+  [role="button"],
+  label[for] {
+    cursor: pointer;
+  }
+
+  .btn:active {
+    transform: scale(0.96) !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  .glass-card:active {
+    transform: scale(0.985) !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  .filter-btn:active {
+    transform: scale(0.94) !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  .portfolio-card:active .portfolio-emoji {
+    transform: scale(1.05) !important;
+  }
+
+  .social-link:active {
+    transform: scale(0.9) !important;
+    transition: transform 0.1s ease !important;
   }
 }
 
