@@ -7,7 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const BASE_URL  = 'https://clixdigitalworks.co.tz';
+const BASE_URL  = 'https://clixworks.co.tz';
 const TODAY     = new Date().toISOString().slice(0, 10);
 
 const ROUTES = [

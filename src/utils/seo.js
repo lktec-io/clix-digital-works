@@ -1,4 +1,4 @@
-const BASE_URL = 'https://clixdigitalworks.co.tz';
+const BASE_URL = 'https://clixworks.co.tz';
 
 export function setPageMeta({ title, description, canonical, ogImage } = {}) {
   const fullTitle = title

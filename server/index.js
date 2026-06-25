@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3001;
 app.use(helmet());
 
 // ── CORS ─────────────────────────────────────────────────────────────────────
-const allowedOrigins = (process.env.ALLOWED_ORIGIN || 'http://localhost:5173').split(',');
+const allowedOrigins = (process.env.ALLOWED_ORIGIN || 'https://clixworks.co.tz').split(',');
 app.use(cors({
   origin: (origin, cb) => {
     if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
