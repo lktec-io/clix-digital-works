@@ -1,0 +1,68 @@
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  will-change: transform;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--secondary);
+  border-radius: 50%;
+  margin-left: -4px;
+  margin-top: -4px;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(0, 229, 255, 0.6);
+  border-radius: 50%;
+  margin-left: -18px;
+  margin-top: -18px;
+  transition: width 0.3s, height 0.3s, border-color 0.3s, opacity 0.3s;
+}
+
+.cursor-dot.cursor-hover {
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  margin-left: -6px;
+  margin-top: -6px;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.9);
+}
+
+.cursor-ring.cursor-hover {
+  width: 56px;
+  height: 56px;
+  margin-left: -28px;
+  margin-top: -28px;
+  border-color: rgba(0, 229, 255, 0.4);
+}
+
+.cursor-dot.cursor-click {
+  transform: translate(var(--cx, 0), var(--cy, 0)) scale(0.7) !important;
+}
+
+.cursor-ring.cursor-click {
+  opacity: 0.5;
+  transform: translate(var(--rx, 0), var(--ry, 0)) scale(0.85) !important;
+}
+
+.cursor-dot.cursor-hidden,
+.cursor-ring.cursor-hidden {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}

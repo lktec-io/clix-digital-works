@@ -1,0 +1,86 @@
+:root {
+  /* Colors */
+  --primary: #0A2342;
+  --primary-light: #0d2d56;
+  --primary-dark: #061829;
+  --secondary: #39FF14;
+  --secondary-dim: rgba(57, 255, 20, 0.15);
+  --accent: #00E5FF;
+  --accent-dim: rgba(0, 229, 255, 0.15);
+  --bg: #050816;
+  --bg-card: rgba(10, 35, 66, 0.4);
+  --bg-card-hover: rgba(10, 35, 66, 0.7);
+  --text-primary: #FFFFFF;
+  --text-secondary: #B8C4D6;
+  --text-muted: #6B7FA3;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #0A2342 0%, #050816 100%);
+  --gradient-accent: linear-gradient(135deg, #39FF14 0%, #00E5FF 100%);
+  --gradient-glow: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.15) 0%, transparent 70%);
+  --gradient-hero: radial-gradient(ellipse at 60% 50%, rgba(57, 255, 20, 0.08) 0%, transparent 60%),
+                   radial-gradient(ellipse at 20% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 60%);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(10, 35, 66, 0.3);
+  --glass-border: rgba(0, 229, 255, 0.15);
+  --glass-blur: blur(20px);
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.5);
+  --shadow-glow-green: 0 0 30px rgba(57, 255, 20, 0.3);
+  --shadow-glow-cyan: 0 0 30px rgba(0, 229, 255, 0.3);
+  --shadow-glow-blue: 0 0 30px rgba(10, 35, 66, 0.6);
+
+  /* Typography */
+  --font-primary: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Inter', sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.25rem;
+  --fs-2xl: 1.5rem;
+  --fs-3xl: 1.875rem;
+  --fs-4xl: 2.25rem;
+  --fs-5xl: 3rem;
+  --fs-6xl: 3.75rem;
+  --fs-7xl: 4.5rem;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+  --space-5xl: 8rem;
+
+  /* Border */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.6s ease;
+  --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Z-index */
+  --z-base: 1;
+  --z-card: 10;
+  --z-navbar: 100;
+  --z-modal: 200;
+  --z-cursor: 9999;
+
+  /* Layout */
+  --max-width: 1280px;
+  --navbar-height: 80px;
+}
