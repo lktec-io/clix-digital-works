@@ -56,6 +56,6 @@ app.use((err, req, res, _next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✓ Clix API running on http://localhost:${PORT}`);
+  console.log(`✓ Clix API running on https://clixworks.co.tz:${PORT}`);
   console.log(`  NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
 });
