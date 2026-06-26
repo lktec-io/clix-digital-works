@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <!-- REPLACE THIS FILE with your final brand logo SVG -->
+  <rect width="40" height="40" rx="10" fill="url(#grad)"/>
+  <text x="20" y="28" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="22" fill="#050816">C</text>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#39FF14"/>
+      <stop offset="100%" stop-color="#00E5FF"/>
+    </linearGradient>
+  </defs>
+</svg>

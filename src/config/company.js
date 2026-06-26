@@ -44,8 +44,9 @@ export const COMPANY = {
 
   // ─── Business hours ───────────────────────────────────────────────────────
   hours: {
-    weekdays: 'Monday – Friday, 8 AM – 6 PM EAT',
-    saturday: 'Saturday, 9 AM – 2 PM EAT',
+    weekdays: 'Monday – Friday: 08:00 AM – 06:00 PM EAT',
+    saturday: 'Saturday: Closed',
+    sunday: 'Sunday: 08:00 AM – 02:00 PM EAT',
     support: '24/7 (emergency technical support)',
   },
 

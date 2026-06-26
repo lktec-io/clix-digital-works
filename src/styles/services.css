@@ -183,3 +183,26 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 480px) {
+  .service-card {
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 360px) {
+  .service-card {
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .services-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .services-cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

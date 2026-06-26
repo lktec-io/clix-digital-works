@@ -409,14 +409,20 @@ select:focus-visible {
 @media (hover: none) and (pointer: coarse) {
   body {
     cursor: auto;
+    -webkit-tap-highlight-color: transparent;
   }
 
   button,
   .btn,
   a,
   [role="button"],
-  label[for] {
+  label[for],
+  input,
+  select,
+  textarea {
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .btn:active {
@@ -470,5 +476,36 @@ select:focus-visible {
   .btn {
     padding: 12px 24px;
     font-size: var(--fs-sm);
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding: 0 var(--space-sm);
+  }
+
+  .section {
+    padding: var(--space-2xl) 0;
+  }
+
+  .section-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .section-title {
+    font-size: clamp(1.55rem, 7.5vw, 2rem);
+  }
+
+  .section-subtitle {
+    font-size: var(--fs-base);
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: var(--fs-xs);
+  }
+
+  .btn-lg {
+    padding: 12px 22px;
   }
 }

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FiTwitter, FiLinkedin, FiFacebook, FiInstagram, FiYoutube, FiMapPin, FiPhone, FiMail, FiArrowRight, FiHeart } from 'react-icons/fi';
 import COMPANY from '../config/company';
+import Logo from './Logo';
 import '../styles/footer.css';
 
 const QUICK_LINKS = [
@@ -69,7 +70,7 @@ export default function Footer() {
             {/* Brand */}
             <div className="footer-brand">
               <Link to="/" className="footer-logo" aria-label={`${COMPANY.name} — Home`}>
-                <div className="footer-logo-mark">C</div>
+                <Logo variant="footer" />
                 <div>
                   <div className="footer-logo-name">{COMPANY.name}</div>
                   <div className="footer-logo-tag">{COMPANY.tagline}</div>
@@ -160,6 +161,7 @@ export default function Footer() {
                 <p style={{ fontSize: 'var(--fs-xs)', color: 'var(--text-muted)', lineHeight: 1.7 }}>
                   {COMPANY.hours.weekdays}<br />
                   {COMPANY.hours.saturday}<br />
+                  {COMPANY.hours.sunday}<br />
                   <span style={{ color: 'var(--secondary)' }}>Support: {COMPANY.hours.support}</span>
                 </p>
               </div>

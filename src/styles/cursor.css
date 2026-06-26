@@ -66,3 +66,27 @@
     display: none;
   }
 }
+
+/* ── Mobile touch glow ─────────────────────────────────────────────────────── */
+.touch-glow {
+  position: fixed;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  transform: translate(-50%, -50%) scale(0);
+  animation: touchGlow 0.55s ease-out forwards;
+  background: radial-gradient(
+    circle,
+    rgba(57, 255, 20, 0.45) 0%,
+    rgba(57, 255, 20, 0.15) 45%,
+    transparent 70%
+  );
+}
+
+@keyframes touchGlow {
+  0%   { transform: translate(-50%, -50%) scale(0);   opacity: 1; }
+  40%  { transform: translate(-50%, -50%) scale(1);   opacity: 0.85; }
+  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}

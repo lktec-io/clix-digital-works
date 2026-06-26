@@ -28,7 +28,7 @@
   font-size: var(--fs-sm);
   font-weight: 500;
   text-align: left;
-  cursor: none;
+  cursor: pointer;
   position: relative;
   transition: all var(--transition-fast);
   overflow: hidden;
@@ -226,5 +226,35 @@
 
   .sol-tab {
     padding: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .solutions-panel {
+    padding: var(--space-md);
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .panel-emoji {
+    width: 52px;
+    height: 52px;
+  }
+
+  .panel-title {
+    font-size: var(--fs-xl);
+  }
+
+  .panel-footer {
+    flex-direction: column;
+  }
+
+  .panel-footer .btn {
+    width: 100%;
+    justify-content: center;
   }
 }

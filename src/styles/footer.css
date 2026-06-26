@@ -290,6 +290,11 @@
   .newsletter-form {
     width: 100%;
     max-width: none;
+    min-width: 0;
+  }
+
+  .footer-main {
+    padding: var(--space-4xl) 0 var(--space-2xl);
   }
 
   .footer-bottom-inner {
@@ -302,5 +307,48 @@
 @media (max-width: 480px) {
   .footer-grid {
     grid-template-columns: 1fr;
+  }
+
+  .footer-main {
+    padding: var(--space-3xl) 0 var(--space-xl);
+  }
+
+  .footer-newsletter {
+    padding: var(--space-2xl) 0;
+  }
+
+  .newsletter-text h3 {
+    font-size: var(--fs-lg);
+  }
+
+  .footer-bottom-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 360px) {
+  .footer-main {
+    padding: var(--space-2xl) 0 var(--space-lg);
+  }
+
+  .footer-newsletter {
+    padding: var(--space-lg) 0;
+  }
+
+  .newsletter-text h3 {
+    font-size: var(--fs-base);
+  }
+
+  .footer-logo-name {
+    font-size: var(--fs-base);
+  }
+
+  .footer-logo-mark {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    border-radius: 9px;
   }
 }

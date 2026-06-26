@@ -184,3 +184,43 @@
     font-size: var(--fs-3xl);
   }
 }
+
+@media (max-width: 480px) {
+  .why-stats {
+    padding: var(--space-lg);
+    gap: var(--space-lg);
+  }
+
+  .why-stat-value {
+    font-size: var(--fs-2xl);
+  }
+
+  .why-card {
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 360px) {
+  .why-stats {
+    padding: var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .why-stat-value {
+    font-size: var(--fs-xl);
+  }
+
+  .why-stat-suffix {
+    font-size: var(--fs-lg);
+  }
+
+  .why-card {
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .why-icon-wrap {
+    width: 44px;
+    height: 44px;
+  }
+}

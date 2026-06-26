@@ -408,3 +408,89 @@
     display: none;
   }
 }
+
+@media (max-width: 480px) {
+  .hero-visual-inner {
+    width: 220px;
+    height: 220px;
+  }
+
+  .visual-orb {
+    width: 110px;
+    height: 110px;
+  }
+
+  .orb-core {
+    width: 66px;
+    height: 66px;
+  }
+
+  .orbit-card {
+    display: none;
+  }
+
+  .hero-headline {
+    font-size: clamp(2rem, 8.5vw, 2.8rem);
+  }
+
+  .hero-subheadline {
+    font-size: var(--fs-base);
+  }
+
+  .hero-stats {
+    gap: var(--space-lg);
+  }
+
+  .stat-number {
+    font-size: var(--fs-xl);
+  }
+
+  .stat-suffix {
+    font-size: var(--fs-lg);
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-visual-inner {
+    width: 180px;
+    height: 180px;
+  }
+
+  .visual-orb {
+    width: 90px;
+    height: 90px;
+  }
+
+  .orb-core {
+    width: 54px;
+    height: 54px;
+  }
+
+  .orb-logo {
+    font-size: var(--fs-xs);
+  }
+
+  .hero-headline {
+    font-size: clamp(1.75rem, 8vw, 2.2rem);
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-stats {
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-item {
+    min-width: 70px;
+  }
+}

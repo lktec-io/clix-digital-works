@@ -180,3 +180,34 @@
     display: none;
   }
 }
+
+@media (max-width: 480px) {
+  .step-card {
+    padding: var(--space-lg);
+  }
+
+  .step-title {
+    font-size: var(--fs-lg);
+  }
+
+  .process-step {
+    grid-template-columns: 40px 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .step-card {
+    padding: var(--space-md);
+  }
+
+  .step-node {
+    width: 36px;
+    height: 36px;
+    font-size: var(--fs-sm);
+  }
+
+  .process-step {
+    grid-template-columns: 36px 1fr;
+    gap: var(--space-sm);
+  }
+}

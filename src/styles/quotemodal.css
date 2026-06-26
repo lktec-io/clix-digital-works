@@ -47,7 +47,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: none;
+  cursor: pointer;
   flex-shrink: 0;
   transition: all var(--transition-fast);
 }
@@ -115,5 +115,37 @@
 
   .qm-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 430px) {
+  .qm-overlay {
+    padding: var(--space-sm);
+    align-items: flex-start;
+    padding-top: var(--space-lg);
+  }
+
+  .qm-panel {
+    padding: var(--space-lg);
+    max-height: 96vh;
+    border-radius: var(--radius-lg);
+  }
+
+  .qm-title {
+    font-size: var(--fs-xl);
+  }
+}
+
+@media (max-width: 360px) {
+  .qm-panel {
+    padding: var(--space-md);
+  }
+
+  .qm-header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .qm-form {
+    gap: var(--space-md);
   }
 }

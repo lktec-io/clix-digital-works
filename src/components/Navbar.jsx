@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX, FiArrowRight } from 'react-icons/fi';
+import Logo from './Logo';
 import '../styles/navbar.css';
 
 const navLinks = [
@@ -50,13 +51,7 @@ export default function Navbar() {
         <div className="navbar-container">
           {/* Logo */}
           <Link to="/" className="navbar-logo" aria-label="Clix Digital Works - Home">
-            <div className="logo-mark">
-              <span>C</span>
-            </div>
-            <div className="logo-text">
-              <span className="logo-main">Clix</span>
-              <span className="logo-dot"> Digital Works</span>
-            </div>
+            <Logo variant="navbar" showText={true} />
           </Link>
 
           {/* Desktop Nav */}

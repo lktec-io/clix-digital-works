@@ -16,8 +16,21 @@ export default function CustomCursor() {
   const hovered = useRef(false);
 
   useEffect(() => {
-    // Hide on touch devices
-    if (window.matchMedia('(pointer: coarse)').matches) return;
+    // Mobile touch glow — shown instead of custom cursor on touch devices
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      const onTouch = (e) => {
+        Array.from(e.changedTouches).forEach(touch => {
+          const glow = document.createElement('div');
+          glow.className = 'touch-glow';
+          glow.style.left = touch.clientX + 'px';
+          glow.style.top = touch.clientY + 'px';
+          document.body.appendChild(glow);
+          glow.addEventListener('animationend', () => glow.remove(), { once: true });
+        });
+      };
+      document.addEventListener('touchstart', onTouch, { passive: true });
+      return () => document.removeEventListener('touchstart', onTouch);
+    }
 
     const dot  = dotRef.current;
     const ring = ringRef.current;
