@@ -134,7 +134,7 @@
 }
 
 .loading-bar-wrap {
-  width: 320px;
+  width: min(320px, calc(100vw - 3rem));
   height: 3px;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 2px;
@@ -153,4 +153,33 @@
   color: var(--secondary);
   font-weight: 600;
   letter-spacing: 0.1em;
+}
+
+@media (max-width: 400px) {
+  .loading-logo {
+    gap: var(--space-md);
+  }
+
+  .logo-name {
+    font-size: var(--fs-2xl);
+  }
+
+  .logo-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .logo-inner {
+    width: 44px;
+    height: 44px;
+  }
+
+  .logo-letter {
+    font-size: 22px;
+  }
+
+  .loading-tagline {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.1em;
+  }
 }

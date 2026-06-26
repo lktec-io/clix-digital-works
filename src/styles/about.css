@@ -155,3 +155,30 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 480px) {
+  .team-card {
+    padding: var(--space-lg);
+  }
+
+  .value-card {
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+}
+
+@media (max-width: 360px) {
+  .team-card {
+    padding: var(--space-md);
+  }
+
+  .team-avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  .value-icon {
+    width: 36px;
+    height: 36px;
+  }
+}

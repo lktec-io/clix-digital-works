@@ -1,5 +1,6 @@
 .portfolio-section {
   position: relative;
+  overflow: hidden;
 }
 
 .portfolio-filters {

@@ -1,5 +1,6 @@
 .services-section {
   position: relative;
+  overflow: hidden;
 }
 
 .services-section::before {

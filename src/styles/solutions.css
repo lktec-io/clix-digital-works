@@ -1,5 +1,6 @@
 .solutions-section {
   position: relative;
+  overflow: hidden;
 }
 
 .solutions-layout {
