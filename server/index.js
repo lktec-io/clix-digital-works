@@ -11,7 +11,9 @@ import { adminRouter }      from './routes/admin.js';
 
 dotenv.config();
 import path from 'path';
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config({
+  path: path.resolve('./server/.env')
+});
 
 const app  = express();
 // Trust Nginx / Cloudflare reverse proxy
