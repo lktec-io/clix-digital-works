@@ -73,8 +73,11 @@ adminRouter.get('/stats', requireAuth, async (req, res) => {
 // ── Contacts ─────────────────────────────────────────────────────────────────
 adminRouter.get('/contacts', requireAuth, async (req, res) => {
   try {
-    const { search = '', status = '', page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const page   = Math.max(1, parseInt(req.query.page)  || 1);
+    const limit  = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+    const search = (req.query.search || '').trim();
+    const status = (req.query.status || '').trim();
 
     let where = 'WHERE 1=1';
     const params = [];
@@ -89,13 +92,14 @@ adminRouter.get('/contacts', requireAuth, async (req, res) => {
       params.push(status);
     }
 
+    // LIMIT/OFFSET are validated integers — embed as literals to avoid
+    // ER_WRONG_ARGUMENTS from mysql2's binary-protocol type mismatch.
     const [total, rows] = await Promise.all([
       queryOne(`SELECT COUNT(*) AS total FROM contacts ${where}`, params),
-      query(`SELECT * FROM contacts ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`,
-        [...params, parseInt(limit), offset]),
+      query(`SELECT * FROM contacts ${where} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`, params),
     ]);
 
-    res.json({ data: rows, total: total.total, page: parseInt(page), limit: parseInt(limit) });
+    res.json({ data: rows, total: total.total, page, limit });
   } catch (err) {
     console.error('[admin] contacts list error:', err);
     res.status(500).json({ error: 'Failed to load contacts' });
@@ -130,8 +134,11 @@ adminRouter.delete('/contacts/:id', requireAuth, async (req, res) => {
 // ── Quote Requests ────────────────────────────────────────────────────────────
 adminRouter.get('/quotes', requireAuth, async (req, res) => {
   try {
-    const { search = '', status = '', page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const page   = Math.max(1, parseInt(req.query.page)  || 1);
+    const limit  = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+    const search = (req.query.search || '').trim();
+    const status = (req.query.status || '').trim();
 
     let where = 'WHERE 1=1';
     const params = [];
@@ -148,11 +155,10 @@ adminRouter.get('/quotes', requireAuth, async (req, res) => {
 
     const [total, rows] = await Promise.all([
       queryOne(`SELECT COUNT(*) AS total FROM quote_requests ${where}`, params),
-      query(`SELECT * FROM quote_requests ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`,
-        [...params, parseInt(limit), offset]),
+      query(`SELECT * FROM quote_requests ${where} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`, params),
     ]);
 
-    res.json({ data: rows, total: total.total, page: parseInt(page), limit: parseInt(limit) });
+    res.json({ data: rows, total: total.total, page, limit });
   } catch (err) {
     console.error('[admin] quotes list error:', err);
     res.status(500).json({ error: 'Failed to load quotes' });
@@ -187,8 +193,11 @@ adminRouter.delete('/quotes/:id', requireAuth, async (req, res) => {
 // ── Newsletter ────────────────────────────────────────────────────────────────
 adminRouter.get('/newsletter', requireAuth, async (req, res) => {
   try {
-    const { search = '', status = '', page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const page   = Math.max(1, parseInt(req.query.page)  || 1);
+    const limit  = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+    const search = (req.query.search || '').trim();
+    const status = (req.query.status || '').trim();
 
     let where = 'WHERE 1=1';
     const params = [];
@@ -205,11 +214,10 @@ adminRouter.get('/newsletter', requireAuth, async (req, res) => {
 
     const [total, rows] = await Promise.all([
       queryOne(`SELECT COUNT(*) AS total FROM newsletter_subscribers ${where}`, params),
-      query(`SELECT id, email, name, status, subscribed_at FROM newsletter_subscribers ${where} ORDER BY subscribed_at DESC LIMIT ? OFFSET ?`,
-        [...params, parseInt(limit), offset]),
+      query(`SELECT id, email, name, status, subscribed_at FROM newsletter_subscribers ${where} ORDER BY subscribed_at DESC LIMIT ${limit} OFFSET ${offset}`, params),
     ]);
 
-    res.json({ data: rows, total: total.total, page: parseInt(page), limit: parseInt(limit) });
+    res.json({ data: rows, total: total.total, page, limit });
   } catch (err) {
     console.error('[admin] newsletter list error:', err);
     res.status(500).json({ error: 'Failed to load subscribers' });

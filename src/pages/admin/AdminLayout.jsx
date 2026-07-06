@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { FiGrid, FiMail, FiFileText, FiUsers, FiLogOut, FiExternalLink, FiMenu, FiX } from 'react-icons/fi';
 import { useAdminAuth } from '../../context/AdminAuthContext';
+import '../../styles/admin.css';
 
 const NAV = [
   { to: '/admin',            label: 'Dashboard',  icon: FiGrid,     end: true },
