@@ -15,6 +15,10 @@ const pool = mysql.createPool({
   charset:         'utf8mb4',
 });
 
+console.log("DB_HOST =", process.env.DB_HOST);
+console.log("DB_USER =", process.env.DB_USER);
+console.log("DB_PASSWORD =", JSON.stringify(process.env.DB_PASSWORD)); 
+
 export async function query(sql, params) {
   const [rows] = await pool.execute(sql, params);
   return rows;
