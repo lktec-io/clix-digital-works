@@ -10,6 +10,8 @@ import { newsletterRouter } from './routes/newsletter.js';
 import { adminRouter }      from './routes/admin.js';
 
 dotenv.config();
+import path from 'path';
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const app  = express();
 // Trust Nginx / Cloudflare reverse proxy
