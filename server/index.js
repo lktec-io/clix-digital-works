@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import path from 'path';
 
 import { globalRateLimiter } from './middleware/rateLimiter.js';
 import { contactRouter }    from './routes/contact.js';
@@ -9,10 +10,8 @@ import { quotesRouter }     from './routes/quotes.js';
 import { newsletterRouter } from './routes/newsletter.js';
 import { adminRouter }      from './routes/admin.js';
 
-dotenv.config();
-import path from 'path';
 dotenv.config({
-  path: path.resolve('./server/.env')
+  path: path.resolve(process.cwd(), '.env')
 });
 
 const app  = express();
