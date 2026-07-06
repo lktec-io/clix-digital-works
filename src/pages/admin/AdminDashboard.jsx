@@ -30,7 +30,7 @@ export default function AdminDashboard() {
   return (
     <AdminLayout title="Dashboard">
       {loading ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '20px' }}>
+        <div className="admin-grid-loading">
           {Array.from({ length: 4 }, (_, i) => <SkeletonCard key={i} lines={2} />)}
         </div>
       ) : (
@@ -58,7 +58,7 @@ export default function AdminDashboard() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '8px' }}>
+          <div className="admin-grid-panels">
             <div className="admin-table-card" style={{ padding: '24px' }}>
               <h3 style={{ color: 'var(--text-primary)', marginBottom: '16px', fontSize: 'var(--fs-base)', fontWeight: 700 }}>
                 Quick Actions

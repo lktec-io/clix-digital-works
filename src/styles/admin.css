@@ -4,6 +4,7 @@
   min-height: 100vh;
   background: var(--bg);
   font-family: var(--font-primary);
+  overflow-x: hidden; /* prevent sidebar or wide content from scrolling the page */
 }
 
 /* Sidebar */
@@ -40,12 +41,15 @@
   font-weight: 900;
   font-size: 14px;
   color: var(--bg);
+  flex-shrink: 0;
 }
 
 .admin-logo-text {
   font-size: var(--fs-sm);
   font-weight: 700;
   color: var(--text-primary);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .admin-logo-sub {
@@ -61,6 +65,8 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .admin-nav-label {
@@ -85,6 +91,8 @@
   text-decoration: none;
   transition: all var(--transition-fast);
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .admin-nav-link:hover {
@@ -110,6 +118,7 @@
   align-items: center;
   justify-content: center;
   padding: 0 5px;
+  flex-shrink: 0;
 }
 
 .admin-sidebar-footer {
@@ -121,6 +130,9 @@
   font-size: var(--fs-xs);
   color: var(--text-muted);
   margin-bottom: var(--space-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-user-info strong {
@@ -155,6 +167,9 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-width: 0;          /* essential: prevents flex child from overflowing parent */
+  overflow-x: hidden;
+  max-width: calc(100vw - 240px);
 }
 
 .admin-topbar {
@@ -169,23 +184,48 @@
   position: sticky;
   top: 0;
   z-index: 5;
+  overflow: hidden;
 }
 
 .admin-topbar-title {
   font-size: var(--fs-lg);
   font-weight: 700;
   color: var(--text-primary);
+  min-width: 0;          /* allow title to shrink in flex row */
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-topbar-time {
   margin-left: auto;
   font-size: var(--fs-xs);
   color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .admin-content {
   padding: var(--space-2xl);
   flex: 1;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* ─── Dashboard grids (replaced inline styles for responsiveness) ─────────── */
+.admin-grid-loading {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.admin-grid-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 8px;
 }
 
 /* ─── Stats Cards ─────────────────────────────────────────────────────────── */
@@ -203,6 +243,7 @@
   border-radius: var(--radius-lg);
   position: relative;
   overflow: hidden;
+  min-width: 0;
 }
 
 .admin-stat-card::before {
@@ -237,6 +278,7 @@
   font-size: var(--fs-xs);
   color: var(--s-color, var(--secondary));
   font-weight: 600;
+  word-break: break-word;
 }
 
 .admin-stat-icon {
@@ -251,6 +293,7 @@
   align-items: center;
   justify-content: center;
   color: var(--s-color, var(--secondary));
+  flex-shrink: 0;
 }
 
 /* ─── Data Table ─────────────────────────────────────────────────────────── */
@@ -259,6 +302,9 @@
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-xl);
   overflow: hidden;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-table-header {
@@ -274,12 +320,15 @@
   font-size: var(--fs-base);
   font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .admin-search {
   flex: 1;
-  min-width: 200px;
+  min-width: min(200px, 100%); /* was: 200px — now respects small viewports */
   max-width: 300px;
+  box-sizing: border-box;
 }
 
 .admin-search input {
@@ -292,10 +341,15 @@
   font-size: var(--fs-sm);
   outline: none;
   transition: border-color var(--transition-fast);
+  box-sizing: border-box;
 }
 
 .admin-search input:focus {
   border-color: var(--accent);
+}
+
+.admin-filter {
+  box-sizing: border-box;
 }
 
 .admin-filter select {
@@ -307,16 +361,21 @@
   font-size: var(--fs-sm);
   outline: none;
   cursor: pointer;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-table-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
 }
 
 table.admin-table {
   width: 100%;
   border-collapse: collapse;
   font-size: var(--fs-sm);
+  min-width: 480px; /* table scrolls horizontally inside its wrapper, not the page */
 }
 
 .admin-table th {
@@ -358,6 +417,7 @@ table.admin-table {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .status-new      { background: rgba(57,255,20,0.1);  color: #39FF14; border: 1px solid rgba(57,255,20,0.2); }
@@ -375,6 +435,7 @@ table.admin-table {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: nowrap;
 }
 
 .action-btn {
@@ -385,6 +446,8 @@ table.admin-table {
   border: 1px solid transparent;
   cursor: pointer;
   transition: all var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .action-btn-status {
@@ -417,11 +480,14 @@ table.admin-table {
   border-top: 1px solid rgba(255,255,255,0.06);
   font-size: var(--fs-sm);
   color: var(--text-muted);
+  flex-wrap: wrap;
+  gap: var(--space-sm);
 }
 
 .pagination-btns {
   display: flex;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .page-btn {
@@ -437,6 +503,7 @@ table.admin-table {
   justify-content: center;
   cursor: pointer;
   transition: all var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .page-btn:hover:not(:disabled) {
@@ -464,12 +531,15 @@ table.admin-table {
   justify-content: center;
   background: var(--bg);
   padding: var(--space-xl);
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .admin-login-card {
   width: 100%;
   max-width: 400px;
   padding: var(--space-3xl);
+  box-sizing: border-box;
 }
 
 .admin-login-logo {
@@ -530,23 +600,28 @@ table.admin-table {
   .admin-stats {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .admin-grid-loading {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-  /* Sidebar slides in from left instead of being hidden */
+  /* Sidebar slides in from left */
   .admin-sidebar {
     transform: translateX(-100%);
     transition: transform 0.28s ease;
     z-index: 10;
-    /* Remove display:none — sidebar stays in DOM so transition works */
   }
 
   .admin-sidebar.admin-sidebar-open {
     transform: translateX(0);
   }
 
+  /* Main fills full width */
   .admin-main {
     margin-left: 0;
+    max-width: 100vw;
   }
 
   .admin-hamburger {
@@ -565,11 +640,28 @@ table.admin-table {
   .admin-stats {
     grid-template-columns: 1fr 1fr;
   }
+
+  .admin-grid-panels {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-table-header {
+    padding: var(--space-md) var(--space-lg);
+    gap: var(--space-sm);
+  }
+
+  .admin-pagination {
+    padding: var(--space-sm) var(--space-lg);
+  }
 }
 
 @media (max-width: 480px) {
   .admin-stats {
     grid-template-columns: 1fr;
+  }
+
+  .admin-grid-loading {
+    grid-template-columns: 1fr 1fr;
   }
 
   .admin-content {
@@ -578,5 +670,102 @@ table.admin-table {
 
   .admin-topbar {
     padding: 0 var(--space-md);
+  }
+
+  /* Table header: let search and filter take full row */
+  .admin-table-header {
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .admin-search {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    flex: unset;
+    order: 2;
+  }
+
+  .admin-filter {
+    width: 100%;
+    order: 3;
+  }
+
+  .admin-filter select {
+    width: 100%;
+  }
+
+  .admin-table-title {
+    order: 1;
+    width: 100%;
+  }
+
+  /* Pagination stacks cleanly */
+  .admin-pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .admin-table-card {
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (max-width: 390px) {
+  .admin-stats {
+    gap: var(--space-sm);
+  }
+
+  .admin-stat-card {
+    padding: var(--space-lg);
+  }
+
+  .admin-stat-value {
+    font-size: var(--fs-2xl);
+  }
+
+  .admin-grid-loading {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-content {
+    padding: var(--space-md);
+  }
+
+  .admin-topbar {
+    padding: 0 var(--space-sm);
+  }
+
+  .admin-login-card {
+    padding: var(--space-xl);
+  }
+
+  .admin-table-header {
+    padding: var(--space-sm);
+    gap: 6px;
+  }
+
+  .admin-pagination {
+    padding: var(--space-sm);
+  }
+}
+
+@media (max-width: 360px) {
+  .admin-stats {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+  }
+
+  .admin-stat-card {
+    padding: var(--space-md);
+  }
+
+  .admin-login-page {
+    padding: var(--space-md);
+  }
+
+  .admin-login-card {
+    padding: var(--space-lg);
   }
 }
