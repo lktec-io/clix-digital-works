@@ -33,7 +33,7 @@ adminRouter.post('/login', adminLoginLimiter, async (req, res) => {
 
     res.json({ token, username });
   } catch (err) {
-    console.error('admin login error:', err);
+    console.error('[admin] login error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -56,16 +56,16 @@ adminRouter.get('/stats', requireAuth, async (req, res) => {
     ]);
 
     res.json({
-      contacts:          contacts.total,
-      new_contacts:      newContacts.total,
-      quotes:            quotes.total,
-      new_quotes:        newQuotes.total,
-      subscribers:       subscribers.total,
-      recent_contacts:   recentContacts.total,
-      recent_quotes:     recentQuotes.total,
+      contacts:        contacts.total,
+      new_contacts:    newContacts.total,
+      quotes:          quotes.total,
+      new_quotes:      newQuotes.total,
+      subscribers:     subscribers.total,
+      recent_contacts: recentContacts.total,
+      recent_quotes:   recentQuotes.total,
     });
   } catch (err) {
-    console.error('admin stats error:', err);
+    console.error('[admin] stats error:', err);
     res.status(500).json({ error: 'Failed to load stats' });
   }
 });
@@ -97,7 +97,7 @@ adminRouter.get('/contacts', requireAuth, async (req, res) => {
 
     res.json({ data: rows, total: total.total, page: parseInt(page), limit: parseInt(limit) });
   } catch (err) {
-    console.error('admin contacts list error:', err);
+    console.error('[admin] contacts list error:', err);
     res.status(500).json({ error: 'Failed to load contacts' });
   }
 });
@@ -112,7 +112,7 @@ adminRouter.patch('/contacts/:id', requireAuth, async (req, res) => {
     await query('UPDATE contacts SET status = ? WHERE id = ?', [status, req.params.id]);
     res.json({ success: true });
   } catch (err) {
-    console.error('admin contacts patch error:', err);
+    console.error('[admin] contacts patch error:', err);
     res.status(500).json({ error: 'Update failed' });
   }
 });
@@ -122,7 +122,7 @@ adminRouter.delete('/contacts/:id', requireAuth, async (req, res) => {
     await query('DELETE FROM contacts WHERE id = ?', [req.params.id]);
     res.json({ success: true });
   } catch (err) {
-    console.error('admin contacts delete error:', err);
+    console.error('[admin] contacts delete error:', err);
     res.status(500).json({ error: 'Delete failed' });
   }
 });
@@ -154,7 +154,7 @@ adminRouter.get('/quotes', requireAuth, async (req, res) => {
 
     res.json({ data: rows, total: total.total, page: parseInt(page), limit: parseInt(limit) });
   } catch (err) {
-    console.error('admin quotes list error:', err);
+    console.error('[admin] quotes list error:', err);
     res.status(500).json({ error: 'Failed to load quotes' });
   }
 });
@@ -169,6 +169,7 @@ adminRouter.patch('/quotes/:id', requireAuth, async (req, res) => {
     await query('UPDATE quote_requests SET status = ? WHERE id = ?', [status, req.params.id]);
     res.json({ success: true });
   } catch (err) {
+    console.error('[admin] quotes patch error:', err);
     res.status(500).json({ error: 'Update failed' });
   }
 });
@@ -178,6 +179,7 @@ adminRouter.delete('/quotes/:id', requireAuth, async (req, res) => {
     await query('DELETE FROM quote_requests WHERE id = ?', [req.params.id]);
     res.json({ success: true });
   } catch (err) {
+    console.error('[admin] quotes delete error:', err);
     res.status(500).json({ error: 'Delete failed' });
   }
 });
@@ -209,6 +211,7 @@ adminRouter.get('/newsletter', requireAuth, async (req, res) => {
 
     res.json({ data: rows, total: total.total, page: parseInt(page), limit: parseInt(limit) });
   } catch (err) {
+    console.error('[admin] newsletter list error:', err);
     res.status(500).json({ error: 'Failed to load subscribers' });
   }
 });
@@ -218,6 +221,7 @@ adminRouter.delete('/newsletter/:id', requireAuth, async (req, res) => {
     await query('DELETE FROM newsletter_subscribers WHERE id = ?', [req.params.id]);
     res.json({ success: true });
   } catch (err) {
+    console.error('[admin] newsletter delete error:', err);
     res.status(500).json({ error: 'Delete failed' });
   }
 });
