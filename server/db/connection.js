@@ -4,10 +4,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const pool = mysql.createPool({
-  host:            process.env.DB_HOST     || '127.0.0.1',
+  host:            process.env.DB_HOST,
   port:            parseInt(process.env.DB_PORT) || 3306,
   user:            process.env.DB_USER     || 'clix_user',
-  password:        process.env.DB_PASSWORD || '',
+  password:        process.env.DB_PASSWORD || 'clix#$7!digital',
   database:        process.env.DB_NAME     || 'clix_db',
   waitForConnections: true,
   connectionLimit: 10,
