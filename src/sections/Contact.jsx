@@ -93,13 +93,13 @@ export default function Contact() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          company: formData.company,
-          project_type: formData.projectType || null,
-          message: formData.message,
-        }),
+  name: formData.name,
+  email: formData.email,
+  phone: formData.phone,
+  company: formData.company,
+  project_type: formData.projectType || '',
+  message: formData.message,
+}),
         
       }).then(async (res) => {
         const data = await res.json();
