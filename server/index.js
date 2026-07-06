@@ -12,19 +12,39 @@ import { adminRouter }      from './routes/admin.js';
 dotenv.config();
 
 const app  = express();
+// Trust Nginx / Cloudflare reverse proxy
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 // ── Security headers ─────────────────────────────────────────────────────────
 app.use(helmet());
 
 // ── CORS ─────────────────────────────────────────────────────────────────────
-const allowedOrigins = (process.env.ALLOWED_ORIGIN || 'https://clixworks.co.tz').split(',');
+const allowedOrigins = (
+    process.env.ALLOWED_ORIGIN ||
+    "https://clixworks.co.tz,https://www.clixworks.co.tz,http://localhost:5173"
+)
+.split(",")
+.map(origin => origin.trim());
+
 app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    cb(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
+    origin(origin, callback) {
+
+        // requests without origin (curl, Postman, server-server)
+        if (!origin) {
+            return callback(null, true);
+        }
+
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        console.log("Blocked Origin:", origin);
+
+        callback(new Error(`Origin ${origin} not allowed.`));
+    },
+
+    credentials: true
 }));
 
 // ── Body parsing ─────────────────────────────────────────────────────────────
