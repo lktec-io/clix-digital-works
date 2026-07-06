@@ -1,57 +1,65 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FiSend, FiMapPin, FiPhone, FiMail, FiCheck, FiMessageSquare, FiAlertCircle } from 'react-icons/fi';
-import COMPANY from '../config/company';
-import { API } from '../config/api';
-import '../styles/contact.css';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  FiSend,
+  FiMapPin,
+  FiPhone,
+  FiMail,
+  FiCheck,
+  FiMessageSquare,
+  FiAlertCircle,
+} from "react-icons/fi";
+import COMPANY from "../config/company";
+import { API } from "../config/api";
+import "../styles/contact.css";
 
 const PROJECT_TYPES = [
-  'Website Development',
-  'Mobile App',
-  'Custom Software',
-  'AI / ML Solution',
-  'ERP System',
-  'Accounting System',
-  'Church Management',
-  'School Management',
-  'SACCO System',
-  'Cybersecurity',
-  'Cloud & Hosting',
-  'Other',
+  "Website Development",
+  "Mobile App",
+  "Custom Software",
+  "AI / ML Solution",
+  "ERP System",
+  "Accounting System",
+  "Church Management",
+  "School Management",
+  "SACCO System",
+  "Cybersecurity",
+  "Cloud & Hosting",
+  "Other",
 ];
 
 const CONTACT_INFO = [
   {
     icon: FiMapPin,
-    label: 'Location',
+    label: "Location",
     value: COMPANY.address.full,
     sub: COMPANY.address.continent,
-    color: '#39FF14',
+    color: "#39FF14",
     href: COMPANY.address.googleMapsUrl,
     external: true,
   },
   {
     icon: FiPhone,
-    label: 'Phone / WhatsApp',
+    label: "Phone / WhatsApp",
     value: COMPANY.phone,
     sub: COMPANY.hours.weekdays,
-    color: '#00E5FF',
-    href: `tel:${COMPANY.phone.replace(/\s/g, '')}`,
+    color: "#00E5FF",
+    href: `tel:${COMPANY.phone.replace(/\s/g, "")}`,
   },
   {
     icon: FiMail,
-    label: 'Email',
+    label: "Email",
     value: COMPANY.email,
-    sub: 'We reply within 24 hours',
-    color: '#39FF14',
+    sub: "We reply within 24 hours",
+    color: "#39FF14",
     href: `mailto:${COMPANY.email}`,
   },
   {
     icon: FiMessageSquare,
-    label: 'WhatsApp',
-    value: 'Chat with us',
-    sub: 'Quick response guaranteed',
-    color: '#00E5FF',
+    label: "WhatsApp",
+    value: "Chat with us",
+    sub: "Quick response guaranteed",
+    color: "#00E5FF",
     href: COMPANY.social.whatsapp,
     external: true,
   },
@@ -59,40 +67,51 @@ const CONTACT_INFO = [
 
 export default function Contact() {
   const [formData, setFormData] = useState({
-    name: '', email: '', phone: '', company: '',
-    projectType: '', message: '',
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    projectType: "",
+    message: "",
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) =>
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+ if (!formData.projectType) {
+  setError("Please select project type");
+  return;
+}
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
     try {
       await fetch(API.contact, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
           company: formData.company,
-          project_type: formData.projectType,
+          project_type: formData.projectType || null,
           message: formData.message,
         }),
-      }).then(async res => {
+        
+      }).then(async (res) => {
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Submission failed');
+        if (!res.ok) throw new Error(data.error || "Submission failed");
         return data;
       });
       setSubmitted(true);
     } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again or contact us directly.');
+      setError(
+        err.message ||
+          "Something went wrong. Please try again or contact us directly.",
+      );
     } finally {
       setLoading(false);
     }
@@ -115,7 +134,8 @@ export default function Contact() {
             Start Your <span>Project Today</span>
           </h2>
           <p className="section-subtitle">
-            Tell us about your project and we'll get back to you within 24 hours with a free consultation.
+            Tell us about your project and we'll get back to you within 24 hours
+            with a free consultation.
           </p>
         </motion.div>
 
@@ -129,8 +149,14 @@ export default function Contact() {
             transition={{ duration: 0.6 }}
           >
             <div className="contact-info-header">
-              <h3>Let's Build Something <span className="gradient-text">Amazing</span> Together</h3>
-              <p>Whether you have a clear project plan or just an idea, we're here to help turn it into a working digital product.</p>
+              <h3>
+                Let's Build Something{" "}
+                <span className="gradient-text">Amazing</span> Together
+              </h3>
+              <p>
+                Whether you have a clear project plan or just an idea, we're
+                here to help turn it into a working digital product.
+              </p>
             </div>
 
             <div className="contact-cards">
@@ -143,9 +169,9 @@ export default function Contact() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08 }}
-                  style={{ '--c-color': info.color, textDecoration: 'none' }}
-                  target={info.external ? '_blank' : undefined}
-                  rel={info.external ? 'noopener noreferrer' : undefined}
+                  style={{ "--c-color": info.color, textDecoration: "none" }}
+                  target={info.external ? "_blank" : undefined}
+                  rel={info.external ? "noopener noreferrer" : undefined}
                   whileHover={{ x: 4 }}
                 >
                   <div className="contact-card-icon">
@@ -162,13 +188,17 @@ export default function Contact() {
 
             <div className="contact-promise">
               {[
-                'Free Initial Consultation',
-                'Response Within 24 Hours',
-                'No Commitment Required',
-                'Transparent Pricing',
-              ].map(p => (
+                "Free Initial Consultation",
+                "Response Within 24 Hours",
+                "No Commitment Required",
+                "Transparent Pricing",
+              ].map((p) => (
                 <div key={p} className="promise-item">
-                  <FiCheck size={14} className="promise-check" aria-hidden="true" />
+                  <FiCheck
+                    size={14}
+                    className="promise-check"
+                    aria-hidden="true"
+                  />
                   <span>{p}</span>
                 </div>
               ))}
@@ -194,11 +224,21 @@ export default function Contact() {
                 </div>
                 <h3>Message Sent Successfully!</h3>
                 <p>
-                  Thank you for reaching out. Our team will contact you within 24 hours to
-                  discuss your project in detail.
+                  Thank you for reaching out. Our team will contact you within
+                  24 hours to discuss your project in detail.
                 </p>
-                <div style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  <button className="btn btn-outline" onClick={() => setSubmitted(false)}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "var(--space-sm)",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                  }}
+                >
+                  <button
+                    className="btn btn-outline"
+                    onClick={() => setSubmitted(false)}
+                  >
                     Send Another Message
                   </button>
                   <a
@@ -220,7 +260,9 @@ export default function Contact() {
               >
                 <div className="form-grid">
                   <div className="form-group">
-                    <label htmlFor="contact-name" className="form-label">Full Name *</label>
+                    <label htmlFor="contact-name" className="form-label">
+                      Full Name *
+                    </label>
                     <input
                       type="text"
                       id="contact-name"
@@ -235,7 +277,9 @@ export default function Contact() {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="contact-email" className="form-label">Email Address *</label>
+                    <label htmlFor="contact-email" className="form-label">
+                      Email Address *
+                    </label>
                     <input
                       type="email"
                       id="contact-email"
@@ -250,7 +294,9 @@ export default function Contact() {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="contact-phone" className="form-label">Phone / WhatsApp</label>
+                    <label htmlFor="contact-phone" className="form-label">
+                      Phone / WhatsApp
+                    </label>
                     <input
                       type="tel"
                       id="contact-phone"
@@ -264,7 +310,9 @@ export default function Contact() {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="contact-company" className="form-label">Company / Organization</label>
+                    <label htmlFor="contact-company" className="form-label">
+                      Company / Organization
+                    </label>
                     <input
                       type="text"
                       id="contact-company"
@@ -279,7 +327,9 @@ export default function Contact() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="contact-projectType" className="form-label">Project Type *</label>
+                  <label htmlFor="contact-projectType" className="form-label">
+                    Project Type *
+                  </label>
                   <select
                     id="contact-projectType"
                     name="projectType"
@@ -289,14 +339,18 @@ export default function Contact() {
                     required
                   >
                     <option value="">Select project type…</option>
-                    {PROJECT_TYPES.map(pt => (
-                      <option key={pt} value={pt}>{pt}</option>
+                    {PROJECT_TYPES.map((pt) => (
+                      <option key={pt} value={pt}>
+                        {pt}
+                      </option>
                     ))}
                   </select>
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="contact-message" className="form-label">Project Details *</label>
+                  <label htmlFor="contact-message" className="form-label">
+                    Project Details *
+                  </label>
                   <textarea
                     id="contact-message"
                     name="message"
@@ -328,7 +382,9 @@ export default function Contact() {
                       Sending…
                     </span>
                   ) : (
-                    <><FiSend size={18} aria-hidden="true" /> Send Message</>
+                    <>
+                      <FiSend size={18} aria-hidden="true" /> Send Message
+                    </>
                   )}
                 </button>
               </form>
