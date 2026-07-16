@@ -2,6 +2,13 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiMap } from 'react-icons/fi';
 import '../styles/legal.css';
+import SEO from '../components/SEO';
+import { buildBreadcrumbs } from '../utils/seo';
+
+const PAGE_SCHEMA = buildBreadcrumbs([
+  { name: 'Home',    path: '/' },
+  { name: 'Sitemap', path: '/sitemap' },
+]);
 
 const SITE_STRUCTURE = [
   {
@@ -61,6 +68,12 @@ export default function SitemapPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
+      <SEO
+        title="Sitemap"
+        description="Full structure of the Clix Digital Works website. Navigate to our services, industry solutions, portfolio, blog, about page, and contact information."
+        canonical="/sitemap"
+        schema={PAGE_SCHEMA}
+      />
       <div className="container">
         <motion.div
           className="legal-header"

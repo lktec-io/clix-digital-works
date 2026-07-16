@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { FiShield } from 'react-icons/fi';
 import COMPANY from '../config/company';
 import '../styles/legal.css';
+import SEO from '../components/SEO';
+import { buildBreadcrumbs } from '../utils/seo';
 
 const SECTIONS = [
   {
@@ -69,6 +71,11 @@ const SECTIONS = [
   },
 ];
 
+const PAGE_SCHEMA = buildBreadcrumbs([
+  { name: 'Home',           path: '/' },
+  { name: 'Privacy Policy', path: '/privacy' },
+]);
+
 export default function PrivacyPage() {
   return (
     <motion.main
@@ -77,6 +84,13 @@ export default function PrivacyPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
+      <SEO
+        title="Privacy Policy"
+        description="Read how Clix Digital Works collects, uses, and protects your personal data. Our privacy policy is transparent about your data rights and how we handle your information securely."
+        canonical="/privacy"
+        schema={PAGE_SCHEMA}
+      />
+
       <div className="container">
         <motion.div
           className="legal-header"

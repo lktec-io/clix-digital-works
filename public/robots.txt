@@ -1,7 +1,29 @@
 User-agent: *
 Allow: /
 
+# Block admin panel from all crawlers
 Disallow: /admin
 Disallow: /admin/
+Disallow: /admin/*
+
+# Block internal API endpoints
+Disallow: /api/
+
+# Allow indexing of sitemap and static assets
+Allow: /sitemap.xml
+Allow: /favicon.svg
+Allow: /og-image.svg
 
 Sitemap: https://clixworks.co.tz/sitemap.xml
+
+# Bing / Yahoo
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+
+# Google Image Bot
+User-agent: Googlebot-Image
+Allow: /og-image.svg
+Allow: /favicon.svg

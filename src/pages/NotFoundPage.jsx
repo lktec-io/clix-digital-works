@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiAlertCircle, FiArrowLeft, FiHome } from 'react-icons/fi';
 import '../styles/notfound.css';
+import SEO from '../components/SEO';
 
 const QUICK_LINKS = [
   { label: 'Services', path: '/services' },
@@ -22,6 +23,12 @@ export default function NotFoundPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
+      <SEO
+        title="Page Not Found"
+        description="The page you're looking for doesn't exist or has been moved. Return to Clix Digital Works to explore our software development services."
+        canonical="/404"
+        noindex={true}
+      />
       <div className="notfound-bg" aria-hidden="true">
         <div className="notfound-glow-1" />
         <div className="notfound-glow-2" />

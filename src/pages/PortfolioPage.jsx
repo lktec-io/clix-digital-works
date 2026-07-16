@@ -4,6 +4,13 @@ import Portfolio from '../sections/Portfolio';
 import Contact from '../sections/Contact';
 import { FiArrowRight } from 'react-icons/fi';
 import '../styles/pages.css';
+import SEO from '../components/SEO';
+import { buildBreadcrumbs } from '../utils/seo';
+
+const PAGE_SCHEMA = buildBreadcrumbs([
+  { name: 'Home',      path: '/' },
+  { name: 'Portfolio', path: '/portfolio' },
+]);
 
 export default function PortfolioPage() {
   return (
@@ -12,6 +19,13 @@ export default function PortfolioPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
+      <SEO
+        title="Our Projects &amp; Case Studies"
+        description="View our showcase of custom websites, mobile apps, management systems, and digital solutions built for clients across Tanzania and East Africa. Real projects, real impact."
+        canonical="/portfolio"
+        schema={PAGE_SCHEMA}
+      />
+
       <div className="page-hero">
         <div className="page-hero-bg" />
         <div className="container">

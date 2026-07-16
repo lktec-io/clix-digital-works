@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { FiFileText } from 'react-icons/fi';
 import COMPANY from '../config/company';
 import '../styles/legal.css';
+import SEO from '../components/SEO';
+import { buildBreadcrumbs } from '../utils/seo';
 
 const SECTIONS = [
   {
@@ -111,6 +113,11 @@ const SECTIONS = [
   },
 ];
 
+const PAGE_SCHEMA = buildBreadcrumbs([
+  { name: 'Home',             path: '/' },
+  { name: 'Terms of Service', path: '/terms' },
+]);
+
 export default function TermsPage() {
   return (
     <motion.main
@@ -119,6 +126,13 @@ export default function TermsPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
+      <SEO
+        title="Terms of Service"
+        description="Clix Digital Works terms of service: understand your rights and obligations when using our website or engaging our software development and digital transformation services."
+        canonical="/terms"
+        schema={PAGE_SCHEMA}
+      />
+
       <div className="container">
         <motion.div
           className="legal-header"

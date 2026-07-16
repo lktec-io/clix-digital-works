@@ -11,6 +11,8 @@ import {
 } from 'react-icons/fi';
 import '../styles/pages.css';
 import '../styles/about.css';
+import SEO from '../components/SEO';
+import { buildBreadcrumbs } from '../utils/seo';
 
 const TEAM = [
   {
@@ -69,6 +71,39 @@ const VALUES = [
   { icon: FiEye, title: 'Transparency', desc: 'We communicate openly about timelines, costs, and challenges.' },
 ];
 
+const PAGE_SCHEMA = [
+  buildBreadcrumbs([
+    { name: 'Home',     path: '/' },
+    { name: 'About Us', path: '/about' },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type':    'AboutPage',
+    name:       'About Clix Digital Works',
+    url:        'https://clixworks.co.tz/about',
+    description: 'Meet the passionate team of engineers, designers, and innovators behind Clix Digital Works, based in Mbeya, Tanzania.',
+    mainEntity: {
+      '@type':       'Organization',
+      '@id':         'https://clixworks.co.tz/#organization',
+      name:          'Clix Digital Works',
+      foundingDate:  '2024',
+      foundingLocation: {
+        '@type':          'Place',
+        name:             'Mbeya, Tanzania',
+        addressCountry:   'TZ',
+      },
+      member: TEAM.map(m => ({
+        '@type':       'OrganizationMember',
+        member: {
+          '@type': 'Person',
+          name:    m.name,
+          jobTitle: m.role,
+        },
+      })),
+    },
+  },
+];
+
 export default function AboutPage() {
   return (
     <motion.main
@@ -76,6 +111,13 @@ export default function AboutPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
+      <SEO
+        title="About Us — Our Team &amp; Story"
+        description="Meet the team behind Clix Digital Works — engineers, designers, and innovators based in Mbeya, Tanzania, committed to building world-class digital products for Africa."
+        canonical="/about"
+        schema={PAGE_SCHEMA}
+      />
+
       <div className="page-hero">
         <div className="page-hero-bg" />
         <div className="container">
@@ -97,7 +139,7 @@ export default function AboutPage() {
       </div>
 
       {/* Story Section */}
-      <section className="section">
+      <section className="section" aria-labelledby="story-heading">
         <div className="container">
           <div className="about-story-grid">
             <motion.div
@@ -107,7 +149,7 @@ export default function AboutPage() {
               transition={{ duration: 0.6 }}
             >
               <span className="section-label">Our Story</span>
-              <h2 className="section-title" style={{ textAlign: 'left' }}>
+              <h2 id="story-heading" className="section-title" style={{ textAlign: 'left' }}>
                 From Mbeya to the<br /><span>Digital World</span>
               </h2>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 'var(--space-lg)' }}>
@@ -152,7 +194,7 @@ export default function AboutPage() {
       </section>
 
       {/* Team */}
-      <section className="section">
+      <section className="section" aria-labelledby="team-heading">
         <div className="container">
           <motion.div
             className="section-header"
@@ -161,7 +203,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
           >
             <span className="section-label">The Team</span>
-            <h2 className="section-title">The People <span>Behind the Code</span></h2>
+            <h2 id="team-heading" className="section-title">The People <span>Behind the Code</span></h2>
             <p className="section-subtitle">Passionate engineers and designers dedicated to your success.</p>
           </motion.div>
 

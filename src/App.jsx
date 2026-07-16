@@ -34,7 +34,7 @@ import AdminNewsletter from './pages/admin/AdminNewsletter';
 import { QuoteModalProvider } from './context/QuoteModalContext';
 import { AdminAuthProvider, useAdminAuth } from './context/AdminAuthContext';
 
-import { initAnalytics } from './utils/analytics';
+import { initAnalytics, trackPageView } from './utils/analytics';
 
 // Scroll to top on route change
 function ScrollReset() {
@@ -42,6 +42,15 @@ function ScrollReset() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
+  return null;
+}
+
+// Fire a GA page_view on every SPA route change
+function RouteAnalytics() {
+  const location = useLocation();
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location.pathname, location.search]);
   return null;
 }
 
@@ -58,6 +67,7 @@ function AppRoutes() {
   return (
     <>
       <ScrollReset />
+      <RouteAnalytics />
 
       {/* Admin routes — no site chrome */}
       {isAdmin ? (

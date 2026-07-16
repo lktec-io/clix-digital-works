@@ -2,88 +2,174 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    <meta name="google-site-verification" content="sIvWPnoBKoGGbcb3llQJfGmt_cqVKanoGhz8tppW9XM" />
+    <!-- ── Favicons ──────────────────────────────────────────────────────────── -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050816" />
+    <meta name="msapplication-TileColor" content="#050816" />
 
-    <!-- Primary Meta Tags -->
-    <title>Clix Digital Works | Software Engineering & Digital Transformation | Mbeya, Tanzania</title>
-    <meta name="title" content="Clix Digital Works | Software Engineering & Digital Transformation | Mbeya, Tanzania" />
-    <meta name="description" content="Clix Digital Works is a software engineering company in Mbeya, Tanzania specializing in custom software, web development, mobile apps, AI solutions, ERP systems, and cybersecurity for businesses, schools, hospitals, churches, and government institutions." />
+    <!-- ── Google Fonts — preload before CSS parses (CWV improvement) ────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+
+    <!-- ── Primary Meta ───────────────────────────────────────────────────────── -->
+    <!-- Title target: 50-60 chars. React SEO component overrides per page. -->
+    <title>Software &amp; App Development, Tanzania | Clix Digital Works</title>
+    <meta name="description" content="Tanzania's leading software engineering company. We build custom software, websites, mobile apps, AI systems, ERP platforms, and cybersecurity solutions." />
     <meta name="keywords" content="software company Tanzania, web development Mbeya, mobile apps Tanzania, ERP system Tanzania, AI solutions, church management system, school management system, SACCO system, accounting software Tanzania, cybersecurity Tanzania" />
     <meta name="author" content="Clix Digital Works" />
     <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://clixworks.co.tz/" />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://clixworks.co.tz/" />
-    <meta property="og:title" content="Clix Digital Works | Software Engineering & Digital Transformation" />
-    <meta property="og:description" content="We build websites, mobile apps, AI systems, ERP solutions, and cybersecurity systems for organizations across Tanzania." />
-    <meta property="og:image" content="https://clixworks.co.tz/og-image.svg" />
+    <!-- ── Open Graph / Facebook ─────────────────────────────────────────────── -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://clixworks.co.tz/" />
+    <meta property="og:title"       content="Software &amp; App Development, Tanzania | Clix Digital Works" />
+    <meta property="og:description" content="Tanzania's leading software engineering company. Custom software, websites, mobile apps, AI systems, ERP platforms, and cybersecurity solutions." />
+    <meta property="og:image"       content="https://clixworks.co.tz/og-image.svg" />
+    <meta property="og:locale"      content="en_TZ" />
+    <meta property="og:site_name"   content="Clix Digital Works" />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://clixworks.co.tz/" />
-    <meta property="twitter:title" content="Clix Digital Works | Software Engineering & Digital Transformation" />
-    <meta property="twitter:description" content="We build websites, mobile apps, AI systems, ERP solutions, and cybersecurity systems for organizations across Tanzania." />
-    <meta property="twitter:image" content="https://clixworks.co.tz/og-image.svg" />
+    <!-- ── Twitter Card (must use name= not property=) ───────────────────────── -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:site"        content="@clixworks_tz" />
+    <meta name="twitter:creator"     content="@clixworks_tz" />
+    <meta name="twitter:url"         content="https://clixworks.co.tz/" />
+    <meta name="twitter:title"       content="Software &amp; App Development, Tanzania | Clix Digital Works" />
+    <meta name="twitter:description" content="Tanzania's leading software engineering company. Custom software, websites, mobile apps, AI systems, ERP platforms, and cybersecurity solutions." />
+    <meta name="twitter:image"       content="https://clixworks.co.tz/og-image.svg" />
 
-    <!-- Structured Data -->
+    <!--
+      ── Webmaster Verification ─────────────────────────────────────────────────
+      Set these in your .env file and they will be injected at runtime via
+      analytics.js → injectVerificationTags(). See src/utils/seo.js.
+        VITE_GSC_VERIFICATION=<your-google-search-console-code>
+        VITE_BING_VERIFICATION=<your-bing-webmaster-code>
+    -->
+
+    <!-- ── Base Structured Data (always present, page-specific injected via SEO.jsx) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Clix Digital Works",
-      "url": "https://clixworks.co.tz",
-      "logo": "https://clixworks.co.tz/favicon.svg",
-      "description": "Software engineering and digital transformation company based in Mbeya, Tanzania.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Mbeya",
-        "addressCountry": "TZ"
-      },
-      "contactPoint": [
+      "@graph": [
         {
-          "@type": "ContactPoint",
-          "contactType": "customer service",
-          "telephone": "+255674022265",
-          "email": "info@clixworks.co.tz"
+          "@type": "Organization",
+          "@id": "https://clixworks.co.tz/#organization",
+          "name": "Clix Digital Works",
+          "url": "https://clixworks.co.tz",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://clixworks.co.tz/favicon.svg",
+            "width": 512,
+            "height": 512
+          },
+          "image": "https://clixworks.co.tz/og-image.svg",
+          "description": "Software engineering and digital transformation company based in Mbeya, Tanzania. We build custom software, websites, mobile apps, AI systems, ERP platforms, and cybersecurity solutions.",
+          "foundingDate": "2024",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Mbeya",
+            "addressRegion": "Mbeya Region",
+            "addressCountry": "TZ",
+            "addressCountryName": "Tanzania"
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "contactType": "customer service",
+              "telephone": "+255-674-022-265",
+              "email": "info@clixworks.co.tz",
+              "availableLanguage": ["English", "Swahili"]
+            },
+            {
+              "@type": "ContactPoint",
+              "contactType": "sales",
+              "telephone": "+255-794-987-520",
+              "email": "info@clixworks.co.tz",
+              "availableLanguage": ["English", "Swahili"]
+            }
+          ],
+          "sameAs": [
+            "https://facebook.com/clixworks.tz",
+            "https://twitter.com/clixworks_tz",
+            "https://linkedin.com/company/clix-digital-works",
+            "https://instagram.com/clixworks.tz",
+            "https://youtube.com/@clixdigitalworks"
+          ]
         },
         {
-          "@type": "ContactPoint",
-          "contactType": "sales",
-          "telephone": "+255794987520",
-          "email": "info@clixworks.co.tz"
+          "@type": "LocalBusiness",
+          "@id": "https://clixworks.co.tz/#localbusiness",
+          "name": "Clix Digital Works",
+          "url": "https://clixworks.co.tz",
+          "telephone": "+255674022265",
+          "email": "info@clixworks.co.tz",
+          "image": "https://clixworks.co.tz/og-image.svg",
+          "description": "Custom software, website development, mobile apps, AI, ERP, and cybersecurity company in Mbeya, Tanzania.",
+          "priceRange": "$$",
+          "currenciesAccepted": "TZS, USD",
+          "paymentAccepted": "Cash, M-Pesa, Bank Transfer",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Mbeya",
+            "addressRegion": "Mbeya Region",
+            "addressCountry": "TZ"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": -8.9,
+            "longitude": 33.46
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "Tanzania"
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "08:00",
+              "closes": "18:00"
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Sunday"],
+              "opens": "08:00",
+              "closes": "14:00"
+            }
+          ],
+          "parentOrganization": {
+            "@id": "https://clixworks.co.tz/#organization"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://clixworks.co.tz/#website",
+          "url": "https://clixworks.co.tz",
+          "name": "Clix Digital Works",
+          "description": "Software engineering and digital transformation company in Mbeya, Tanzania.",
+          "inLanguage": "en-TZ",
+          "publisher": {
+            "@id": "https://clixworks.co.tz/#organization"
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://clixworks.co.tz/?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
         }
-      ],
-      "sameAs": [
-        "https://facebook.com/clixworks.tz",
-        "https://twitter.com/clixworks_tz",
-        "https://linkedin.com/company/clix-digital-works"
       ]
     }
     </script>
-
-    <!-- Preconnect for fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QWS1WMX4ZS"></script>
-
-<script>
-window.dataLayer = window.dataLayer || [];
-
-function gtag(){
-  dataLayer.push(arguments);
-}
-
-gtag('js', new Date());
-
-gtag('config', 'G-QWS1WMX4ZS');
-</script>
 </html>
