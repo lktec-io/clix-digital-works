@@ -13,8 +13,7 @@
     <!-- ── Google Fonts — preload before CSS parses (CWV improvement) ────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" />
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" fetchpriority="high" />
     <!-- ── Primary Meta ───────────────────────────────────────────────────────── -->
     <!-- Title target: 50-60 chars. React SEO component overrides per page. -->
     <title>Software &amp; App Development, Tanzania | Clix Digital Works</title>
@@ -170,6 +169,19 @@
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <style>body { cursor: auto; }</style>
+      <div style="font-family:sans-serif;text-align:center;padding:4rem 2rem;max-width:600px;margin:0 auto">
+        <h1>JavaScript Required</h1>
+        <p style="margin-top:1rem;color:#666">
+          Clix Digital Works requires JavaScript to run. Please enable JavaScript in your browser settings and reload the page.
+        </p>
+        <p style="margin-top:1rem">
+          <a href="https://clixworks.co.tz" style="color:#39FF14">clixworks.co.tz</a> &middot;
+          <a href="mailto:info@clixworks.co.tz" style="color:#39FF14">info@clixworks.co.tz</a>
+        </p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

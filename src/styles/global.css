@@ -20,11 +20,52 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   max-width: 100%;
-  cursor: none;
+}
+
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
 }
 
 body.loading {
   overflow: hidden;
+}
+
+/* ===== SKIP NAVIGATION ===== */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.75rem 1.5rem;
+  background: var(--bg);
+  color: var(--text-primary);
+  border: 2px solid var(--secondary);
+  border-radius: var(--radius-md, 8px);
+  z-index: 99999;
+  font-weight: 600;
+  font-size: var(--fs-base);
+  text-decoration: none;
+  overflow: visible;
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+}
+
+/* ===== FOCUS INDICATORS ===== */
+:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 
 ::selection {
@@ -51,10 +92,15 @@ a {
 }
 
 button {
-  cursor: none;
   border: none;
   background: none;
   font-family: var(--font-primary);
+}
+
+@media (pointer: fine) {
+  button {
+    cursor: none;
+  }
 }
 
 input, textarea, select {
@@ -150,8 +196,13 @@ ul, ol {
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
-  cursor: none;
   white-space: nowrap;
+}
+
+@media (pointer: fine) {
+  .btn {
+    cursor: none;
+  }
 }
 
 .btn::before {

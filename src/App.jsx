@@ -80,22 +80,25 @@ function AppRoutes() {
         </Routes>
       ) : (
         <>
+          <a href="#main-content" className="skip-link">Skip to main content</a>
           <Navbar />
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route path="/"          element={<Home />} />
-              <Route path="/services"  element={<ServicesPage />} />
-              <Route path="/solutions" element={<SolutionsPage />} />
-              <Route path="/portfolio" element={<PortfolioPage />} />
-              <Route path="/about"     element={<AboutPage />} />
-              <Route path="/blog"      element={<BlogPage />} />
-              <Route path="/contact"   element={<ContactPage />} />
-              <Route path="/privacy"   element={<PrivacyPage />} />
-              <Route path="/terms"     element={<TermsPage />} />
-              <Route path="/sitemap"   element={<SitemapPage />} />
-              <Route path="*"          element={<NotFoundPage />} />
-            </Routes>
-          </AnimatePresence>
+          <main id="main-content" tabIndex={-1}>
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
+                <Route path="/"          element={<Home />} />
+                <Route path="/services"  element={<ServicesPage />} />
+                <Route path="/solutions" element={<SolutionsPage />} />
+                <Route path="/portfolio" element={<PortfolioPage />} />
+                <Route path="/about"     element={<AboutPage />} />
+                <Route path="/blog"      element={<BlogPage />} />
+                <Route path="/contact"   element={<ContactPage />} />
+                <Route path="/privacy"   element={<PrivacyPage />} />
+                <Route path="/terms"     element={<TermsPage />} />
+                <Route path="/sitemap"   element={<SitemapPage />} />
+                <Route path="*"          element={<NotFoundPage />} />
+              </Routes>
+            </AnimatePresence>
+          </main>
           <NewsletterBanner />
           <Footer />
           <ScrollToTop />
