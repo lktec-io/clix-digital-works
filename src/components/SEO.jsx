@@ -62,7 +62,7 @@ export default function SEO({
   useEffect(() => {
     const fullTitle = title
       ? `${title} | ${SITE_NAME}`
-      : `${SITE_NAME} | Software & App Development, Tanzania`;
+      : `${SITE_NAME} Clix Digital Works | Software & App Development, Tanzania`;
 
     const desc = description || DEFAULT_DESCRIPTION;
     const path  = canonical != null ? canonical : location.pathname;
