@@ -125,14 +125,63 @@ ul, ol {
   padding: 0 var(--space-xl);
 }
 
+/* Ensure the main content landmark fills width without overflow */
+#main-content {
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--space-md);
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding: 0 var(--space-sm);
+  }
+}
+
 .section {
   padding: var(--space-5xl) 0;
   position: relative;
 }
 
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-4xl) 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: var(--space-3xl) 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .section {
+    padding: var(--space-2xl) 0;
+  }
+}
+
 .section-header {
   text-align: center;
   margin-bottom: var(--space-4xl);
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    margin-bottom: var(--space-3xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .section-header {
+    margin-bottom: var(--space-2xl);
+  }
 }
 
 .section-label {

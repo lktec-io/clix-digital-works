@@ -174,3 +174,20 @@
     font-size: var(--fs-xs);
   }
 }
+
+@media (max-width: 480px) {
+  .tech-category {
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 360px) {
+  .tech-category {
+    padding: var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .tech-trust {
+    padding: var(--space-md);
+  }
+}

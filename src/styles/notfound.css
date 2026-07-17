@@ -130,3 +130,30 @@
   border-color: rgba(0, 229, 255, 0.3);
   background: rgba(0, 229, 255, 0.05);
 }
+
+/* Responsive */
+@media (max-width: 480px) {
+  .notfound-page {
+    padding: var(--space-2xl) var(--space-md);
+  }
+
+  .notfound-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .notfound-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .notfound-page {
+    padding: var(--space-xl) var(--space-sm);
+  }
+
+  .notfound-content {
+    gap: var(--space-lg);
+  }
+}

@@ -21,7 +21,13 @@
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all var(--transition-fast);
-  cursor: none;
+  min-height: 44px;
+}
+
+@media (pointer: fine) {
+  .filter-btn {
+    cursor: none;
+  }
 }
 
 .filter-btn:hover {
@@ -130,7 +136,12 @@
   opacity: 0;
   transition: all var(--transition-fast);
   z-index: 3;
-  cursor: none;
+}
+
+@media (pointer: fine) {
+  .portfolio-preview-btn {
+    cursor: none;
+  }
 }
 
 .portfolio-card:hover .portfolio-preview-btn {
@@ -216,5 +227,31 @@
 @media (max-width: 600px) {
   .portfolio-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-card-body {
+    padding: var(--space-lg);
+  }
+
+  .portfolio-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .portfolio-cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .portfolio-card-body {
+    padding: var(--space-md);
+  }
+
+  .portfolio-filters {
+    gap: var(--space-xs);
   }
 }

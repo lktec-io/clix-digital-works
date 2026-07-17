@@ -181,6 +181,7 @@
   line-height: 1.6;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -204,5 +205,29 @@
 @media (max-width: 600px) {
   .blog-card {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-card-body {
+    padding: var(--space-lg);
+  }
+
+  .blog-title {
+    font-size: var(--fs-lg);
+  }
+
+  .featured-title {
+    font-size: var(--fs-xl);
+  }
+}
+
+@media (max-width: 360px) {
+  .blog-card-body {
+    padding: var(--space-md);
+  }
+
+  .blog-card {
+    padding: var(--space-md);
   }
 }
