@@ -1,10 +1,28 @@
-/* Poppins is loaded via <link> in index.html for better Core Web Vitals */
+/* Nunito is loaded via <link> in index.html for better Core Web Vitals */
 @import './variables.css';
 
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* ===== GLOBAL TYPOGRAPHY ENFORCEMENT =====
+   Every text surface resolves to Nunito via --font-primary. Form controls and
+   buttons are listed explicitly because UA stylesheets do not inherit font
+   from body. Decorative exceptions (.code-line monospace, the Georgia quote
+   glyph in testimonials) intentionally override this below. */
+body,
+h1, h2, h3, h4, h5, h6,
+p, span, li, a, label, blockquote, figcaption,
+button, input, textarea, select, optgroup,
+.btn, .glass-card, .card, .badge {
+  font-family: var(--font-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
 }
 
 html {
@@ -130,6 +148,10 @@ ul, ol {
   width: 100%;
   min-width: 0;
   overflow-x: hidden;
+  /* Scroll anchoring keeps an on-screen element pinned when content above it
+     changes height. During a route swap the whole subtree is replaced, so the
+     browser "helpfully" restores an offset mid-page. See ScrollReset.jsx. */
+  overflow-anchor: none;
 }
 
 @media (max-width: 480px) {

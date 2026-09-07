@@ -7,6 +7,7 @@ import LoadingScreen          from './components/LoadingScreen';
 import CustomCursor           from './components/CustomCursor';
 import ScrollProgress         from './components/ScrollProgress';
 import ScrollToTop            from './components/ScrollToTop';
+import ScrollReset            from './components/ScrollReset';
 import ParticleBackground     from './components/ParticleBackground';
 import Navbar                 from './components/Navbar';
 import Footer                 from './components/Footer';
@@ -35,15 +36,6 @@ import { QuoteModalProvider } from './context/QuoteModalContext';
 import { AdminAuthProvider, useAdminAuth } from './context/AdminAuthContext';
 
 import { initAnalytics, trackPageView } from './utils/analytics';
-
-// Scroll to top on route change
-function ScrollReset() {
-  const location = useLocation();
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [location.pathname]);
-  return null;
-}
 
 // Fire a GA page_view on every SPA route change
 function RouteAnalytics() {

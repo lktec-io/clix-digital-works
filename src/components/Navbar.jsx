@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX, FiArrowRight } from 'react-icons/fi';
+import { Menu, X, ArrowRight } from 'lucide-react';
 import Logo from './Logo';
+import Sidebar from './Sidebar';
 import '../styles/navbar.css';
 
 const navLinks = [
@@ -26,17 +27,18 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
+  // Sidebar owns its own body-scroll lock; the navbar only owns open/closed.
+  // Closing on route change is derived during render rather than in an effect,
+  // so the drawer never paints once against the new route (covers back/forward
+  // navigation too, not just clicks inside the drawer).
+  const [lastPath, setLastPath] = useState(location.pathname);
+  if (location.pathname !== lastPath) {
+    setLastPath(location.pathname);
     setMobileOpen(false);
-    document.body.style.overflow = '';
-  }, [location]);
+  }
 
-  const toggleMobile = () => {
-    setMobileOpen(prev => {
-      document.body.style.overflow = !prev ? 'hidden' : '';
-      return !prev;
-    });
-  };
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+  const toggleMobile = () => setMobileOpen(prev => !prev);
 
   return (
     <>
@@ -77,7 +79,7 @@ export default function Navbar() {
               Get Quote
             </Link>
             <Link to="/contact" className="btn btn-primary btn-sm">
-              Let's Talk <FiArrowRight size={16} />
+              Let's Talk <ArrowRight size={16} />
             </Link>
           </div>
 
@@ -87,16 +89,16 @@ export default function Navbar() {
             onClick={toggleMobile}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
-            aria-controls="mobile-menu"
+            aria-controls="premium-sidebar"
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               {mobileOpen ? (
                 <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                  <FiX size={24} />
+                  <X size={24} />
                 </motion.span>
               ) : (
                 <motion.span key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                  <FiMenu size={24} />
+                  <Menu size={24} />
                 </motion.span>
               )}
             </AnimatePresence>
@@ -104,48 +106,8 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            id="mobile-menu"
-            className="mobile-menu"
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-          >
-            <div className="mobile-menu-inner">
-              <ul className="mobile-links" role="list">
-                {navLinks.map((link, i) => (
-                  <motion.li
-                    key={link.path}
-                    initial={{ opacity: 0, x: 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.07 }}
-                  >
-                    <Link
-                      to={link.path}
-                      className={`mobile-link ${location.pathname === link.path ? 'active' : ''}`}
-                    >
-                      {link.label}
-                    </Link>
-                  </motion.li>
-                ))}
-              </ul>
-
-              <div className="mobile-cta">
-                <Link to="/contact" className="btn btn-outline" style={{ width: '100%', justifyContent: 'center' }}>
-                  Get Quote
-                </Link>
-                <Link to="/contact" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                  Let's Talk <FiArrowRight size={16} />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Premium responsive navigation drawer */}
+      <Sidebar open={mobileOpen} onClose={closeMobile} />
     </>
   );
 }
