@@ -31,6 +31,13 @@ import AdminDashboard  from './pages/admin/AdminDashboard';
 import AdminContacts   from './pages/admin/AdminContacts';
 import AdminQuotes     from './pages/admin/AdminQuotes';
 import AdminNewsletter from './pages/admin/AdminNewsletter';
+import AdminClients            from './pages/admin/crm/AdminClients';
+import AdminClientDetail       from './pages/admin/crm/AdminClientDetail';
+import AdminProjects           from './pages/admin/crm/AdminProjects';
+import AdminFollowUps          from './pages/admin/crm/AdminFollowUps';
+import AdminPayments           from './pages/admin/crm/AdminPayments';
+import AdminCardHubEvents      from './pages/admin/crm/AdminCardHubEvents';
+import AdminCardHubEventDetail from './pages/admin/crm/AdminCardHubEventDetail';
 
 import { QuoteModalProvider } from './context/QuoteModalContext';
 import { AdminAuthProvider, useAdminAuth } from './context/AdminAuthContext';
@@ -69,6 +76,15 @@ function AppRoutes() {
           <Route path="/admin/contacts" element={<AdminGuard><AdminContacts /></AdminGuard>} />
           <Route path="/admin/quotes" element={<AdminGuard><AdminQuotes /></AdminGuard>} />
           <Route path="/admin/newsletter" element={<AdminGuard><AdminNewsletter /></AdminGuard>} />
+          <Route path="/admin/clients" element={<AdminGuard><AdminClients /></AdminGuard>} />
+          <Route path="/admin/clients/:id" element={<AdminGuard><AdminClientDetail /></AdminGuard>} />
+          <Route path="/admin/projects" element={<AdminGuard><AdminProjects /></AdminGuard>} />
+          <Route path="/admin/follow-ups" element={<AdminGuard><AdminFollowUps /></AdminGuard>} />
+          <Route path="/admin/payments" element={<AdminGuard><AdminPayments /></AdminGuard>} />
+          <Route path="/admin/cardhub/upcoming" element={<AdminGuard><AdminCardHubEvents key="upcoming" defaultView="upcoming" /></AdminGuard>} />
+          <Route path="/admin/cardhub/events" element={<AdminGuard><AdminCardHubEvents key="all" defaultView="all" /></AdminGuard>} />
+          <Route path="/admin/cardhub/events/:id" element={<AdminGuard><AdminCardHubEventDetail /></AdminGuard>} />
+          <Route path="/admin/cardhub/customers" element={<AdminGuard><AdminClients mode="cardhub" /></AdminGuard>} />
         </Routes>
       ) : (
         <>

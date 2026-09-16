@@ -9,6 +9,7 @@ import { contactRouter }    from './routes/contact.js';
 import { quotesRouter }     from './routes/quotes.js';
 import { newsletterRouter } from './routes/newsletter.js';
 import { adminRouter }      from './routes/admin.js';
+import { crmRouter }        from './routes/crm/index.js';
 import { runMigrations }    from './db/migrate.js';
 
 dotenv.config({
@@ -54,6 +55,7 @@ app.use('/api/contact',    contactRouter);
 app.use('/api/quotes',     quotesRouter);
 app.use('/api/newsletter', newsletterRouter);
 app.use('/api/admin',      adminRouter);
+app.use('/api/admin',      crmRouter);   // CRM + CardHub management (all routes require admin auth)
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

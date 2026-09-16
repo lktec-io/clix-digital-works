@@ -1,4 +1,5 @@
 import pool from './connection.js';
+import { runCrmMigrations } from './migrations/crm.js';
 
 async function hasColumn(table, column) {
   const [rows] = await pool.execute(
@@ -92,6 +93,10 @@ export async function runMigrations() {
   await addIfMissing('newsletter_subscribers', 'unsubscribe_token', "VARCHAR(64) UNIQUE");
   await addIfMissing('newsletter_subscribers', 'subscribed_at',     "TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
   await addIfMissing('newsletter_subscribers', 'unsubscribed_at',   "TIMESTAMP NULL");
+
+  // ── CRM + CardHub management (additive; runs after the tables above so a
+  //    failure here can never block the existing site tables) ────────────────
+  await runCrmMigrations(pool);
 
   console.log('[migrate] Schema up to date.');
 }

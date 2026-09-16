@@ -11,6 +11,16 @@ export const API = {
   adminQuotes:         `${BASE}/api/admin/quotes`,
   adminNewsletter:     `${BASE}/api/admin/newsletter`,
   newsletterExport:    `${BASE}/api/newsletter/export`,
+
+  // CRM + CardHub management (admin-only)
+  crmOptions:          `${BASE}/api/admin/crm/options`,
+  crmDashboard:        `${BASE}/api/admin/crm/dashboard`,
+  crmSearch:           `${BASE}/api/admin/crm/search`,
+  clients:             `${BASE}/api/admin/clients`,
+  projects:            `${BASE}/api/admin/projects`,
+  followUps:           `${BASE}/api/admin/follow-ups`,
+  cardhubEvents:       `${BASE}/api/admin/cardhub/events`,
+  payments:            `${BASE}/api/admin/payments`,
 };
 
 export async function apiFetch(url, options = {}) {
@@ -21,6 +31,12 @@ export async function apiFetch(url, options = {}) {
   const res = await fetch(url, { ...options, headers });
   const data = await res.json().catch(() => ({}));
 
-  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+  if (!res.ok) {
+    const err = new Error(data.error || `Request failed (${res.status})`);
+    // Additive: callers that only read err.message are unaffected.
+    err.status = res.status;
+    err.details = data.details || [];
+    throw err;
+  }
   return data;
 }

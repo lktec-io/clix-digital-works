@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { FiGrid, FiMail, FiFileText, FiUsers, FiLogOut, FiExternalLink, FiMenu, FiX } from 'react-icons/fi';
+import {
+  FiGrid, FiMail, FiFileText, FiUsers, FiLogOut, FiExternalLink, FiMenu, FiX,
+  FiUserCheck, FiBriefcase, FiCalendar, FiDollarSign, FiGift, FiList, FiHeart,
+} from 'react-icons/fi';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import '../../styles/admin.css';
 
@@ -9,6 +12,27 @@ const NAV = [
   { to: '/admin/contacts',   label: 'Contacts',   icon: FiMail },
   { to: '/admin/quotes',     label: 'Quotes',     icon: FiFileText },
   { to: '/admin/newsletter', label: 'Newsletter', icon: FiUsers },
+];
+
+// Client pipeline stages (Leads, Prospects…) are filter tabs on the Clients
+// page rather than seven separate sidebar links, keeping the sidebar short.
+const NAV_CRM = [
+  { to: '/admin/clients',    label: 'Clients',    icon: FiUserCheck },
+  { to: '/admin/projects',   label: 'Projects',   icon: FiBriefcase },
+  { to: '/admin/follow-ups', label: 'Follow-ups', icon: FiCalendar },
+  { to: '/admin/payments',   label: 'Payments',   icon: FiDollarSign },
+];
+
+const NAV_CARDHUB = [
+  { to: '/admin/cardhub/upcoming',  label: 'Upcoming Events', icon: FiGift },
+  { to: '/admin/cardhub/events',    label: 'All Events',      icon: FiList },
+  { to: '/admin/cardhub/customers', label: 'Customers',       icon: FiHeart },
+];
+
+const NAV_GROUPS = [
+  { label: 'Main', items: NAV },
+  { label: 'Clients', items: NAV_CRM },
+  { label: 'CardHub', items: NAV_CARDHUB },
 ];
 
 export default function AdminLayout({ children, title }) {
@@ -61,17 +85,21 @@ export default function AdminLayout({ children, title }) {
         </div>
 
         <nav className="admin-nav" aria-label="Admin navigation">
-          <span className="admin-nav-label">Main</span>
-          {NAV.map(({ to, label, icon: Icon, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) => `admin-nav-link${isActive ? ' active' : ''}`}
-            >
-              <Icon size={16} />
-              {label}
-            </NavLink>
+          {NAV_GROUPS.map(group => (
+            <Fragment key={group.label}>
+              <span className="admin-nav-label">{group.label}</span>
+              {group.items.map(({ to, label, icon: Icon, end }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={end}
+                  className={({ isActive }) => `admin-nav-link${isActive ? ' active' : ''}`}
+                >
+                  <Icon size={16} />
+                  {label}
+                </NavLink>
+              ))}
+            </Fragment>
           ))}
           <span className="admin-nav-label">Site</span>
           <a className="admin-nav-link" href="/" target="_blank" rel="noopener noreferrer">

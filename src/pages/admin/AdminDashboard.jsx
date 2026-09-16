@@ -4,6 +4,7 @@ import { FiMail, FiFileText, FiUsers, FiTrendingUp } from 'react-icons/fi';
 import AdminLayout from './AdminLayout';
 import { API, apiFetch } from '../../config/api';
 import { SkeletonCard } from '../../components/Skeleton';
+import CrmDashboardSection from '../../components/admin/crm/CrmDashboardSection';
 
 function StatCard({ label, value, sub, icon: Icon, color }) {
   return (
@@ -114,6 +115,11 @@ export default function AdminDashboard() {
           </div>
         </>
       )}
+
+      {/* CRM + CardHub — loads independently of the website-lead stats above */}
+      <div style={{ marginTop: 'var(--space-2xl)' }}>
+        <CrmDashboardSection />
+      </div>
     </AdminLayout>
   );
 }
