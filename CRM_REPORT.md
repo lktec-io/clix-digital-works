@@ -161,3 +161,21 @@ pm2 logs <clix-api-process-name> --lines 30
 ```
 
 The database user needs `CREATE` and `REFERENCES` privileges for the first boot (table creation with foreign keys).
+
+---
+
+## 10. UX simplification pass (17 Sep 2026)
+
+Goal: a partner with no technical background can use it from a phone. No features removed; API behaviour unchanged (one additive change: the dashboard's upcoming-events rows now include `number_of_cards`, `total_price`, `amount_paid`).
+
+- **Forms:** Add Client needs only a name (phone recommended); follow-up date, reason and notes are optional in the same step; everything else is behind "Add more details" (auto-opens on edit or on an error). Follow-up = Client, Reason, Date with one-tap Tomorrow / In 3 days / Next week / Next month. Payment form shows Current balance / This payment / Remaining live (server validation unchanged). Optional fields are labelled "(optional)".
+- **Defaults:** client Lead / Medium / source Other; project Planned; event New; follow-up Pending + Medium; payment date today, method M-Pesa.
+- **Swahili helpers** (short, subtle, only where terms can confuse): status, priority, next follow-up date, expected start, budget, total price, amount paid, balance, event date, expected guests, payment reference, source; one-line Swahili explanation of the selected status; helpful empty states.
+- **Actions:** one primary action per screen (Add Follow-up on a client, Record Payment on an event/project, Complete on a follow-up); secondary actions in a "More" menu; consistent labels (Add Client, Save Client, Add Follow-up, Complete, Reschedule, Record Payment, Update Event).
+- **Dashboard:** 4 actionable KPIs (Clients, Follow up today + overdue, Events in 30 days + balances due, Outstanding TZS) replace the alert list; overdue + today follow-ups merged into one panel; projects starting soon; CardHub next 30 days; compact pipeline; Add Client button.
+- **Client page:** name, status, phone/WhatsApp/email, then Next follow-up / Owes / Needs, then actions and status. Sections are tabs on desktop and a dropdown on phones.
+- **Lists:** phone cards show only what matters with Add Follow-up + View; filters behind a [Filter] button on phones; CardHub date tabs reduced to 6 (past/cancelled/all under Filter); Projects list shows Total / Paid / Balance directly; empty detail values are hidden.
+- **Mobile:** 44px buttons/inputs on phones and touch screens, bottom-sheet modals, menus that stay on screen.
+- **Radius:** admin-only token override (`.admin-app`, `.admin-login-page`, CRM modals): 4px controls/cards/modals, 2–3px small elements and badges; hardcoded 10px/9px/6px admin values fixed. Public website unchanged (verified: still 9999px buttons / 20px cards).
+
+Verification: API 86/86; lint unchanged at the pre-CRM baseline; build passes; headless Chrome at 320–1280px on 14 routes (incl. Contacts, Quotes, Newsletter): body scroll width = viewport, no clipping, no touch target under 40px on phones, no radius above 4px, no console errors; the five mobile flows pass (clicks: add client 2, follow-up add+complete 5, project + payment 4, event + payment 6, search + status 2).

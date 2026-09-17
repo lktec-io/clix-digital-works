@@ -3,7 +3,7 @@ import AdminLayout from '../AdminLayout';
 import { API } from '../../../config/api';
 import { useApi, useCrmOptions, useDialog, useQueryFilters } from '../../../hooks/useCrm';
 import { qs } from '../../../utils/crm';
-import { DataView, FilterTabs, Pagination, SearchBox, Select } from '../../../components/admin/crm/ui';
+import { DataView, FilterTabs, Pagination, SearchBox, Select, Toolbar } from '../../../components/admin/crm/ui';
 import { FollowUpDialogs, FollowUpRow } from '../../../components/admin/crm/lists';
 import { FollowUpForm } from '../../../components/admin/crm/forms';
 
@@ -13,14 +13,14 @@ const VIEWS = [
   { value: 'today', label: 'Today' },
   { value: 'overdue', label: 'Overdue' },
   { value: 'upcoming', label: 'Upcoming' },
-  { value: 'completed', label: 'Completed' },
+  { value: 'completed', label: 'Done' },
 ];
 
 const EMPTY = {
-  today: 'No follow-ups today.',
-  overdue: 'Nothing overdue. Well done.',
-  upcoming: 'No upcoming follow-ups.',
-  completed: 'No completed follow-ups yet.',
+  today:     ['No follow-ups today.', 'Kwa sasa huna mteja wa kumfuatilia leo.'],
+  overdue:   ['Nothing overdue.', 'Hakuna ufuatiliaji uliopitwa na tarehe.'],
+  upcoming:  ['No upcoming follow-ups.', 'Ongeza ufuatiliaji ili usimsahau mteja.'],
+  completed: ['No completed follow-ups yet.', null],
 };
 
 export default function AdminFollowUps() {
@@ -33,28 +33,41 @@ export default function AdminFollowUps() {
   );
   const rows = data?.data || [];
   const today = data?.today || options?.today;
+  const filtered = Boolean(f.search || f.priority);
+  const [emptyText, emptySw] = EMPTY[f.view] || ['No follow-ups.', null];
+
+  const addButton = (
+    <button type="button" className="crm-btn crm-btn-primary" onClick={() => open('new')}>
+      <FiPlus size={14} aria-hidden="true" /> Add Follow-up
+    </button>
+  );
 
   return (
     <AdminLayout title="Follow-ups">
       <div className="crm-page-head">
         <div>
           <h2>Follow-ups</h2>
-          <p>Reminders so no potential client is forgotten.</p>
+          <p>Who to call or message, and when — so no client is forgotten.</p>
         </div>
-        <div className="crm-page-actions">
-          <button type="button" className="crm-btn crm-btn-primary" onClick={() => open('new')}><FiPlus size={14} /> New follow-up</button>
-        </div>
+        <div className="crm-page-actions">{addButton}</div>
       </div>
 
       <div className="admin-table-card">
-        <FilterTabs tabs={VIEWS} value={f.view} onChange={view => update({ view })} counts={data?.view_counts} label="Follow-up view" />
-        <div className="crm-toolbar">
-          <SearchBox value={f.search} onSearch={search => update({ search })} placeholder="Client, phone or title…" />
+        <FilterTabs tabs={VIEWS} value={f.view} onChange={view => update({ view })} counts={data?.view_counts} label="Follow-ups to show" />
+        <Toolbar
+          activeCount={f.priority ? 1 : 0}
+          search={<SearchBox value={f.search} onSearch={search => update({ search })} placeholder="Search client, phone or reason…" label="Search follow-ups" />}
+        >
           <Select aria-label="Priority" value={f.priority} onChange={priority => update({ priority })} options={options?.priorities} placeholder="Any priority" />
-        </div>
+        </Toolbar>
 
-        <DataView loading={loading} error={error} data={data} isEmpty={!rows.length} what="follow-ups" onRetry={reload}
-          empty={f.search || f.priority ? 'No follow-ups match these filters.' : EMPTY[f.view] || 'No follow-ups.'} cols={4}>
+        <DataView
+          loading={loading} error={error} data={data} isEmpty={!rows.length} what="follow-ups" onRetry={reload}
+          empty={filtered ? 'No follow-ups match your search.' : emptyText}
+          emptySw={filtered ? undefined : emptySw}
+          emptyAction={!filtered && f.view !== 'completed' ? addButton : undefined}
+          cols={4}
+        >
           <ul className="crm-rows">
             {rows.map(item => <FollowUpRow key={item.id} item={item} today={today} onAction={open} />)}
           </ul>

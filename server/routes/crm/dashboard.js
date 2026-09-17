@@ -90,8 +90,8 @@ dashboardRouter.get('/crm/dashboard', route('crm dashboard', async (req, res) =>
     followUpList('f.due_date < ?', [today], 'f.due_date ASC, f.id ASC'),
     followUpList('f.due_date > ? AND f.due_date <= ?', [today, followUpUntil], 'f.due_date ASC, f.id ASC'),
     crmQuery(
-      `SELECT e.id, e.client_id, e.event_type, e.event_name, e.event_date, e.event_location,
-              e.status, e.payment_status, e.balance, c.full_name AS client_name
+      `SELECT e.id, e.client_id, e.event_type, e.event_name, e.event_date, e.event_location, e.number_of_cards,
+              e.status, e.payment_status, e.total_price, e.amount_paid, e.balance, c.full_name AS client_name
        FROM cardhub_events e JOIN clients c ON c.id = e.client_id
        WHERE e.archived_at IS NULL AND e.status NOT IN (${CLOSED_EV}) AND e.event_date BETWEEN ? AND ?
        ORDER BY e.event_date ASC, e.id ASC LIMIT ${WIDGET_LIMIT}`,

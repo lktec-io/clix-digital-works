@@ -2,25 +2,34 @@ import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { API, apiFetch } from '../../../config/api';
 import { useFormState, useMutation, useSessionGuard } from '../../../hooks/useCrm';
-import { fieldErrors, labelFor, qs } from '../../../utils/crm';
-import { Modal, Field, Select, FormSection, FormError } from './ui';
+import { fieldErrors, labelFor, qs, STATUS_HELP, SW } from '../../../utils/crm';
+import { Modal, Field, Select, FormSection, FormError, MoreDetails } from './ui';
 
 const EMPTY = {
   full_name: '', phone: '', email: '', company: '', location: '', city: '', region: '',
-  source: 'whatsapp', status: 'lead', priority: 'medium',
+  // Safe defaults: a new person is a Lead with normal priority. Source stays
+  // neutral ("Other") rather than guessing where they came from.
+  source: 'other', status: 'lead', priority: 'medium',
   interested_service: '', estimated_budget: '', expected_start_date: '',
   next_follow_up_date: '', next_follow_up_title: '', initial_note: '',
 };
+
+/** Fields that live behind "Add more details". */
+const DETAIL_FIELDS = [
+  'email', 'company', 'location', 'city', 'region', 'source', 'status', 'priority',
+  'interested_service', 'estimated_budget', 'expected_start_date',
+];
 
 const fromClient = c => Object.fromEntries(
   Object.keys(EMPTY).map(k => [k, c?.[k] === null || c?.[k] === undefined ? EMPTY[k] : String(c[k])]),
 );
 
 /**
- * Create / edit a client. On create it can also record an opening note and
- * schedule the first follow-up in the same transaction. Possible duplicates
- * (same phone or email) are shown as a warning only — family members and
- * businesses legitimately share contact details.
+ * Add / edit a client. Adding needs only a name (phone recommended); a
+ * follow-up date and a note can be captured in the same step so the person is
+ * never forgotten. Everything else is optional and tucked behind
+ * "Add more details". Possible duplicates (same phone or email) are shown as a
+ * warning only — family members and businesses legitimately share contacts.
  */
 export default function ClientForm({ client, initial, options, onClose, onSaved }) {
   const isEdit = Boolean(client?.id);
@@ -28,9 +37,11 @@ export default function ClientForm({ client, initial, options, onClose, onSaved 
   const { values, set, bind } = useFormState(() => fromClient(client || initial));
   const { run, busy, error } = useMutation();
   const [duplicates, setDuplicates] = useState([]);
+  const [showMore, setShowMore] = useState(isEdit);
   const guard = useSessionGuard();
 
   const errors = fieldErrors(error);
+  const detailsOpen = showMore || DETAIL_FIELDS.some(f => errors[f]);
 
   const checkDuplicates = async () => {
     const phone = values.phone.trim();
@@ -63,14 +74,14 @@ export default function ClientForm({ client, initial, options, onClose, onSaved 
   return (
     <Modal
       open
-      title={isEdit ? `Edit ${client.full_name}` : 'New client'}
+      title={isEdit ? `Edit ${client.full_name}` : 'Add Client'}
       onClose={onClose}
       busy={busy}
       footer={(
         <>
           <button type="button" className="crm-btn crm-btn-ghost" onClick={onClose} disabled={busy}>Cancel</button>
           <button type="submit" form={formId} className="crm-btn crm-btn-primary" disabled={busy || !options}>
-            {busy ? 'Saving…' : isEdit ? 'Save changes' : 'Create client'}
+            {busy ? 'Saving…' : 'Save Client'}
           </button>
         </>
       )}
@@ -78,7 +89,7 @@ export default function ClientForm({ client, initial, options, onClose, onSaved 
       <form id={formId} onSubmit={submit} noValidate>
         {duplicates.length > 0 && (
           <div className="crm-notice" role="status">
-            <strong>Possible existing client.</strong> Same phone or email as:
+            <strong>This client may already exist.</strong> Same phone or email as:
             <ul>
               {duplicates.map(d => (
                 <li key={d.id}>
@@ -93,64 +104,73 @@ export default function ClientForm({ client, initial, options, onClose, onSaved 
           </div>
         )}
 
-        <FormSection title="Basic information">
-          <Field label="Full name" required error={errors.full_name} full>
-            {id => <input id={id} className="crm-input" autoComplete="off" maxLength={190} {...bind('full_name')} />}
+        <FormSection title="Client">
+          <Field label="Full name" required error={errors.full_name}>
+            {id => <input id={id} className="crm-input" autoComplete="off" maxLength={190} placeholder="e.g. John Mwanga" {...bind('full_name')} />}
           </Field>
           <Field label="Phone" error={errors.phone}>
             {id => <input id={id} className="crm-input" type="tel" inputMode="tel" autoComplete="off" placeholder="07XX XXX XXX" {...bind('phone')} onBlur={checkDuplicates} />}
           </Field>
-          <Field label="Email" error={errors.email}>
-            {id => <input id={id} className="crm-input" type="email" autoComplete="off" {...bind('email')} onBlur={checkDuplicates} />}
-          </Field>
-          <Field label="Company" error={errors.company}>
-            {id => <input id={id} className="crm-input" maxLength={190} {...bind('company')} />}
-          </Field>
-          <Field label="Location / area" error={errors.location}>
-            {id => <input id={id} className="crm-input" maxLength={190} {...bind('location')} />}
-          </Field>
-          <Field label="City" error={errors.city}>
-            {id => <input id={id} className="crm-input" maxLength={100} {...bind('city')} />}
-          </Field>
-          <Field label="Region" error={errors.region}>
-            {id => <input id={id} className="crm-input" maxLength={100} {...bind('region')} />}
-          </Field>
-        </FormSection>
-
-        <FormSection title="Business information">
-          <Field label="Status" required error={errors.status}>
-            {id => <Select id={id} value={values.status} onChange={v => set('status', v)} options={options?.client_statuses} />}
-          </Field>
-          <Field label="Source" required error={errors.source}>
-            {id => <Select id={id} value={values.source} onChange={v => set('source', v)} options={options?.client_sources} />}
-          </Field>
-          <Field label="Priority" required error={errors.priority}>
-            {id => <Select id={id} value={values.priority} onChange={v => set('priority', v)} options={options?.priorities} />}
-          </Field>
-          <Field label="Interested service" error={errors.interested_service}>
-            {id => <input id={id} className="crm-input" maxLength={190} placeholder="e.g. Pharmacy Management System" {...bind('interested_service')} />}
-          </Field>
-          <Field label="Estimated budget (TZS)" error={errors.estimated_budget}>
-            {id => <input id={id} className="crm-input" inputMode="decimal" placeholder="e.g. 2,500,000" {...bind('estimated_budget')} />}
-          </Field>
-          <Field label="Expected start date" error={errors.expected_start_date}>
-            {id => <input id={id} className="crm-input" type="date" {...bind('expected_start_date')} />}
-          </Field>
+          {!isEdit && (
+            <Field label="What do they need?" optional error={errors.interested_service} full>
+              {id => <input id={id} className="crm-input" maxLength={190} placeholder="e.g. Pharmacy system, website, wedding cards" {...bind('interested_service')} />}
+            </Field>
+          )}
         </FormSection>
 
         {!isEdit && (
-          <FormSection title="Follow-up & notes">
-            <Field label="Next follow-up date" error={errors.next_follow_up_date} hint="Creates a reminder on the dashboard">
+          <FormSection title="Follow-up">
+            <Field label="Next follow-up date" optional sw={SW.followUpDate} error={errors.next_follow_up_date}>
               {id => <input id={id} className="crm-input" type="date" {...bind('next_follow_up_date')} />}
             </Field>
-            <Field label="Follow-up title" error={errors.next_follow_up_title}>
-              {id => <input id={id} className="crm-input" maxLength={190} placeholder="e.g. Confirm project start" {...bind('next_follow_up_title')} />}
+            <Field label="Reason" optional error={errors.next_follow_up_title}>
+              {id => <input id={id} className="crm-input" maxLength={190} placeholder="e.g. Call to confirm start" {...bind('next_follow_up_title')} />}
             </Field>
-            <Field label="Notes" error={errors.initial_note} full>
-              {id => <textarea id={id} className="crm-input" rows={3} maxLength={5000} placeholder="What did the client say?" {...bind('initial_note')} />}
+            <Field label="Notes" optional error={errors.initial_note} full>
+              {id => <textarea id={id} className="crm-input" rows={2} maxLength={5000} placeholder="What did the client say?" {...bind('initial_note')} />}
             </Field>
           </FormSection>
         )}
+
+        <MoreDetails open={detailsOpen} onToggle={() => setShowMore(o => !o)}>
+          <FormSection title="More details">
+            <Field label="Status" sw={SW.status} hint={STATUS_HELP.client[values.status]} error={errors.status}>
+              {id => <Select id={id} value={values.status} onChange={v => set('status', v)} options={options?.client_statuses} />}
+            </Field>
+            <Field label="Priority" sw={SW.priority} error={errors.priority}>
+              {id => <Select id={id} value={values.priority} onChange={v => set('priority', v)} options={options?.priorities} />}
+            </Field>
+            {isEdit && (
+              <Field label="What do they need?" optional error={errors.interested_service} full>
+                {id => <input id={id} className="crm-input" maxLength={190} {...bind('interested_service')} />}
+              </Field>
+            )}
+            <Field label="Expected start date" optional sw={SW.expectedStart} error={errors.expected_start_date}>
+              {id => <input id={id} className="crm-input" type="date" {...bind('expected_start_date')} />}
+            </Field>
+            <Field label="Estimated budget (TZS)" optional sw={SW.budget} error={errors.estimated_budget}>
+              {id => <input id={id} className="crm-input" inputMode="decimal" placeholder="e.g. 2,500,000" {...bind('estimated_budget')} />}
+            </Field>
+            <Field label="Email" optional error={errors.email}>
+              {id => <input id={id} className="crm-input" type="email" autoComplete="off" {...bind('email')} onBlur={checkDuplicates} />}
+            </Field>
+            <Field label="Company" optional error={errors.company}>
+              {id => <input id={id} className="crm-input" maxLength={190} {...bind('company')} />}
+            </Field>
+            <Field label="City" optional error={errors.city}>
+              {id => <input id={id} className="crm-input" maxLength={100} {...bind('city')} />}
+            </Field>
+            <Field label="Area / street" optional error={errors.location}>
+              {id => <input id={id} className="crm-input" maxLength={190} {...bind('location')} />}
+            </Field>
+            <Field label="Region" optional error={errors.region}>
+              {id => <input id={id} className="crm-input" maxLength={100} {...bind('region')} />}
+            </Field>
+            <Field label="How they found us" sw={SW.source} error={errors.source}>
+              {id => <Select id={id} value={values.source} onChange={v => set('source', v)} options={options?.client_sources} />}
+            </Field>
+          </FormSection>
+        </MoreDetails>
 
         <FormError error={error} />
       </form>

@@ -76,14 +76,14 @@ export default function AdminDashboard() {
                     style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                       padding: '12px 16px', background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px',
+                      border: '1px solid rgba(255,255,255,0.06)', borderRadius: 'var(--radius-md)',
                       color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 'var(--fs-sm)',
                       transition: 'all 0.2s',
                     }}
                   >
                     {label}
                     {badge > 0 && (
-                      <span className="nav-badge" style={{ background: 'var(--gradient-accent)', color: 'var(--bg)', fontSize: '10px', fontWeight: 800, padding: '2px 8px', borderRadius: '10px' }}>
+                      <span className="nav-badge" style={{ background: 'var(--gradient-accent)', color: 'var(--bg)', fontSize: '10px', fontWeight: 800, padding: '2px 8px', borderRadius: 'var(--radius-full)' }}>
                         {badge} new
                       </span>
                     )}

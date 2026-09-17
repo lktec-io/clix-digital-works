@@ -1,6 +1,9 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { FiX, FiAlertCircle, FiRefreshCw, FiChevronLeft, FiChevronRight, FiInbox } from 'react-icons/fi';
+import {
+  FiX, FiAlertCircle, FiRefreshCw, FiChevronLeft, FiChevronRight, FiChevronDown, FiChevronUp,
+  FiInbox, FiMoreHorizontal, FiFilter,
+} from 'react-icons/fi';
 import { SkeletonTable } from '../../Skeleton';
 import { labelFor, toneFor } from '../../../utils/crm';
 import { useDebounced } from '../../../hooks/useCrm';
@@ -79,26 +82,147 @@ export function ErrorState({ error, what = 'data', onRetry }) {
   );
 }
 
-export function EmptyState({ children, action }) {
+export function EmptyState({ children, sw, action }) {
   return (
     <div className="crm-state crm-state-empty">
-      <FiInbox size={18} />
+      <FiInbox size={18} aria-hidden="true" />
       <p>{children}</p>
+      {sw && <p className="crm-sw">{sw}</p>}
       {action}
     </div>
   );
 }
 
 /** Renders loading / error / empty / content in one place. */
-export function DataView({ loading, error, data, isEmpty, what, onRetry, empty, emptyAction, children, rows, cols }) {
+export function DataView({ loading, error, data, isEmpty, what, onRetry, empty, emptySw, emptyAction, children, rows, cols }) {
   if (error && !data) return <ErrorState error={error} what={what} onRetry={onRetry} />;
   if (loading && !data) return <LoadingState rows={rows} cols={cols} />;
   if (!data) return null;
   return (
     <>
       {error && <ErrorState error={error} what={what} onRetry={onRetry} />}
-      {isEmpty ? <EmptyState action={emptyAction}>{empty}</EmptyState> : children}
+      {isEmpty ? <EmptyState sw={emptySw} action={emptyAction}>{empty}</EmptyState> : children}
     </>
+  );
+}
+
+/* ── More menu (secondary actions, so rows don't carry many buttons) ────── */
+
+export function MoreMenu({ items, label = 'More actions', buttonLabel = 'More' }) {
+  const [open, setOpen] = useState(false);
+  const [alignLeft, setAlignLeft] = useState(false);
+  const ref = useRef(null);
+
+  // Open towards whichever side has room, so the menu never leaves the screen
+  // when the button wraps to the left edge on a narrow phone.
+  const toggle = () => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (rect) setAlignLeft(rect.right < 260);
+    setOpen(o => !o);
+  };
+  const menuId = useId();
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDown = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const onKey = e => { if (e.key === 'Escape') { e.stopPropagation(); setOpen(false); } };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('touchstart', onDown, { passive: true });
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('touchstart', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  const visible = items.filter(Boolean);
+  if (!visible.length) return null;
+
+  return (
+    <div className="crm-menu" ref={ref}>
+      <button
+        type="button"
+        className="crm-btn crm-btn-ghost"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={menuId}
+        aria-label={label}
+        onClick={toggle}
+      >
+        <FiMoreHorizontal size={15} aria-hidden="true" /> {buttonLabel}
+      </button>
+      {open && (
+        <div className={`crm-menu-list${alignLeft ? ' is-left' : ''}`} role="menu" id={menuId}>
+          {visible.map(item => (
+            <button
+              key={item.label}
+              type="button"
+              role="menuitem"
+              className={`crm-menu-item${item.danger ? ' is-danger' : ''}`}
+              onClick={() => { setOpen(false); item.onClick(); }}
+            >
+              {item.icon && <item.icon size={14} aria-hidden="true" />} {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Toolbar: search always visible, other filters behind [Filter] on phones ─ */
+
+export function Toolbar({ search, activeCount = 0, children }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`crm-toolbar${open ? ' filters-open' : ''}`}>
+      {search}
+      {children && (
+        <>
+          <button
+            type="button"
+            className="crm-btn crm-btn-ghost crm-filter-toggle"
+            aria-expanded={open}
+            onClick={() => setOpen(o => !o)}
+          >
+            <FiFilter size={14} aria-hidden="true" /> Filter{activeCount > 0 ? ` (${activeCount})` : ''}
+          </button>
+          <div className="crm-filters">{children}</div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ── Section navigation: tabs on larger screens, a dropdown on phones ───── */
+
+export function SectionNav({ tabs, value, onChange, label }) {
+  const id = useId();
+  return (
+    <>
+      <div className="crm-section-tabs"><FilterTabs tabs={tabs} value={value} onChange={onChange} label={label} flush /></div>
+      <div className="crm-section-select">
+        <label htmlFor={id} className="crm-sr-only">{label}</label>
+        <select id={id} className="crm-input" value={value} onChange={e => onChange(e.target.value)}>
+          {tabs.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+        </select>
+      </div>
+    </>
+  );
+}
+
+/* ── Progressive disclosure for optional form fields ────────────────────── */
+
+export function MoreDetails({ open, onToggle, label = 'Add more details', children }) {
+  return (
+    <div className="crm-more-details">
+      <button type="button" className="crm-more-toggle" aria-expanded={open} onClick={onToggle}>
+        {open ? <FiChevronUp size={14} aria-hidden="true" /> : <FiChevronDown size={14} aria-hidden="true" />}
+        {open ? 'Hide extra details' : label}
+      </button>
+      {open && children}
+    </div>
   );
 }
 
@@ -218,16 +342,23 @@ export function ConfirmDialog({ open, title, message, confirmLabel = 'Confirm', 
 
 /* ── Form primitives ────────────────────────────────────────────────────── */
 
-export function Field({ label, error, hint, required, children, full }) {
+/**
+ * `sw` adds a short Swahili explanation under the label; `optional` marks the
+ * field as not required so required fields stand out without extra noise.
+ */
+export function Field({ label, error, hint, sw, required, optional, children, full }) {
   const id = useId();
   const child = typeof children === 'function' ? children(id) : children;
   return (
     <div className={`crm-field${full ? ' crm-field-full' : ''}${error ? ' has-error' : ''}`}>
       {label && (
         <label htmlFor={id}>
-          {label}{required && <span className="crm-required" aria-hidden="true"> *</span>}
+          {label}
+          {required && <span className="crm-required" aria-hidden="true"> *</span>}
+          {optional && <span className="crm-optional"> (optional)</span>}
         </label>
       )}
+      {sw && <span className="crm-sw">{sw}</span>}
       {child}
       {error ? <span className="crm-field-error" role="alert">{error}</span>
         : hint ? <span className="crm-field-hint">{hint}</span> : null}
@@ -262,14 +393,16 @@ export function FormError({ error }) {
   return <div className="crm-form-error" role="alert"><FiAlertCircle size={14} /> {message}</div>;
 }
 
-/** Plain row of label/value pairs for detail views. */
+/** Label/value pairs for detail views. Empty values are skipped to keep pages calm. */
 export function InfoList({ items, single = false }) {
+  const shown = items.filter(item => item && item.value !== null && item.value !== undefined && item.value !== '' && item.value !== '—');
+  if (!shown.length) return null;
   return (
     <dl className={`crm-info-list${single ? ' is-single' : ''}`}>
-      {items.filter(Boolean).map(({ label, value }) => (
+      {shown.map(({ label, value }) => (
         <div key={label} className="crm-info-row">
           <dt>{label}</dt>
-          <dd>{value ?? '—'}</dd>
+          <dd>{value}</dd>
         </div>
       ))}
     </dl>

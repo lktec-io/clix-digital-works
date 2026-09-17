@@ -3,7 +3,7 @@ import AdminLayout from '../AdminLayout';
 import { API } from '../../../config/api';
 import { useApi, useCrmOptions, useDialog, useQueryFilters } from '../../../hooks/useCrm';
 import { formatDate, formatTZS, labelFor, qs } from '../../../utils/crm';
-import { Badge, DataView, FilterTabs, Pagination, SearchBox, Select } from '../../../components/admin/crm/ui';
+import { Badge, DataView, FilterTabs, Pagination, SearchBox, Select, Toolbar } from '../../../components/admin/crm/ui';
 import { VoidPaymentForm } from '../../../components/admin/crm/forms';
 
 const LIMIT = 25;
@@ -34,7 +34,7 @@ export default function AdminPayments() {
       <div className="crm-page-head">
         <div>
           <h2>Payments</h2>
-          <p>All payments recorded against projects and CardHub events. Add payments from a project or event.</p>
+          <p>Every payment received. To record a new one, open the project or CardHub event it belongs to.</p>
         </div>
       </div>
 
@@ -59,19 +59,23 @@ export default function AdminPayments() {
 
       <div className="admin-table-card">
         <FilterTabs tabs={TYPES} value={f.type} onChange={type => update({ type })} label="Payment type" />
-        <div className="crm-toolbar">
-          <SearchBox value={f.search} onSearch={search => update({ search })} placeholder="Reference, client, project or event…" />
+        <Toolbar
+          activeCount={[f.method, f.from, f.to, f.voided].filter(Boolean).length}
+          search={<SearchBox value={f.search} onSearch={search => update({ search })} placeholder="Search reference, client or event…" label="Search payments" />}
+        >
           <Select aria-label="Method" value={f.method} onChange={method => update({ method })} options={options?.payment_methods} placeholder="Any method" />
-          <input type="date" className="crm-input" aria-label="From date" value={f.from} onChange={e => update({ from: e.target.value })} />
-          <input type="date" className="crm-input" aria-label="To date" value={f.to} onChange={e => update({ to: e.target.value })} />
+          <label className="crm-inline-field">From <input type="date" className="crm-input" value={f.from} onChange={e => update({ from: e.target.value })} /></label>
+          <label className="crm-inline-field">To <input type="date" className="crm-input" value={f.to} onChange={e => update({ to: e.target.value })} /></label>
           <label className="crm-check">
             <input type="checkbox" checked={f.voided === '1'} onChange={e => update({ voided: e.target.checked ? '1' : '' })} />
             Show voided
           </label>
-        </div>
+        </Toolbar>
 
         <DataView loading={loading} error={error} data={data} isEmpty={!rows.length} what="payments" onRetry={reload}
-          empty="No payments found." cols={6}>
+          empty={f.search || f.method || f.from || f.to ? 'No payments match your search or filters.' : 'No payments recorded yet.'}
+          emptySw={f.search || f.method || f.from || f.to ? undefined : 'Malipo hurekodiwa kupitia project au tukio la CardHub.'}
+          cols={6}>
           <div className="admin-table-wrap crm-table-desktop">
             <table className="admin-table crm-table">
               <thead>

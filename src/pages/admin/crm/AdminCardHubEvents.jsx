@@ -5,32 +5,29 @@ import AdminLayout from '../AdminLayout';
 import { API } from '../../../config/api';
 import { useApi, useCrmOptions, useQueryFilters } from '../../../hooks/useCrm';
 import { qs } from '../../../utils/crm';
-import { DataView, FilterTabs, Pagination, SearchBox, Select } from '../../../components/admin/crm/ui';
+import { DataView, FilterTabs, Pagination, SearchBox, Select, Toolbar } from '../../../components/admin/crm/ui';
 import { EventRow } from '../../../components/admin/crm/lists';
 import { CardHubEventForm } from '../../../components/admin/crm/forms';
 import ClientForm from '../../../components/admin/crm/ClientForm';
 
 const LIMIT = 25;
 
-const VIEWS = [
-  { value: 'upcoming', label: 'Upcoming' },
+/** Simple date windows people actually think in. */
+const DATE_TABS = [
+  { value: 'upcoming', label: 'All upcoming' },
   { value: 'next_7', label: 'Next 7 days' },
   { value: 'next_30', label: 'Next 30 days' },
-  { value: 'next_60', label: 'Next 60 days' },
-  { value: 'next_90', label: 'Next 90 days' },
   { value: 'this_month', label: 'This month' },
   { value: 'next_month', label: 'Next month' },
-  { value: 'completed', label: 'Completed' },
-  { value: 'cancelled', label: 'Cancelled' },
-  { value: 'all', label: 'All events' },
+  { value: 'next_60', label: 'Next 60 days' },
 ];
 
-const EMPTY = {
-  upcoming: 'No upcoming CardHub events.',
-  completed: 'No completed events yet.',
-  cancelled: 'No cancelled events.',
-  all: 'No CardHub events yet.',
-};
+/** Past/closed views live in the filter panel to keep the tab strip short. */
+const OTHER_VIEWS = [
+  { value: 'completed', label: 'Completed events' },
+  { value: 'cancelled', label: 'Cancelled events' },
+  { value: 'all', label: 'All events' },
+];
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const monthKey = ymd => (ymd ? ymd.slice(0, 7) : 'unset');
@@ -53,31 +50,47 @@ export default function AdminCardHubEvents({ defaultView = 'upcoming' }) {
   const today = data?.today || options?.today;
   const title = defaultView === 'upcoming' ? 'Upcoming Events' : 'CardHub Events';
 
+  const otherView = OTHER_VIEWS.some(v => v.value === f.view) ? f.view : '';
+  const activeFilters = [f.status, f.payment_status, otherView].filter(Boolean).length;
+  const filtered = Boolean(f.search || f.status || f.payment_status);
+
   const showEventForm = f.new === '1' && newCustomer !== 'form';
   const closeEventForm = () => { setNewCustomer(null); update({ new: '' }); };
+
+  const addButton = (
+    <button type="button" className="crm-btn crm-btn-primary" onClick={() => update({ new: '1' })}>
+      <FiPlus size={14} aria-hidden="true" /> Add Event
+    </button>
+  );
 
   return (
     <AdminLayout title={title}>
       <div className="crm-page-head">
         <div>
           <h2>{title}</h2>
-          <p>Invitation card orders by event date, with payment status and balances.</p>
+          <p>Invitation card orders by event date, with what is paid and what is still owed.</p>
         </div>
-        <div className="crm-page-actions">
-          <button type="button" className="crm-btn crm-btn-primary" onClick={() => update({ new: '1' })}><FiPlus size={14} /> New event</button>
-        </div>
+        <div className="crm-page-actions">{addButton}</div>
       </div>
 
       <div className="admin-table-card">
-        <FilterTabs tabs={VIEWS} value={f.view} onChange={view => update({ view })} counts={data?.view_counts} label="Event date range" />
-        <div className="crm-toolbar">
-          <SearchBox value={f.search} onSearch={search => update({ search })} placeholder="Event, customer, location, date (YYYY-MM-DD)…" />
+        <FilterTabs tabs={DATE_TABS} value={f.view} onChange={view => update({ view })} counts={data?.view_counts} label="Event dates" />
+        <Toolbar
+          activeCount={activeFilters}
+          search={<SearchBox value={f.search} onSearch={search => update({ search })} placeholder="Search customer or event…" label="Search events" />}
+        >
+          <Select aria-label="Show past events" value={otherView} onChange={v => update({ view: v || 'upcoming' })} options={OTHER_VIEWS} placeholder="Upcoming events" />
           <Select aria-label="Event status" value={f.status} onChange={status => update({ status })} options={options?.cardhub_event_statuses} placeholder="Any status" />
-          <Select aria-label="Payment status" value={f.payment_status} onChange={v => update({ payment_status: v })} options={options?.payment_statuses} placeholder="Any payment" />
-        </div>
+          <Select aria-label="Payment" value={f.payment_status} onChange={v => update({ payment_status: v })} options={options?.payment_statuses} placeholder="Any payment" />
+        </Toolbar>
 
-        <DataView loading={loading} error={error} data={data} isEmpty={!rows.length} what="CardHub events" onRetry={reload}
-          empty={f.search || f.status || f.payment_status ? 'No events match these filters.' : EMPTY[f.view] || 'No events in this period.'} cols={4}>
+        <DataView
+          loading={loading} error={error} data={data} isEmpty={!rows.length} what="CardHub events" onRetry={reload}
+          empty={filtered ? 'No events match your search or filters.' : 'No events in this period.'}
+          emptySw={filtered ? undefined : 'Hakuna tukio katika kipindi hiki.'}
+          emptyAction={filtered ? undefined : addButton}
+          cols={4}
+        >
           <ul className="crm-rows">
             {rows.map((event, i) => {
               const key = monthKey(event.event_date);

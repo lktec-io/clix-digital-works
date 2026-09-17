@@ -111,6 +111,62 @@ const TONES = {
 
 export const toneFor = value => TONES[value] || 'muted';
 
+/**
+ * Short Swahili helpers, shown under labels only where a term may be unclear
+ * to a non-technical user. One sentence maximum — keep it that way.
+ */
+export const SW = {
+  status:          'Hatua ambayo mteja alipo kwa sasa.',
+  priority:        'Umuhimu wa kumfuatilia mteja huyu.',
+  followUpDate:    'Ni tarehe ya kumfuatilia tena mteja.',
+  expectedStart:   'Tarehe ambayo mteja anatarajia kuanza huduma au project.',
+  budget:          'Kiasi ambacho mteja anakadiria kutumia.',
+  totalPrice:      'Bei kamili iliyokubaliwa.',
+  amountPaid:      'Kiasi ambacho tayari kimeshalipwa.',
+  balance:         'Kiasi ambacho bado hakijalipwa.',
+  eventDate:       'Tarehe ya tukio.',
+  expectedGuests:  'Idadi ya wageni wanaotarajiwa.',
+  reference:       'Namba au kumbukumbu ya malipo.',
+  source:          'Mteja alitufahamu kupitia wapi.',
+};
+
+/** One-line plain explanations of statuses, shown for the currently selected value. */
+export const STATUS_HELP = {
+  client: {
+    lead:        'Amewasiliana nasi kwa mara ya kwanza.',
+    prospect:    'Mteja anayevutiwa na huduma lakini bado hajathibitisha.',
+    negotiation: 'Tunajadiliana bei au masharti.',
+    confirmed:   'Amekubali kufanya kazi nasi.',
+    active:      'Kazi yake inaendelea sasa.',
+    completed:   'Kazi yake imekamilika.',
+    inactive:    'Hafuatiliwi tena kwa sasa.',
+  },
+  project: {
+    planned:     'Imepangwa, bado haijaanza.',
+    quoted:      'Mteja amepewa bei.',
+    confirmed:   'Mteja amekubali, tayari kuanza.',
+    in_progress: 'Kazi inaendelea.',
+    on_hold:     'Imesimamishwa kwa muda.',
+    completed:   'Imekamilika.',
+    cancelled:   'Imesitishwa.',
+  },
+  event: {
+    new:             'Oda mpya imepokelewa.',
+    planning:        'Tunakusanya taarifa za tukio.',
+    designing:       'Kadi zinasanifiwa.',
+    ready:           'Kadi ziko tayari.',
+    delivered:       'Kadi zimekabidhiwa kwa mteja.',
+    event_completed: 'Tukio limeshafanyika.',
+    cancelled:       'Oda imesitishwa.',
+  },
+};
+
+/** Parses a typed amount ("1,500,000") to a number for display maths only; the server re-validates. */
+export function parseAmount(value) {
+  const n = Number(String(value ?? '').replace(/,/g, '').trim());
+  return String(value ?? '').trim() === '' || Number.isNaN(n) ? null : n;
+}
+
 /** Maps API 422 details to { field: message }. */
 export function fieldErrors(err) {
   return Object.fromEntries((err?.details || []).map(d => [d.field, d.message]));

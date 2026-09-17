@@ -3,8 +3,12 @@ import { FiArrowLeft, FiEdit2, FiPlus, FiTruck, FiPhone, FiMail, FiMessageCircle
 import AdminLayout from '../AdminLayout';
 import { API } from '../../../config/api';
 import { useApi, useCrmOptions, useDialog, useMutation } from '../../../hooks/useCrm';
-import { eventCountdown, daysUntil, formatDate, formatDateTime, hasBalance, labelFor, whatsappLink } from '../../../utils/crm';
-import { Badge, ConfirmDialog, DataView, EmptyState, FormError, InfoList, PanelHeader, Select } from '../../../components/admin/crm/ui';
+import {
+  eventCountdown, daysUntil, formatDate, formatDateTime, hasBalance, labelFor, STATUS_HELP, whatsappLink,
+} from '../../../utils/crm';
+import {
+  Badge, ConfirmDialog, DataView, EmptyState, FormError, InfoList, MoreMenu, PanelHeader, Select,
+} from '../../../components/admin/crm/ui';
 import { ActivityTimeline, DateBlock, MoneySummary, PaymentRows } from '../../../components/admin/crm/lists';
 import { CardHubEventForm, PaymentForm, VoidPaymentForm } from '../../../components/admin/crm/forms';
 
@@ -21,6 +25,8 @@ export default function AdminCardHubEventDetail() {
   const event = data?.data;
   const today = data?.today || options?.today;
   const done = () => { close(); reload(); };
+  const archived = Boolean(event?.archived_at);
+  const priced = Number(event?.total_price) > 0;
 
   const setStatus = async value => {
     try { await status.run(`${API.cardhubEvents}/${id}/status`, { method: 'PATCH', body: { status: value } }); reload(); } catch { /* shown */ }
@@ -37,7 +43,7 @@ export default function AdminCardHubEventDetail() {
 
   return (
     <AdminLayout title={event?.event_name || 'CardHub event'}>
-      <Link to="/admin/cardhub/upcoming" className="crm-back"><FiArrowLeft size={14} /> CardHub events</Link>
+      <Link to="/admin/cardhub/upcoming" className="crm-back"><FiArrowLeft size={14} aria-hidden="true" /> CardHub events</Link>
 
       <DataView loading={loading} error={error} data={data} what="this event" onRetry={reload} rows={6} cols={3}>
         {event && (
@@ -46,96 +52,101 @@ export default function AdminCardHubEventDetail() {
               <div className="crm-event-hero">
                 <DateBlock ymd={event.event_date} />
                 <div className="crm-detail-identity">
-                  <h2 style={{ fontSize: 'var(--fs-2xl)', fontWeight: 800, color: 'var(--text-primary)', overflowWrap: 'anywhere' }}>{event.event_name}</h2>
-                  <div className="crm-detail-badges">
-                    <Badge value="muted" tone="muted" label={labelFor(options?.cardhub_event_types, event.event_type)} />
-                    <Badge value={event.status} options={options?.cardhub_event_statuses} />
-                    {Number(event.total_price) > 0 && <Badge value={event.payment_status} options={options?.payment_statuses} />}
-                    {event.archived_at && <Badge value="cancelled" label="Archived" />}
-                  </div>
+                  <span className="crm-eyebrow">{labelFor(options?.cardhub_event_types, event.event_type)}</span>
+                  <h2 className="crm-event-title">{event.event_name}</h2>
                   <div className={`crm-countdown crm-text-${countdownTone()}`}>
                     {event.event_date ? `${formatDate(event.event_date)} · ${eventCountdown(event.event_date, today)}` : 'Event date not set'}
-                    {event.event_location ? ` · ${event.event_location}` : ''}
+                  </div>
+                  <div className="crm-row-sub">
+                    {[event.event_location, event.number_of_cards && `${event.number_of_cards} cards`, event.package].filter(Boolean).join(' · ')}
+                  </div>
+                  <div className="crm-detail-badges">
+                    <Badge value={event.status} options={options?.cardhub_event_statuses} />
+                    {archived && <Badge value="cancelled" label="Archived" />}
                   </div>
                 </div>
-                <div className="crm-page-actions">
-                  {!event.archived_at && (
-                    <>
-                      <Select aria-label="Event status" value={event.status} onChange={setStatus}
-                        options={options?.cardhub_event_statuses} disabled={status.busy || !options} style={{ width: 'auto' }} />
-                      {!['delivered', ...CLOSED].includes(event.status) && (
-                        <button type="button" className="crm-btn crm-btn-ghost" onClick={() => setStatus('delivered')} disabled={status.busy}>
-                          <FiTruck size={13} /> Mark delivered
-                        </button>
-                      )}
-                      <button type="button" className="crm-btn crm-btn-ghost" onClick={() => open('edit')}><FiEdit2 size={13} /> Edit</button>
-                      {hasBalance(event.balance) && (
-                        <button type="button" className="crm-btn crm-btn-primary" onClick={() => open('pay')}><FiPlus size={13} /> Add payment</button>
-                      )}
-                    </>
-                  )}
-                  <button type="button" className="crm-btn crm-btn-ghost" onClick={() => open('archive')}>
-                    {event.archived_at ? <><FiRotateCcw size={13} /> Restore</> : <><FiArchive size={13} /> Archive</>}
-                  </button>
-                </div>
               </div>
-              {status.error && <div style={{ padding: '0 var(--space-lg) var(--space-md)' }}><FormError error={status.error} /></div>}
-              <MoneySummary total={event.total_price} paid={event.amount_paid} balance={event.balance} labels={['Price', 'Paid', 'Balance']} />
+
+              {priced
+                ? <MoneySummary total={event.total_price} paid={event.amount_paid} balance={event.balance} labels={['Price', 'Paid', 'Balance']} help />
+                : <p className="crm-status-help">No price set yet. Edit the event to add the price before recording payments.</p>}
+
+              <div className="crm-detail-actions">
+                {!archived && hasBalance(event.balance) && (
+                  <button type="button" className="crm-btn crm-btn-primary" onClick={() => open('pay')}>
+                    <FiPlus size={14} aria-hidden="true" /> Record Payment
+                  </button>
+                )}
+                {!archived && !['delivered', ...CLOSED].includes(event.status) && (
+                  <button type="button" className="crm-btn crm-btn-ghost" onClick={() => setStatus('delivered')} disabled={status.busy}>
+                    <FiTruck size={14} aria-hidden="true" /> Mark Delivered
+                  </button>
+                )}
+                <MoreMenu items={[
+                  !archived && { label: 'Edit event', icon: FiEdit2, onClick: () => open('edit') },
+                  { label: archived ? 'Restore event' : 'Archive event', icon: archived ? FiRotateCcw : FiArchive, danger: !archived, onClick: () => open('archive') },
+                ]} />
+                {!archived && (
+                  <label className="crm-status-control">
+                    <span>Status</span>
+                    <Select aria-label="Update event status" value={event.status} onChange={setStatus}
+                      options={options?.cardhub_event_statuses} disabled={status.busy || !options} />
+                  </label>
+                )}
+              </div>
+              {!archived && STATUS_HELP.event[event.status] && (
+                <p className="crm-status-help">{STATUS_HELP.event[event.status]}</p>
+              )}
+              {status.error && <div className="crm-panel-body" style={{ paddingTop: 0 }}><FormError error={status.error} /></div>}
             </div>
 
             <div className="crm-detail-grid">
               <div className="crm-stack">
                 <div className="crm-panel">
-                  <PanelHeader title="Event details" />
-                  <div className="crm-panel-body" style={{ paddingTop: 0, paddingBottom: 0 }}>
-                    <InfoList items={[
-                      { label: 'Event type', value: labelFor(options?.cardhub_event_types, event.event_type) },
-                      { label: 'Event date', value: formatDate(event.event_date, 'Not set') },
-                      { label: 'Location', value: event.event_location },
-                      { label: 'Expected guests', value: event.expected_guests },
-                      { label: 'Card type', value: event.card_type },
-                      { label: 'Number of cards', value: event.number_of_cards },
-                      { label: 'Package', value: event.package },
-                      { label: 'Reference', value: event.external_reference },
-                      event.delivered_at && { label: 'Delivered', value: formatDateTime(event.delivered_at) },
-                      { label: 'Created', value: formatDateTime(event.created_at) },
-                    ]} />
-                  </div>
-                  {event.notes && <div className="crm-note"><div className="crm-note-meta">Notes</div><div className="crm-note-body">{event.notes}</div></div>}
+                  <PanelHeader title={`Payments (${data.payments.length})`} />
+                  {data.payments.length
+                    ? <PaymentRows payments={data.payments} options={options} onVoid={p => open('void', p)} />
+                    : <EmptyState>{priced ? 'No payments recorded yet.' : 'Set a price to record payments.'}</EmptyState>}
                 </div>
 
                 <div className="crm-panel">
-                  <PanelHeader title={`Payments (${data.payments.length})`}>
-                    {!event.archived_at && hasBalance(event.balance) && (
-                      <button type="button" className="crm-btn crm-btn-ghost crm-btn-sm" onClick={() => open('pay')}><FiPlus size={12} /> Add</button>
-                    )}
-                  </PanelHeader>
-                  {data.payments.length
-                    ? <PaymentRows payments={data.payments} options={options} onVoid={p => open('void', p)} />
-                    : <EmptyState>{Number(event.total_price) > 0 ? 'No payments recorded yet.' : 'Set a total price to record payments.'}</EmptyState>}
+                  <PanelHeader title="Event details" />
+                  <div className="crm-panel-body crm-panel-body-flush">
+                    <InfoList items={[
+                      { label: 'Location', value: event.event_location },
+                      { label: 'Expected guests', value: event.expected_guests },
+                      { label: 'Number of cards', value: event.number_of_cards },
+                      { label: 'Card type', value: event.card_type },
+                      { label: 'Package', value: event.package },
+                      event.external_reference && { label: 'Order reference', value: event.external_reference },
+                      event.delivered_at && { label: 'Delivered', value: formatDateTime(event.delivered_at) },
+                      { label: 'Added', value: formatDateTime(event.created_at) },
+                    ]} />
+                  </div>
+                  {event.notes && <div className="crm-note"><div className="crm-note-meta">Notes</div><div className="crm-note-body">{event.notes}</div></div>}
                 </div>
               </div>
 
               <div className="crm-stack">
                 <div className="crm-panel">
                   <PanelHeader title="Customer">
-                    <Link className="crm-btn crm-btn-ghost crm-btn-sm" to={`/admin/clients/${event.client_id}`}>Open client</Link>
+                    <Link className="crm-btn crm-btn-ghost crm-btn-sm" to={`/admin/clients/${event.client_id}`}>View Client</Link>
                   </PanelHeader>
                   <div className="crm-panel-body">
                     <Link className="crm-row-title" to={`/admin/clients/${event.client_id}`}>{event.client_name}</Link>
-                    <div className="crm-contact-line" style={{ flexDirection: 'column', marginTop: 8 }}>
-                      {event.client_phone && <a href={`tel:${event.client_phone}`}><FiPhone size={13} /> {event.client_phone}</a>}
+                    <div className="crm-contact-line crm-contact-stack">
+                      {event.client_phone && <a href={`tel:${event.client_phone}`}><FiPhone size={14} aria-hidden="true" /> {event.client_phone}</a>}
                       {whatsappLink(event.client_phone) && (
-                        <a href={whatsappLink(event.client_phone)} target="_blank" rel="noopener noreferrer"><FiMessageCircle size={13} /> WhatsApp</a>
+                        <a href={whatsappLink(event.client_phone)} target="_blank" rel="noopener noreferrer"><FiMessageCircle size={14} aria-hidden="true" /> WhatsApp</a>
                       )}
-                      {event.client_email && <a href={`mailto:${event.client_email}`}><FiMail size={13} /> {event.client_email}</a>}
+                      {event.client_email && <a href={`mailto:${event.client_email}`}><FiMail size={14} aria-hidden="true" /> {event.client_email}</a>}
                     </div>
                   </div>
                 </div>
 
                 <div className="crm-panel">
-                  <PanelHeader title="Activity" />
-                  {data.activity.length ? <ActivityTimeline items={data.activity} /> : <EmptyState>No activity yet.</EmptyState>}
+                  <PanelHeader title="History" />
+                  {data.activity.length ? <ActivityTimeline items={data.activity} /> : <EmptyState>No history yet.</EmptyState>}
                 </div>
               </div>
             </div>
@@ -152,18 +163,18 @@ export default function AdminCardHubEventDetail() {
       {event && dialog?.type === 'archive' && (
         <ConfirmDialog
           open
-          danger={!event.archived_at}
-          title={event.archived_at ? 'Restore event' : 'Archive event'}
-          message={event.archived_at
+          danger={!archived}
+          title={archived ? 'Restore Event' : 'Archive Event'}
+          message={archived
             ? `Restore ${event.event_name}?`
-            : `Archive ${event.event_name}? It will be hidden from event lists and alerts. Payment history is kept.`}
-          confirmLabel={event.archived_at ? 'Restore' : 'Archive'}
+            : `Archive ${event.event_name}? It will be hidden from event lists. Payment history is kept.`}
+          confirmLabel={archived ? 'Restore' : 'Archive'}
           busy={archive.busy}
           error={archive.error}
           onClose={close}
           onConfirm={async () => {
             try {
-              await archive.run(`${API.cardhubEvents}/${event.id}${event.archived_at ? '/restore' : ''}`, { method: event.archived_at ? 'POST' : 'DELETE' });
+              await archive.run(`${API.cardhubEvents}/${event.id}${archived ? '/restore' : ''}`, { method: archived ? 'POST' : 'DELETE' });
               done();
             } catch { /* shown */ }
           }}

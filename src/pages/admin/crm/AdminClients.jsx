@@ -1,10 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { FiPlus, FiCalendar, FiMessageSquare, FiEye } from 'react-icons/fi';
+import { FiPlus, FiCalendar } from 'react-icons/fi';
 import AdminLayout from '../AdminLayout';
 import { API } from '../../../config/api';
 import { useApi, useCrmOptions, useDialog, useQueryFilters } from '../../../hooks/useCrm';
-import { dueInfo, formatDate, formatMonth, formatTZS, hasBalance, labelFor, qs } from '../../../utils/crm';
-import { Badge, DataView, FilterTabs, Pagination, SearchBox, Select } from '../../../components/admin/crm/ui';
+import { dueInfo, formatDate, formatMonth, formatTZS, hasBalance, qs } from '../../../utils/crm';
+import { Badge, DataView, FilterTabs, Pagination, SearchBox, Select, Toolbar } from '../../../components/admin/crm/ui';
 import ClientForm from '../../../components/admin/crm/ClientForm';
 import { FollowUpForm } from '../../../components/admin/crm/forms';
 
@@ -14,7 +14,6 @@ const SORTS = [
   { value: 'newest', label: 'Newest first' },
   { value: 'next_follow_up', label: 'Next follow-up' },
   { value: 'last_contacted', label: 'Last contacted' },
-  { value: 'updated', label: 'Recently updated' },
   { value: 'name', label: 'Name A–Z' },
 ];
 
@@ -41,15 +40,27 @@ export default function AdminClients({ mode = 'clients' }) {
 
   const tabs = [{ value: '', label: 'All' }, ...(options?.client_statuses || [])];
   const counts = data?.status_counts ? { ...data.status_counts, '': data.status_counts.all } : null;
+  const activeFilters = [f.source, f.priority, f.archived, f.sort !== 'newest' ? f.sort : ''].filter(Boolean).length;
+  const filtered = Boolean(f.search || f.status || activeFilters);
 
   const title = isCardhub ? 'CardHub Customers' : 'Clients';
+  const addLabel = isCardhub ? 'Add Customer' : 'Add Client';
   const onSaved = id => { close(); navigate(`/admin/clients/${id}`); };
 
-  const followUpCell = c => {
-    if (!c.next_follow_up_date || !today) return <span className="crm-muted">—</span>;
+  const followUp = c => {
+    if (!c.next_follow_up_date || !today) return null;
     const due = dueInfo(c.next_follow_up_date, today);
-    return <span className={`crm-text-${due.tone} crm-nowrap`}>{due.label}</span>;
+    return <span className={`crm-text-${due.tone} crm-nowrap`}>{due.tone === 'muted' ? formatDate(c.next_follow_up_date) : due.label}</span>;
   };
+  const needs = c => (isCardhub
+    ? (c.next_event_date ? `Next event ${formatDate(c.next_event_date)}` : `${c.events_count} event${c.events_count === 1 ? '' : 's'}`)
+    : c.interested_service);
+
+  const addButton = (
+    <button type="button" className="crm-btn crm-btn-primary" onClick={() => open('client')}>
+      <FiPlus size={14} aria-hidden="true" /> {addLabel}
+    </button>
+  );
 
   return (
     <AdminLayout title={title}>
@@ -57,34 +68,34 @@ export default function AdminClients({ mode = 'clients' }) {
         <div>
           <h2>{title}</h2>
           <p>{isCardhub
-            ? 'Clients with CardHub events. Customers are shared with the Clients module.'
-            : 'Leads, prospects and active clients in one place.'}</p>
+            ? 'People with CardHub events. They are the same records as in Clients.'
+            : 'Manage all Clix customers and prospects.'}</p>
         </div>
         <div className="crm-page-actions">
           {isCardhub && (
-            <Link className="crm-btn crm-btn-ghost" to="/admin/cardhub/events?new=1"><FiCalendar size={14} /> New event</Link>
+            <Link className="crm-btn crm-btn-ghost" to="/admin/cardhub/events?new=1"><FiCalendar size={14} aria-hidden="true" /> Add Event</Link>
           )}
-          <button type="button" className="crm-btn crm-btn-primary" onClick={() => open('client')}>
-            <FiPlus size={14} /> {isCardhub ? 'New customer' : 'New client'}
-          </button>
+          {addButton}
         </div>
       </div>
 
       <div className="admin-table-card">
         <FilterTabs tabs={tabs} value={f.status} onChange={status => update({ status })} counts={counts} label="Client status" />
 
-        <div className="crm-toolbar">
-          <SearchBox value={f.search} onSearch={search => update({ search })} placeholder="Name, phone, email, company…" />
-          <Select aria-label="Source" value={f.source} onChange={source => update({ source })} options={options?.client_sources} placeholder="All sources" />
+        <Toolbar
+          activeCount={activeFilters}
+          search={<SearchBox value={f.search} onSearch={search => update({ search })} placeholder="Search client, phone or email…" label="Search clients" />}
+        >
+          <Select aria-label="How they found us" value={f.source} onChange={source => update({ source })} options={options?.client_sources} placeholder="Any source" />
           <Select aria-label="Priority" value={f.priority} onChange={priority => update({ priority })} options={options?.priorities} placeholder="Any priority" />
           <Select aria-label="Sort" value={f.sort} onChange={sort => update({ sort })} options={SORTS} />
           {!isCardhub && (
             <label className="crm-check">
               <input type="checkbox" checked={f.archived === '1'} onChange={e => update({ archived: e.target.checked ? '1' : '' })} />
-              Archived
+              Show archived
             </label>
           )}
-        </div>
+        </Toolbar>
 
         <DataView
           loading={loading}
@@ -93,10 +104,12 @@ export default function AdminClients({ mode = 'clients' }) {
           isEmpty={!rows.length}
           what="clients"
           onRetry={reload}
-          empty={f.search || f.status || f.source || f.priority
-            ? 'No clients match these filters.'
-            : isCardhub ? 'No CardHub customers yet.' : 'No clients found.'}
-          cols={6}
+          empty={filtered ? 'No clients match your search or filters.' : isCardhub ? 'No CardHub customers yet.' : 'No clients yet.'}
+          emptySw={filtered ? undefined : 'Anza kwa kuongeza mteja wako wa kwanza.'}
+          emptyAction={filtered
+            ? <button type="button" className="crm-btn crm-btn-ghost" onClick={() => update({ search: '', status: '', source: '', priority: '', archived: '', sort: 'newest' })}>Clear filters</button>
+            : addButton}
+          cols={5}
         >
           <div className="admin-table-wrap crm-table-desktop">
             <table className="admin-table crm-table">
@@ -104,49 +117,37 @@ export default function AdminClients({ mode = 'clients' }) {
                 <tr>
                   <th>Client</th>
                   <th>Status</th>
-                  <th>{isCardhub ? 'Next event' : 'Service'}</th>
+                  <th>{isCardhub ? 'Events' : 'Needs'}</th>
                   <th>Next follow-up</th>
-                  <th className="crm-col-optional">{isCardhub ? 'Events' : 'Projects'}</th>
                   <th>Balance</th>
-                  <th className="crm-col-optional" aria-label="Actions" />
+                  <th className="crm-col-optional"><span className="crm-sr-only">Actions</span></th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map(c => (
                   <tr key={c.id}>
                     <td className="crm-wrap">
-                      <Link className="crm-cell-main" to={`/admin/clients/${c.id}`} style={{ textDecoration: 'none' }}>{c.full_name}</Link>
+                      <Link className="crm-cell-main crm-cell-link" to={`/admin/clients/${c.id}`}>{c.full_name}</Link>
                       <div className="crm-cell-sub">{[c.phone, c.company || c.city].filter(Boolean).join(' · ') || '—'}</div>
                     </td>
                     <td>
                       <Badge value={c.status} options={options?.client_statuses} />
-                      {c.priority === 'high' && <div style={{ marginTop: 4 }}><Badge value="high" label="High" /></div>}
+                      {c.priority === 'high' && <div className="crm-cell-sub crm-text-red">High priority</div>}
                     </td>
                     <td className="crm-wrap">
-                      {isCardhub
-                        ? (c.next_event_date ? formatDate(c.next_event_date) : <span className="crm-muted">—</span>)
-                        : (
-                          <>
-                            {c.interested_service || <span className="crm-muted">—</span>}
-                            {c.expected_start_date && <div className="crm-cell-sub">Start {formatMonth(c.expected_start_date)}</div>}
-                          </>
-                        )}
+                      {needs(c) || <span className="crm-muted">—</span>}
+                      {!isCardhub && c.expected_start_date && <div className="crm-cell-sub">Start {formatMonth(c.expected_start_date)}</div>}
                     </td>
-                    <td>{followUpCell(c)}</td>
-                    <td className="crm-col-optional">{isCardhub ? c.events_count : c.projects_count}</td>
+                    <td>{followUp(c) || <span className="crm-muted">—</span>}</td>
                     <td className={`crm-money ${hasBalance(c.balance) ? 'crm-text-amber' : 'crm-muted'}`}>
                       {hasBalance(c.balance) ? formatTZS(c.balance) : '—'}
                     </td>
                     <td className="crm-col-optional">
-                      <div className="crm-row-actions">
-                        <Link className="action-btn action-btn-status" to={`/admin/clients/${c.id}`} title="View"><FiEye size={12} /></Link>
-                        {!c.archived_at && (
-                          <button type="button" className="action-btn action-btn-status" title="Add follow-up" onClick={() => open('followup', c)}>
-                            <FiCalendar size={12} />
-                          </button>
-                        )}
-                        <Link className="action-btn action-btn-status" to={`/admin/clients/${c.id}?tab=notes`} title="Add note"><FiMessageSquare size={12} /></Link>
-                      </div>
+                      {!c.archived_at && (
+                        <button type="button" className="crm-btn crm-btn-ghost crm-btn-sm" onClick={() => open('followup', c)}>
+                          <FiCalendar size={12} aria-hidden="true" /> Follow-up
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -161,28 +162,25 @@ export default function AdminClients({ mode = 'clients' }) {
                   <Link className="crm-card-title" to={`/admin/clients/${c.id}`}>{c.full_name}</Link>
                   <Badge value={c.status} options={options?.client_statuses} />
                 </div>
-                <div className="crm-card-meta">
-                  {c.phone && <a href={`tel:${c.phone}`} style={{ color: 'inherit' }}>{c.phone}</a>}
-                  {c.company && <span>{c.company}</span>}
-                  {!isCardhub && c.interested_service && <span>{c.interested_service}</span>}
-                  {isCardhub && <span>{c.events_count} event{c.events_count === 1 ? '' : 's'}</span>}
-                  {isCardhub && c.next_event_date && <span>Next {formatDate(c.next_event_date)}</span>}
-                  <span>{labelFor(options?.client_sources, c.source)}</span>
-                </div>
-                {(c.next_follow_up_date || hasBalance(c.balance)) && (
+                {(c.phone || needs(c)) && (
                   <div className="crm-card-meta">
-                    {c.next_follow_up_date && <span>Follow-up: {followUpCell(c)}</span>}
-                    {hasBalance(c.balance) && <span>Balance <span className="crm-text-amber">{formatTZS(c.balance)}</span></span>}
+                    {c.phone && <a href={`tel:${c.phone}`} className="crm-tel">{c.phone}</a>}
+                    {needs(c) && <span>{needs(c)}</span>}
+                  </div>
+                )}
+                {(followUp(c) || hasBalance(c.balance)) && (
+                  <div className="crm-card-meta">
+                    {followUp(c) && <span>Follow-up: {followUp(c)}</span>}
+                    {hasBalance(c.balance) && <span>Owes <span className="crm-text-amber">{formatTZS(c.balance)}</span></span>}
                   </div>
                 )}
                 <div className="crm-card-actions">
-                  <Link className="crm-btn crm-btn-ghost crm-btn-sm" to={`/admin/clients/${c.id}`}><FiEye size={12} /> View</Link>
                   {!c.archived_at && (
                     <button type="button" className="crm-btn crm-btn-ghost crm-btn-sm" onClick={() => open('followup', c)}>
-                      <FiCalendar size={12} /> Follow-up
+                      <FiCalendar size={13} aria-hidden="true" /> Add Follow-up
                     </button>
                   )}
-                  <Link className="crm-btn crm-btn-ghost crm-btn-sm" to={`/admin/clients/${c.id}?tab=notes`}><FiMessageSquare size={12} /> Note</Link>
+                  <Link className="crm-btn crm-btn-ghost crm-btn-sm" to={`/admin/clients/${c.id}`}>View</Link>
                 </div>
               </li>
             ))}
