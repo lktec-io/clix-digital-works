@@ -11,7 +11,7 @@ import { EventRow, FollowUpDialogs, FollowUpRow } from './lists';
 
 function Kpi({ to, label, value, sub, icon: Icon, color }) {
   return (
-    <Link to={to} className="admin-stat-card" style={{ '--s-color': color }}>
+    <Link to={to} className="admin-stat-card crm-kpi" style={{ '--s-color': color }}>
       <div className="admin-stat-icon"><Icon size={18} /></div>
       <div className="admin-stat-label">{label}</div>
       <div className="admin-stat-value">{value}</div>

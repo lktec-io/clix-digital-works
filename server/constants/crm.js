@@ -5,6 +5,8 @@
  * through GET /api/admin/crm/options instead of hardcoding its own copy.
  */
 
+/* global process -- Node module; the root ESLint config assumes browser globals */
+
 const option = (value, label) => ({ value, label });
 const values = list => list.map(o => o.value);
 

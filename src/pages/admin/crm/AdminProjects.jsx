@@ -83,10 +83,10 @@ export default function AdminProjects() {
                   <th>Project</th>
                   <th>Client</th>
                   <th>Status</th>
-                  <th>Start</th>
+                  <th className="crm-col-optional">Start</th>
                   <th>Price</th>
                   <th>Balance</th>
-                  <th aria-label="Actions" />
+                  <th className="crm-col-optional" aria-label="Actions" />
                 </tr>
               </thead>
               <tbody>
@@ -98,13 +98,13 @@ export default function AdminProjects() {
                     </td>
                     <td className="crm-wrap"><Link className="crm-link" to={`/admin/clients/${p.client_id}`}>{p.client_name}</Link></td>
                     <td><Badge value={p.status} options={options?.project_statuses} /></td>
-                    <td className="crm-nowrap">{formatDate(p.expected_start_date)}</td>
+                    <td className="crm-nowrap crm-col-optional">{formatDate(p.expected_start_date)}</td>
                     <td className="crm-money">
                       {formatTZS(p.total_price)}
                       {Number(p.total_price) > 0 && <div style={{ marginTop: 4 }}><Badge value={p.payment_status} options={options?.payment_statuses} /></div>}
                     </td>
                     <td className={`crm-money ${hasBalance(p.balance) ? 'crm-text-amber' : 'crm-muted'}`}>{hasBalance(p.balance) ? formatTZS(p.balance) : '—'}</td>
-                    <td><div className="crm-row-actions">{actions(p, true)}</div></td>
+                    <td className="crm-col-optional"><div className="crm-row-actions">{actions(p, true)}</div></td>
                   </tr>
                 ))}
               </tbody>

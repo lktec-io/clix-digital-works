@@ -343,6 +343,17 @@ input[type="date"].crm-input { color-scheme: dark; min-height: 40px; }
 .crm-table tr.is-clickable { cursor: pointer; }
 .crm-row-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-wrap: nowrap; }
 .crm-table td:first-child { min-width: 180px; }
+.crm-table td.crm-nowrap:first-child { min-width: 0; }
+/* In tables `anywhere` shrinks columns to one letter; break only overlong words. */
+.crm-table .crm-wrap { overflow-wrap: break-word; min-width: 110px; }
+/* Secondary columns give way on laptop widths (sidebar + table) so the
+   actions column stays visible without scrolling. */
+@media (max-width: 1180px) {
+  .crm-col-optional { display: none; }
+  .crm-table th, .crm-table td { padding-left: 10px; padding-right: 10px; }
+  .crm-table td:first-child { min-width: 150px; }
+  .crm-table td.crm-nowrap:first-child { min-width: 0; }
+}
 .crm-money { white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .crm-card-list { display: none; list-style: none; margin: 0; padding: 0; }
@@ -491,7 +502,10 @@ input[type="date"].crm-input { color-scheme: dark; min-height: 40px; }
 .crm-row-title { color: var(--text-primary); font-weight: 600; font-size: var(--fs-sm); overflow-wrap: anywhere; text-decoration: none; }
 a.crm-row-title:hover { color: var(--accent); }
 .crm-row-sub { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; overflow-wrap: anywhere; }
-.crm-row-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; text-align: right; }
+.crm-row-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; max-width: 100%; min-width: 0; text-align: right; }
+.crm-row-side .crm-card-actions { justify-content: flex-end; }
+/* KPI cards added by the CRM keep their labels clear of the corner icon. */
+.crm-kpi .admin-stat-label { padding-right: 44px; }
 .crm-row.is-voided .crm-row-title { text-decoration: line-through; color: var(--text-muted); }
 
 /* Notes + activity timeline */

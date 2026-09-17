@@ -106,9 +106,9 @@ export default function AdminClients({ mode = 'clients' }) {
                   <th>Status</th>
                   <th>{isCardhub ? 'Next event' : 'Service'}</th>
                   <th>Next follow-up</th>
-                  <th>{isCardhub ? 'Events' : 'Projects'}</th>
+                  <th className="crm-col-optional">{isCardhub ? 'Events' : 'Projects'}</th>
                   <th>Balance</th>
-                  <th aria-label="Actions" />
+                  <th className="crm-col-optional" aria-label="Actions" />
                 </tr>
               </thead>
               <tbody>
@@ -133,11 +133,11 @@ export default function AdminClients({ mode = 'clients' }) {
                         )}
                     </td>
                     <td>{followUpCell(c)}</td>
-                    <td>{isCardhub ? c.events_count : c.projects_count}</td>
+                    <td className="crm-col-optional">{isCardhub ? c.events_count : c.projects_count}</td>
                     <td className={`crm-money ${hasBalance(c.balance) ? 'crm-text-amber' : 'crm-muted'}`}>
                       {hasBalance(c.balance) ? formatTZS(c.balance) : '—'}
                     </td>
-                    <td>
+                    <td className="crm-col-optional">
                       <div className="crm-row-actions">
                         <Link className="action-btn action-btn-status" to={`/admin/clients/${c.id}`} title="View"><FiEye size={12} /></Link>
                         {!c.archived_at && (

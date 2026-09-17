@@ -25,15 +25,17 @@ export function formatMonth(ymd, fallback = '—') {
   return `${MONTHS[m - 1]} ${y}`;
 }
 
-const dateTimeFmt = new Intl.DateTimeFormat('en-GB', {
-  timeZone: CRM_TZ, day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
+const dateTimeParts = new Intl.DateTimeFormat('en-GB', {
+  timeZone: CRM_TZ, day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
 });
 
-/** Timestamp -> '16 Sep 2026, 14:05' in business time. */
+/** Timestamp -> '16 Sep 2026, 14:05' in business time (same month style as formatDate). */
 export function formatDateTime(value, fallback = '—') {
   if (!value) return fallback;
   const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? fallback : dateTimeFmt.format(d);
+  if (Number.isNaN(d.getTime())) return fallback;
+  const p = Object.fromEntries(dateTimeParts.formatToParts(d).map(x => [x.type, x.value]));
+  return `${Number(p.day)} ${MONTHS[Number(p.month) - 1]} ${p.year}, ${p.hour}:${p.minute}`;
 }
 
 /** Today in the business timezone (used only until the server's `today` arrives). */
@@ -72,12 +74,15 @@ export function eventCountdown(ymd, today) {
   return `In ${diff} days`;
 }
 
-const tzsFmt = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 });
+const tzsWhole = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+const tzsCents = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+/** 'TZS 2,500,000' for whole amounts, 'TZS 18,150,000.50' when cents exist. */
 export function formatTZS(value, fallback = '—') {
   if (value === null || value === undefined || value === '') return fallback;
   const n = Number(value);
-  return Number.isNaN(n) ? fallback : `TZS ${tzsFmt.format(n)}`;
+  if (Number.isNaN(n)) return fallback;
+  return `TZS ${(Number.isInteger(n) ? tzsWhole : tzsCents).format(n)}`;
 }
 
 export const hasBalance = value => Number(value) > 0;

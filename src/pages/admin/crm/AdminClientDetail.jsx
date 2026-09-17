@@ -297,7 +297,7 @@ function ProjectRow({ project, options, onOpen, onPay }) {
           {[project.service, project.expected_start_date && `Start ${formatDate(project.expected_start_date)}`].filter(Boolean).join(' · ') || 'Project'}
         </div>
         {Number(project.total_price) > 0 && (
-          <div className="crm-row-sub crm-money">
+          <div className="crm-row-sub">
             {formatTZS(project.amount_paid, 'TZS 0')} of {formatTZS(project.total_price)}
             {hasBalance(project.balance) && <> · <span className="crm-text-amber">owes {formatTZS(project.balance)}</span></>}
           </div>

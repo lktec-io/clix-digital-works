@@ -79,7 +79,7 @@ export default function AdminPayments() {
                   <th>Date</th>
                   <th>Client</th>
                   <th>For</th>
-                  <th>Method</th>
+                  <th className="crm-col-optional">Method</th>
                   <th>Reference</th>
                   <th>Amount</th>
                   <th aria-label="Actions" />
@@ -96,7 +96,7 @@ export default function AdminPayments() {
                         <Link className="crm-link" to={parent.to}>{p.parent_name}</Link>
                         <div className="crm-cell-sub">{parent.kind}</div>
                       </td>
-                      <td>{labelFor(options?.payment_methods, p.payment_method)}</td>
+                      <td className="crm-col-optional">{labelFor(options?.payment_methods, p.payment_method)}</td>
                       <td className="crm-wrap">{p.reference || <span className="crm-muted">—</span>}</td>
                       <td className="crm-money crm-strong" style={p.voided_at ? { textDecoration: 'line-through' } : undefined}>{formatTZS(p.amount)}</td>
                       <td>
