@@ -87,6 +87,19 @@ export function formatTZS(value, fallback = '—') {
 
 export const hasBalance = value => Number(value) > 0;
 
+/**
+ * Short money for metric tiles, where a full figure would wrap on a phone:
+ * 'TZS 18.2M' / 'TZS 450K'. The exact amount is kept in the tile's tooltip.
+ */
+export function formatTZSCompact(value, fallback = 'TZS 0') {
+  const n = Number(value);
+  if (value === null || value === undefined || value === '' || Number.isNaN(n)) return fallback;
+  const abs = Math.abs(n);
+  if (abs >= 1_000_000) return `TZS ${(n / 1_000_000).toFixed(abs >= 10_000_000 ? 0 : 1).replace(/\.0$/, '')}M`;
+  if (abs >= 10_000) return `TZS ${Math.round(n / 1000)}K`;
+  return formatTZS(n, fallback);
+}
+
 /** Option list lookup: labelFor(options.client_statuses, 'lead') -> 'Lead'. */
 export function labelFor(list, value, fallback = '—') {
   if (!value) return fallback;

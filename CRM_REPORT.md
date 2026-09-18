@@ -179,3 +179,17 @@ Goal: a partner with no technical background can use it from a phone. No feature
 - **Radius:** admin-only token override (`.admin-app`, `.admin-login-page`, CRM modals): 4px controls/cards/modals, 2–3px small elements and badges; hardcoded 10px/9px/6px admin values fixed. Public website unchanged (verified: still 9999px buttons / 20px cards).
 
 Verification: API 86/86; lint unchanged at the pre-CRM baseline; build passes; headless Chrome at 320–1280px on 14 routes (incl. Contacts, Quotes, Newsletter): body scroll width = viewport, no clipping, no touch target under 40px on phones, no radius above 4px, no console errors; the five mobile flows pass (clicks: add client 2, follow-up add+complete 5, project + payment 4, event + payment 6, search + status 2).
+
+---
+
+## 11. Navigation & analytics pass (18 Sep 2026)
+
+UI only. No database, auth, route, payment, follow-up or CardHub logic changed; the one server edit is additive and read-only (see below).
+
+- **Sidebar:** branded "Clix CRM — Clients & follow-ups" and grouped as Main / Customer management (Clients, Follow-ups, Projects) / CardHub (Upcoming Events, All Events, Customers) / Finance (Payments) / Website (Contacts, Quotes, Newsletter). Every entry is an existing route — no "Outstanding" page was invented; outstanding money is a dashboard panel and the Payments page's own metric. Active state = 2px accent rail + tinted row + bold text + accent icon (no large colour block); inactive rows stay muted. Denser rhythm (1px gaps, 9px rows), footer holds "View website" plus a compact user row with an icon-only sign-out. The mobile drawer gained its own close button; nav rows are 44px on phones.
+- **Dashboard:** greeting header ("Good morning") with supporting line, search and the single primary action (Add Client). KPIs became one hairline-divided analytics strip — Clients / Follow-ups (today + overdue) / Events (upcoming + unpaid) / Owed (compact TZS, exact figure in the tooltip). Order is now Follow-ups → Outstanding payments → Upcoming events → Projects starting soon → Client pipeline (full width) → Website enquiries. No charts, trends or invented comparisons.
+- **New Outstanding payments panel:** lists who owes what (client, project/event, balance, status) — the rows behind the "Owed" total, largest first. This needed one additive read-only query in `GET /api/admin/crm/dashboard` (`outstanding[]`, existing columns only); no response field was changed or removed.
+- **Website leads** kept, moved below the CRM and shown in the same metric strip; the old Quick Actions / Lead Overview panels were duplicates of those links and numbers, so they are represented by the (clickable) tiles instead.
+- **Consistency:** the Payments page uses the same metric strip; dead `.admin-stat-*` / `.admin-grid-panels` CSS removed. Radius stays 2–4px admin-wide; the public site is unchanged (verified: 9999px buttons, 20px cards).
+
+Verification: lint back to the 52-problem baseline, build passes, API 86/86 unaffected; headless Chrome sweep over 14 routes at 320/360/375/390/412/430/768/1024/1280/1440 — body scroll width = viewport everywhere, no clipping, no small touch targets, no radius > 4px, no console errors; all five mobile flows still pass; mobile drawer opens/closes and fits at 320px.

@@ -44,7 +44,7 @@ dashboardRouter.get('/crm/dashboard', route('crm dashboard', async (req, res) =>
 
   const [
     clientCounts, pipeline, projectCounts, followUpCounts, eventCounts, outstanding, monthPayments,
-    todayList, overdueList, upcomingList, eventsList, projectsStarting,
+    todayList, overdueList, upcomingList, eventsList, projectsStarting, outstandingList,
   ] = await Promise.all([
     crmQueryOne(
       `SELECT COUNT(*) AS total,
@@ -105,6 +105,22 @@ dashboardRouter.get('/crm/dashboard', route('crm dashboard', async (req, res) =>
        ORDER BY p.expected_start_date ASC LIMIT ${WIDGET_LIMIT}`,
       [...PRE_START_PROJECT_STATUSES, today, projectUntil],
     ),
+    // Who the outstanding_balance total is actually owed by — same rows the
+    // total is summed from, largest first.
+    crmQuery(
+      `SELECT * FROM (
+         SELECT 'project' AS kind, p.id, p.client_id, p.project_name AS name, p.balance, p.payment_status,
+                c.full_name AS client_name
+         FROM projects p JOIN clients c ON c.id = p.client_id
+         WHERE p.archived_at IS NULL AND p.status <> 'cancelled' AND p.balance > 0
+         UNION ALL
+         SELECT 'event' AS kind, e.id, e.client_id, e.event_name AS name, e.balance, e.payment_status,
+                c.full_name AS client_name
+         FROM cardhub_events e JOIN clients c ON c.id = e.client_id
+         WHERE e.archived_at IS NULL AND e.status <> 'cancelled' AND e.balance > 0
+       ) owed
+       ORDER BY balance DESC, id ASC LIMIT ${WIDGET_LIMIT}`,
+    ),
   ]);
 
   const pipelineCounts = Object.fromEntries(V.clientStatus.map(s => [s, 0]));
@@ -131,6 +147,7 @@ dashboardRouter.get('/crm/dashboard', route('crm dashboard', async (req, res) =>
     },
     pipeline: pipelineCounts,
     follow_ups: { today: todayList, overdue: overdueList, upcoming: upcomingList },
+    outstanding: outstandingList,
     upcoming_events: eventsList,
     projects_starting: projectsStarting,
   });

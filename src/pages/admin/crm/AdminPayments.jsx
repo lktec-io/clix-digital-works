@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
+import { FiTrendingUp, FiAlertCircle, FiDollarSign } from 'react-icons/fi';
 import AdminLayout from '../AdminLayout';
 import { API } from '../../../config/api';
 import { useApi, useCrmOptions, useDialog, useQueryFilters } from '../../../hooks/useCrm';
-import { formatDate, formatTZS, labelFor, qs } from '../../../utils/crm';
-import { Badge, DataView, FilterTabs, Pagination, SearchBox, Select, Toolbar } from '../../../components/admin/crm/ui';
+import { formatDate, formatTZS, formatTZSCompact, labelFor, qs } from '../../../utils/crm';
+import { Badge, DataView, FilterTabs, MetricBar, Pagination, SearchBox, Select, Toolbar } from '../../../components/admin/crm/ui';
 import { VoidPaymentForm } from '../../../components/admin/crm/forms';
 
 const LIMIT = 25;
@@ -39,22 +40,24 @@ export default function AdminPayments() {
       </div>
 
       {t && (
-        <div className="crm-dash-grid">
-          <div className="admin-stat-card" style={{ '--s-color': '#39FF14' }}>
-            <div className="admin-stat-label">Collected this month</div>
-            <div className="admin-stat-value" style={{ fontSize: 'var(--fs-xl)' }}>{formatTZS(t.this_month)}</div>
-          </div>
-          <div className="admin-stat-card" style={{ '--s-color': '#FFA500' }}>
-            <div className="admin-stat-label">Outstanding balances</div>
-            <div className="admin-stat-value" style={{ fontSize: 'var(--fs-xl)' }}>{formatTZS(t.outstanding)}</div>
-            <div className="admin-stat-sub">{t.outstanding_items} unpaid project{t.outstanding_items === 1 ? '' : 's'} / event{t.outstanding_items === 1 ? '' : 's'}</div>
-          </div>
-          <div className="admin-stat-card" style={{ '--s-color': '#00E5FF' }}>
-            <div className="admin-stat-label">Total (current filter)</div>
-            <div className="admin-stat-value" style={{ fontSize: 'var(--fs-xl)' }}>{formatTZS(t.filtered)}</div>
-            <div className="admin-stat-sub">{data.total} payment{data.total === 1 ? '' : 's'}</div>
-          </div>
-        </div>
+        <MetricBar items={[
+          {
+            label: 'Collected this month', icon: FiTrendingUp,
+            value: formatTZSCompact(t.this_month), title: formatTZS(t.this_month, 'TZS 0'),
+            sub: 'Payments received since the 1st',
+          },
+          {
+            label: 'Outstanding', icon: FiAlertCircle,
+            value: formatTZSCompact(t.outstanding), title: formatTZS(t.outstanding, 'TZS 0'),
+            sub: `${t.outstanding_items} unpaid project${t.outstanding_items === 1 ? '' : 's'} / event${t.outstanding_items === 1 ? '' : 's'}`,
+            subTone: Number(t.outstanding) > 0 ? 'amber' : undefined,
+          },
+          {
+            label: 'Shown below', icon: FiDollarSign,
+            value: formatTZSCompact(t.filtered), title: formatTZS(t.filtered, 'TZS 0'),
+            sub: `${data.total} payment${data.total === 1 ? '' : 's'}`,
+          },
+        ]} />
       )}
 
       <div className="admin-table-card">

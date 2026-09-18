@@ -7,32 +7,47 @@ import {
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import '../../styles/admin.css';
 
-const NAV = [
-  { to: '/admin',            label: 'Dashboard',  icon: FiGrid,     end: true },
-  { to: '/admin/contacts',   label: 'Contacts',   icon: FiMail },
-  { to: '/admin/quotes',     label: 'Quotes',     icon: FiFileText },
-  { to: '/admin/newsletter', label: 'Newsletter', icon: FiUsers },
-];
-
-// Client pipeline stages (Leads, Prospects…) are filter tabs on the Clients
-// page rather than seven separate sidebar links, keeping the sidebar short.
-const NAV_CRM = [
-  { to: '/admin/clients',    label: 'Clients',    icon: FiUserCheck },
-  { to: '/admin/projects',   label: 'Projects',   icon: FiBriefcase },
-  { to: '/admin/follow-ups', label: 'Follow-ups', icon: FiCalendar },
-  { to: '/admin/payments',   label: 'Payments',   icon: FiDollarSign },
-];
-
-const NAV_CARDHUB = [
-  { to: '/admin/cardhub/upcoming',  label: 'Upcoming Events', icon: FiGift },
-  { to: '/admin/cardhub/events',    label: 'All Events',      icon: FiList },
-  { to: '/admin/cardhub/customers', label: 'Customers',       icon: FiHeart },
-];
-
+/**
+ * Navigation grouped the way the business thinks: who to manage, what is
+ * coming, what is owed, then the website inbox. Every entry points at a route
+ * that already exists — no placeholder pages.
+ *
+ * Client pipeline stages (Leads, Prospects…) stay as filter tabs on the
+ * Clients page rather than separate links, keeping the sidebar short.
+ */
 const NAV_GROUPS = [
-  { label: 'Main', items: NAV },
-  { label: 'Clients', items: NAV_CRM },
-  { label: 'CardHub', items: NAV_CARDHUB },
+  {
+    label: 'Main',
+    items: [{ to: '/admin', label: 'Dashboard', icon: FiGrid, end: true }],
+  },
+  {
+    label: 'Customer management',
+    items: [
+      { to: '/admin/clients',    label: 'Clients',    icon: FiUserCheck },
+      { to: '/admin/follow-ups', label: 'Follow-ups', icon: FiCalendar },
+      { to: '/admin/projects',   label: 'Projects',   icon: FiBriefcase },
+    ],
+  },
+  {
+    label: 'CardHub',
+    items: [
+      { to: '/admin/cardhub/upcoming',  label: 'Upcoming Events', icon: FiGift },
+      { to: '/admin/cardhub/events',    label: 'All Events',      icon: FiList },
+      { to: '/admin/cardhub/customers', label: 'Customers',       icon: FiHeart },
+    ],
+  },
+  {
+    label: 'Finance',
+    items: [{ to: '/admin/payments', label: 'Payments', icon: FiDollarSign }],
+  },
+  {
+    label: 'Website',
+    items: [
+      { to: '/admin/contacts',   label: 'Contacts',   icon: FiMail },
+      { to: '/admin/quotes',     label: 'Quotes',     icon: FiFileText },
+      { to: '/admin/newsletter', label: 'Newsletter', icon: FiUsers },
+    ],
+  },
 ];
 
 export default function AdminLayout({ children, title }) {
@@ -79,9 +94,12 @@ export default function AdminLayout({ children, title }) {
         <div className="admin-logo">
           <div className="admin-logo-mark">C</div>
           <div className="admin-logo-text">
-            Clix Admin
-            <span className="admin-logo-sub">Control Panel</span>
+            Clix CRM
+            <span className="admin-logo-sub">Clients &amp; follow-ups</span>
           </div>
+          <button className="admin-sidebar-close" onClick={close} aria-label="Close menu">
+            <FiX size={18} />
+          </button>
         </div>
 
         <nav className="admin-nav" aria-label="Admin navigation">
@@ -95,25 +113,27 @@ export default function AdminLayout({ children, title }) {
                   end={end}
                   className={({ isActive }) => `admin-nav-link${isActive ? ' active' : ''}`}
                 >
-                  <Icon size={16} />
-                  {label}
+                  <Icon size={16} aria-hidden="true" />
+                  <span>{label}</span>
                 </NavLink>
               ))}
             </Fragment>
           ))}
-          <span className="admin-nav-label">Site</span>
-          <a className="admin-nav-link" href="/" target="_blank" rel="noopener noreferrer">
-            <FiExternalLink size={16} /> View Website
-          </a>
         </nav>
 
         <div className="admin-sidebar-footer">
-          <div className="admin-user-info">
-            Signed in as <strong>{username || 'admin'}</strong>
+          <a className="admin-nav-link admin-site-link" href="/" target="_blank" rel="noopener noreferrer">
+            <FiExternalLink size={16} aria-hidden="true" /> <span>View website</span>
+          </a>
+          <div className="admin-user-row">
+            <div className="admin-user-info">
+              <span className="admin-user-avatar" aria-hidden="true">{(username || 'a').charAt(0).toUpperCase()}</span>
+              <span className="admin-user-name">{username || 'admin'}</span>
+            </div>
+            <button className="admin-logout-btn" onClick={onLogout} aria-label="Sign out">
+              <FiLogOut size={15} aria-hidden="true" />
+            </button>
           </div>
-          <button className="admin-logout-btn" onClick={onLogout}>
-            <FiLogOut size={14} /> Sign Out
-          </button>
         </div>
       </aside>
 

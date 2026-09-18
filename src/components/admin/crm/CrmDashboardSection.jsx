@@ -3,22 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiUsers, FiCalendar, FiGift, FiDollarSign, FiSearch, FiPlus, FiArrowRight } from 'react-icons/fi';
 import { API, apiFetch } from '../../../config/api';
 import { useApi, useCrmOptions, useDebounced, useDialog, useSessionGuard } from '../../../hooks/useCrm';
-import { formatDate, formatTZS, labelFor, qs } from '../../../utils/crm';
-import { EmptyState, ErrorState, LoadingState, PanelHeader } from './ui';
+import { CRM_TZ, formatDate, formatTZS, formatTZSCompact, labelFor, qs } from '../../../utils/crm';
+import { Badge, EmptyState, ErrorState, LoadingState, MetricBar, PanelHeader } from './ui';
 import { EventRow, FollowUpDialogs, FollowUpRow } from './lists';
 import ClientForm from './ClientForm';
 
 const plural = (n, word, many = `${word}s`) => `${n} ${n === 1 ? word : many}`;
 
-function Kpi({ to, label, value, sub, subTone, icon: Icon, color, money }) {
-  return (
-    <Link to={to} className="admin-stat-card crm-kpi" style={{ '--s-color': color }}>
-      <div className="admin-stat-icon"><Icon size={18} aria-hidden="true" /></div>
-      <div className="admin-stat-label">{label}</div>
-      <div className={`admin-stat-value${money ? ' crm-kpi-money' : ''}`}>{value}</div>
-      {sub && <div className={`admin-stat-sub${subTone ? ` crm-text-${subTone}` : ''}`}>{sub}</div>}
-    </Link>
-  );
+function greeting() {
+  const hour = Number(new Intl.DateTimeFormat('en-GB', { timeZone: CRM_TZ, hour: 'numeric', hourCycle: 'h23' }).format(new Date()));
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
 }
 
 /** Global CRM search: clients, projects, CardHub events and payment references. */
@@ -131,12 +127,17 @@ export default function CrmDashboardSection() {
   const { dialog, open, close } = useDialog();
 
   const header = (
-    <div className="crm-dash-section-title">
-      <h2>Clients & CardHub</h2>
-      <CrmSearch />
-      <button type="button" className="crm-btn crm-btn-primary" onClick={() => open('client')}>
-        <FiPlus size={14} aria-hidden="true" /> Add Client
-      </button>
+    <div className="crm-dash-head">
+      <div className="crm-dash-head-main">
+        <h2>{greeting()}</h2>
+        <p>Track your clients, follow-ups, projects and upcoming events.</p>
+      </div>
+      <div className="crm-dash-head-actions">
+        <CrmSearch />
+        <button type="button" className="crm-btn crm-btn-primary" onClick={() => open('client')}>
+          <FiPlus size={14} aria-hidden="true" /> Add Client
+        </button>
+      </div>
     </div>
   );
 
@@ -166,21 +167,35 @@ export default function CrmDashboardSection() {
     <>
       {header}
 
-      <div className="admin-stats">
-        <Kpi to="/admin/clients" label="Clients" icon={FiUsers} color="#39FF14" value={k.total_clients}
-          sub={plural(k.prospects, 'prospect')} />
-        <Kpi to={k.follow_ups_overdue ? '/admin/follow-ups?view=overdue' : '/admin/follow-ups'}
-          label="Follow up today" icon={FiCalendar} color={k.follow_ups_overdue ? '#ff6b6b' : '#39FF14'}
-          value={k.follow_ups_today}
-          sub={k.follow_ups_overdue ? `${k.follow_ups_overdue} overdue` : 'Nothing overdue'}
-          subTone={k.follow_ups_overdue ? 'red' : undefined} />
-        <Kpi to="/admin/cardhub/upcoming?view=next_30" label={`Events in ${w.event_days} days`} icon={FiGift} color="#FFA500"
-          value={k.upcoming_events}
-          sub={k.upcoming_events_with_balance ? `${k.upcoming_events_with_balance} with balance due` : 'All paid up'} />
-        <Kpi to="/admin/payments" label="Outstanding" icon={FiDollarSign} color="#00E5FF" money
-          value={formatTZS(k.outstanding_balance, 'TZS 0')}
-          sub={k.outstanding_items ? `${plural(k.outstanding_items, 'project or event', 'projects & events')} unpaid` : 'Nothing owed'} />
-      </div>
+      <MetricBar items={[
+        {
+          to: '/admin/clients', label: 'Clients', icon: FiUsers,
+          value: k.total_clients,
+          sub: `${plural(k.prospects, 'prospect')} · ${k.clients_added_last_30} new in 30 days`,
+        },
+        {
+          to: k.follow_ups_overdue ? '/admin/follow-ups?view=overdue' : '/admin/follow-ups',
+          label: 'Follow-ups', icon: FiCalendar,
+          value: `${k.follow_ups_today} today`,
+          sub: k.follow_ups_overdue ? `${k.follow_ups_overdue} overdue` : 'Nothing overdue',
+          subTone: k.follow_ups_overdue ? 'red' : undefined,
+        },
+        {
+          to: '/admin/cardhub/upcoming?view=next_30', label: 'Events', icon: FiGift,
+          value: `${k.upcoming_events} upcoming`,
+          sub: k.upcoming_events_with_balance
+            ? `${k.upcoming_events_with_balance} unpaid · next ${w.event_days} days`
+            : `Next ${w.event_days} days`,
+          subTone: k.upcoming_events_with_balance ? 'amber' : undefined,
+        },
+        {
+          to: '/admin/payments', label: 'Owed', icon: FiDollarSign,
+          value: formatTZSCompact(k.outstanding_balance),
+          title: formatTZS(k.outstanding_balance, 'TZS 0'),
+          sub: k.outstanding_items ? `${plural(k.outstanding_items, 'unpaid item')}` : 'Nothing owed',
+          subTone: k.outstanding_items ? 'amber' : undefined,
+        },
+      ]} />
 
       <div className="crm-dash-grid">
         <div className="crm-panel crm-span-2">
@@ -213,6 +228,44 @@ export default function CrmDashboardSection() {
         </div>
 
         <div className="crm-panel">
+          <PanelHeader title="Outstanding payments">
+            <Link className="crm-btn crm-btn-ghost crm-btn-sm" to="/admin/payments">All payments</Link>
+          </PanelHeader>
+          {data.outstanding?.length ? (
+            <ul className="crm-rows">
+              {data.outstanding.map(o => (
+                <li key={`${o.kind}${o.id}`} className="crm-row crm-owed-row">
+                  <div className="crm-row-main">
+                    <Link
+                      className="crm-row-title"
+                      to={o.kind === 'event' ? `/admin/cardhub/events/${o.id}` : `/admin/clients/${o.client_id}?tab=projects`}
+                    >
+                      {o.client_name}
+                    </Link>
+                    <div className="crm-row-sub">{o.name} · {o.kind === 'event' ? 'CardHub' : 'Project'}</div>
+                  </div>
+                  <div className="crm-row-side">
+                    <span className="crm-money crm-text-amber">{formatTZS(o.balance)}</span>
+                    <Badge value={o.payment_status} options={options?.payment_statuses} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : <EmptyState sw="Hakuna deni lililobaki.">Everything is paid up.</EmptyState>}
+        </div>
+      </div>
+
+      <div className="crm-dash-grid">
+        <div className="crm-panel crm-span-2">
+          <PanelHeader title={`Upcoming events — next ${w.event_days} days`}>
+            <Link className="crm-btn crm-btn-ghost crm-btn-sm" to="/admin/cardhub/upcoming">All events</Link>
+          </PanelHeader>
+          {data.upcoming_events.length
+            ? <ul className="crm-rows">{data.upcoming_events.map(e => <EventRow key={e.id} event={e} options={options} today={today} />)}</ul>
+            : <EmptyState sw="Hakuna tukio linalokuja ndani ya siku 30.">No upcoming CardHub events.</EmptyState>}
+        </div>
+
+        <div className="crm-panel">
           <PanelHeader title="Projects starting soon" />
           {data.projects_starting.length ? (
             <ul className="crm-rows">
@@ -228,19 +281,8 @@ export default function CrmDashboardSection() {
             </ul>
           ) : <EmptyState>No projects starting in the next {w.project_days} days.</EmptyState>}
         </div>
-      </div>
 
-      <div className="crm-dash-grid">
-        <div className="crm-panel crm-span-2">
-          <PanelHeader title={`CardHub events — next ${w.event_days} days`}>
-            <Link className="crm-btn crm-btn-ghost crm-btn-sm" to="/admin/cardhub/upcoming">All events</Link>
-          </PanelHeader>
-          {data.upcoming_events.length
-            ? <ul className="crm-rows">{data.upcoming_events.map(e => <EventRow key={e.id} event={e} options={options} today={today} />)}</ul>
-            : <EmptyState sw="Hakuna tukio linalokuja ndani ya siku 30.">No upcoming CardHub events.</EmptyState>}
-        </div>
-
-        <div className="crm-panel">
+        <div className="crm-panel crm-span-3">
           <PanelHeader title="Client pipeline" />
           <ul className="crm-pipeline">
             {pipelineStatuses.map(s => {

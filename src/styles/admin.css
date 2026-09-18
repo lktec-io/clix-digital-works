@@ -41,10 +41,28 @@
 .admin-logo {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-lg) var(--space-xl);
+  gap: 10px;
+  padding: var(--space-md) var(--space-lg);
   border-bottom: 1px solid rgba(255,255,255,0.06);
+  min-height: 60px; /* lines up with the topbar */
 }
+
+/* Close button inside the drawer (mobile only) */
+.admin-sidebar-close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.admin-sidebar-close:hover { color: var(--text-primary); background: rgba(255,255,255,0.06); }
 
 .admin-logo-mark {
   width: 32px;
@@ -77,49 +95,70 @@
 
 .admin-nav {
   flex: 1;
-  padding: var(--space-lg) var(--space-md);
+  padding: var(--space-sm) 10px var(--space-lg);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
 .admin-nav-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0 var(--space-sm);
-  margin: var(--space-md) 0 var(--space-xs);
+  letter-spacing: 0.1em;
+  padding: 0 10px;
+  margin: var(--space-md) 0 4px;
+  opacity: 0.75;
 }
+.admin-nav-label:first-child { margin-top: var(--space-sm); }
 
+/* Quiet by default; the active item is marked with an accent rail, a brighter
+   icon and heavier text rather than a large coloured block. */
 .admin-nav-link {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px var(--space-md);
+  padding: 9px 10px;
   border-radius: var(--radius-md);
   font-size: var(--fs-sm);
   font-weight: 500;
   color: var(--text-muted);
   text-decoration: none;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast), background var(--transition-fast);
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
 }
+.admin-nav-link svg { flex-shrink: 0; opacity: 0.85; }
+.admin-nav-link span { overflow: hidden; text-overflow: ellipsis; }
 
 .admin-nav-link:hover {
   color: var(--text-primary);
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.05);
 }
 
 .admin-nav-link.active {
-  color: var(--secondary);
-  background: var(--secondary-dim);
+  color: var(--text-primary);
+  background: rgba(57, 255, 20, 0.08);
+  font-weight: 700;
 }
+
+.admin-nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  bottom: 7px;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: var(--secondary);
+}
+
+.admin-nav-link.active svg { color: var(--secondary); opacity: 1; }
 
 .admin-nav-link .nav-badge {
   margin-left: auto;
@@ -138,36 +177,62 @@
 }
 
 .admin-sidebar-footer {
-  padding: var(--space-md) var(--space-lg);
+  padding: 10px;
   border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-site-link { color: var(--text-muted); }
+
+.admin-user-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 6px 4px 2px 10px;
+  min-width: 0;
 }
 
 .admin-user-info {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-  margin-bottom: var(--space-sm);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.admin-user-info strong {
-  color: var(--text-secondary);
-}
-
-.admin-logout-btn {
-  width: 100%;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  min-width: 0;
+  flex: 1;
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+}
+
+.admin-user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.admin-user-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.admin-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
   border-radius: var(--radius-md);
   background: transparent;
   border: 1px solid rgba(255,255,255,0.08);
   color: var(--text-muted);
-  font-size: var(--fs-xs);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
 }
 
 .admin-logout-btn:hover {
@@ -237,80 +302,7 @@
   gap: 20px;
 }
 
-.admin-grid-panels {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-top: 8px;
-}
-
-/* ─── Stats Cards ─────────────────────────────────────────────────────────── */
-.admin-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-lg);
-  margin-bottom: var(--space-2xl);
-}
-
-.admin-stat-card {
-  padding: var(--space-xl);
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  position: relative;
-  overflow: hidden;
-  min-width: 0;
-}
-
-.admin-stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--s-color, var(--secondary));
-  opacity: 0.7;
-}
-
-.admin-stat-label {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 600;
-  margin-bottom: var(--space-sm);
-}
-
-.admin-stat-value {
-  font-size: var(--fs-3xl);
-  font-weight: 900;
-  color: var(--text-primary);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.admin-stat-sub {
-  font-size: var(--fs-xs);
-  color: var(--s-color, var(--secondary));
-  font-weight: 600;
-  word-break: break-word;
-}
-
-.admin-stat-icon {
-  position: absolute;
-  top: var(--space-lg);
-  right: var(--space-lg);
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--s-color, var(--secondary)) 12%, transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--s-color, var(--secondary));
-  flex-shrink: 0;
-}
+/* Stat cards were replaced by the shared MetricBar strip (crm.css). */
 
 /* ─── Data Table ─────────────────────────────────────────────────────────── */
 .admin-table-card {
@@ -613,9 +605,6 @@ table.admin-table {
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .admin-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
   .admin-grid-loading {
     grid-template-columns: repeat(2, 1fr);
@@ -644,6 +633,12 @@ table.admin-table {
     display: flex;
   }
 
+  /* The drawer carries its own close button so it can be dismissed without
+     reaching back to the hamburger. */
+  .admin-sidebar-close { display: flex; }
+  .admin-nav-link { min-height: 44px; }
+  .admin-nav-label { margin: var(--space-md) 0 2px; }
+
   .admin-topbar {
     padding: 0 var(--space-lg);
     gap: var(--space-sm);
@@ -653,13 +648,7 @@ table.admin-table {
     display: none;
   }
 
-  .admin-stats {
-    grid-template-columns: 1fr 1fr;
-  }
 
-  .admin-grid-panels {
-    grid-template-columns: 1fr;
-  }
 
   .admin-table-header {
     padding: var(--space-md) var(--space-lg);
@@ -672,9 +661,6 @@ table.admin-table {
 }
 
 @media (max-width: 480px) {
-  .admin-stats {
-    grid-template-columns: 1fr;
-  }
 
   .admin-grid-loading {
     grid-template-columns: 1fr 1fr;
@@ -729,17 +715,8 @@ table.admin-table {
 }
 
 @media (max-width: 390px) {
-  .admin-stats {
-    gap: var(--space-sm);
-  }
 
-  .admin-stat-card {
-    padding: var(--space-lg);
-  }
 
-  .admin-stat-value {
-    font-size: var(--fs-2xl);
-  }
 
   .admin-grid-loading {
     grid-template-columns: 1fr;
@@ -768,14 +745,7 @@ table.admin-table {
 }
 
 @media (max-width: 360px) {
-  .admin-stats {
-    grid-template-columns: 1fr;
-    gap: var(--space-xs);
-  }
 
-  .admin-stat-card {
-    padding: var(--space-md);
-  }
 
   .admin-login-page {
     padding: var(--space-md);

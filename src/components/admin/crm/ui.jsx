@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
 import {
   FiX, FiAlertCircle, FiRefreshCw, FiChevronLeft, FiChevronRight, FiChevronDown, FiChevronUp,
   FiInbox, FiMoreHorizontal, FiFilter,
@@ -51,6 +52,33 @@ export function Badge({ value, options, label, tone }) {
     <span className={`crm-badge crm-tone-${tone || toneFor(value)}`}>
       {label || labelFor(options, value)}
     </span>
+  );
+}
+
+/* ── Metric strip ───────────────────────────────────────────────────────── */
+
+/**
+ * Compact analytics bar: one hairline-separated cell per business question.
+ * Cells are links when `to` is given. Values come from the API only — no
+ * invented trends or comparisons.
+ */
+export function MetricBar({ items }) {
+  return (
+    <div className="crm-metrics">
+      {items.filter(Boolean).map(({ to, label, value, sub, subTone, icon: Icon, title }) => {
+        const Tag = to ? Link : 'div';
+        return (
+          <Tag key={label} {...(to ? { to } : {})} className="crm-metric" title={title}>
+            <span className="crm-metric-label">
+              {Icon && <Icon size={13} aria-hidden="true" />}
+              {label}
+            </span>
+            <span className="crm-metric-value">{value}</span>
+            {sub && <span className={`crm-metric-sub${subTone ? ` crm-text-${subTone}` : ''}`}>{sub}</span>}
+          </Tag>
+        );
+      })}
+    </div>
   );
 }
 
