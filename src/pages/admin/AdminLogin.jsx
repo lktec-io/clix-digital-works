@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiLock, FiUser, FiLogIn, FiAlertCircle } from 'react-icons/fi';
 import { useAdminAuth } from '../../context/AdminAuthContext';
+import { useAdminTheme } from '../../hooks/useAdminTheme';
 import '../../styles/admin.css';
 
 export default function AdminLogin() {
   const { login, loading, error } = useAdminAuth();
+  useAdminTheme(); // sign-in screen honours the saved theme
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', password: '' });
 

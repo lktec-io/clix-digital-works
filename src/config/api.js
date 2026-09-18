@@ -21,6 +21,8 @@ export const API = {
   followUps:           `${BASE}/api/admin/follow-ups`,
   cardhubEvents:       `${BASE}/api/admin/cardhub/events`,
   payments:            `${BASE}/api/admin/payments`,
+  expenses:            `${BASE}/api/admin/expenses`,
+  expensesSummary:     `${BASE}/api/admin/expenses-summary`,
 };
 
 export async function apiFetch(url, options = {}) {

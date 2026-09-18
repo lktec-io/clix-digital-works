@@ -3,8 +3,10 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   FiGrid, FiMail, FiFileText, FiUsers, FiLogOut, FiExternalLink, FiMenu, FiX,
   FiUserCheck, FiBriefcase, FiCalendar, FiDollarSign, FiGift, FiList, FiHeart,
+  FiTrendingDown, FiSun, FiMoon,
 } from 'react-icons/fi';
 import { useAdminAuth } from '../../context/AdminAuthContext';
+import { useAdminTheme } from '../../hooks/useAdminTheme';
 import '../../styles/admin.css';
 
 /**
@@ -38,7 +40,10 @@ const NAV_GROUPS = [
   },
   {
     label: 'Finance',
-    items: [{ to: '/admin/payments', label: 'Payments', icon: FiDollarSign }],
+    items: [
+      { to: '/admin/payments', label: 'Payments', icon: FiDollarSign },
+      { to: '/admin/expenses', label: 'Expenses', icon: FiTrendingDown },
+    ],
   },
   {
     label: 'Website',
@@ -52,6 +57,7 @@ const NAV_GROUPS = [
 
 export default function AdminLayout({ children, title }) {
   const { username, logout } = useAdminAuth();
+  const { theme, toggle: toggleTheme } = useAdminTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -155,6 +161,17 @@ export default function AdminLayout({ children, title }) {
           <span className="admin-topbar-time">
             {new Date().toLocaleDateString('en-TZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </span>
+          <button
+            type="button"
+            className="admin-theme-toggle"
+            onClick={toggleTheme}
+            aria-pressed={theme === 'light'}
+            title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          >
+            {theme === 'dark'
+              ? <><FiSun size={15} aria-hidden="true" /> <span>Light</span></>
+              : <><FiMoon size={15} aria-hidden="true" /> <span>Dark</span></>}
+          </button>
         </header>
         <main className="admin-content">
           {children}

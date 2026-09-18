@@ -1,16 +1,19 @@
 import { Link, useParams } from 'react-router-dom';
-import { FiArrowLeft, FiEdit2, FiPlus, FiTruck, FiPhone, FiMail, FiMessageCircle, FiArchive, FiRotateCcw } from 'react-icons/fi';
+import {
+  FiArrowLeft, FiEdit2, FiPlus, FiTruck, FiPhone, FiMail, FiMessageCircle, FiArchive, FiRotateCcw, FiTrendingDown,
+} from 'react-icons/fi';
 import AdminLayout from '../AdminLayout';
 import { API } from '../../../config/api';
 import { useApi, useCrmOptions, useDialog, useMutation } from '../../../hooks/useCrm';
 import {
-  eventCountdown, daysUntil, formatDate, formatDateTime, hasBalance, labelFor, STATUS_HELP, whatsappLink,
+  eventCountdown, daysUntil, formatDate, formatDateTime, hasBalance, labelFor, STATUS_HELP, SW, whatsappLink,
 } from '../../../utils/crm';
 import {
   Badge, ConfirmDialog, DataView, EmptyState, FormError, InfoList, MoreMenu, PanelHeader, Select,
 } from '../../../components/admin/crm/ui';
-import { ActivityTimeline, DateBlock, MoneySummary, PaymentRows } from '../../../components/admin/crm/lists';
+import { ActivityTimeline, DateBlock, ExpenseRows, PaymentRows, ProfitSummary } from '../../../components/admin/crm/lists';
 import { CardHubEventForm, PaymentForm, VoidPaymentForm } from '../../../components/admin/crm/forms';
+import ExpenseForm, { VoidExpenseForm } from '../../../components/admin/crm/ExpenseForm';
 
 const CLOSED = ['event_completed', 'cancelled'];
 
@@ -67,8 +70,8 @@ export default function AdminCardHubEventDetail() {
                 </div>
               </div>
 
-              {priced
-                ? <MoneySummary total={event.total_price} paid={event.amount_paid} balance={event.balance} labels={['Price', 'Paid', 'Balance']} help />
+              {priced || Number(data.money?.costs) > 0
+                ? <ProfitSummary money={data.money} />
                 : <p className="crm-status-help">No price set yet. Edit the event to add the price before recording payments.</p>}
 
               <div className="crm-detail-actions">
@@ -80,6 +83,11 @@ export default function AdminCardHubEventDetail() {
                 {!archived && !['delivered', ...CLOSED].includes(event.status) && (
                   <button type="button" className="crm-btn crm-btn-ghost" onClick={() => setStatus('delivered')} disabled={status.busy}>
                     <FiTruck size={14} aria-hidden="true" /> Mark Delivered
+                  </button>
+                )}
+                {!archived && (
+                  <button type="button" className="crm-btn crm-btn-ghost" onClick={() => open('expense')}>
+                    <FiTrendingDown size={14} aria-hidden="true" /> Add Expense
                   </button>
                 )}
                 <MoreMenu items={[
@@ -107,6 +115,20 @@ export default function AdminCardHubEventDetail() {
                   {data.payments.length
                     ? <PaymentRows payments={data.payments} options={options} onVoid={p => open('void', p)} />
                     : <EmptyState>{priced ? 'No payments recorded yet.' : 'Set a price to record payments.'}</EmptyState>}
+                </div>
+
+                <div className="crm-panel">
+                  <PanelHeader title={`Costs (${data.expenses?.length || 0})`}>
+                    {!archived && (
+                      <button type="button" className="crm-btn crm-btn-ghost crm-btn-sm" onClick={() => open('expense')}>
+                        <FiPlus size={13} aria-hidden="true" /> Add Expense
+                      </button>
+                    )}
+                  </PanelHeader>
+                  {data.expenses?.length
+                    ? <ExpenseRows expenses={data.expenses} options={options}
+                        onEdit={x => open('editExpense', x)} onVoid={x => open('voidExpense', x)} />
+                    : <EmptyState sw={SW.projectCost}>No costs recorded for this event.</EmptyState>}
                 </div>
 
                 <div className="crm-panel">
@@ -160,6 +182,9 @@ export default function AdminCardHubEventDetail() {
           balance={event.balance} options={options} onClose={close} onSaved={done} />
       )}
       {dialog?.type === 'void' && <VoidPaymentForm payment={dialog.item} onClose={close} onSaved={done} />}
+      {event && dialog?.type === 'expense' && <ExpenseForm event={event} options={options} onClose={close} onSaved={done} />}
+      {event && dialog?.type === 'editExpense' && <ExpenseForm expense={dialog.item} event={event} options={options} onClose={close} onSaved={done} />}
+      {dialog?.type === 'voidExpense' && <VoidExpenseForm expense={dialog.item} onClose={close} onSaved={done} />}
       {event && dialog?.type === 'archive' && (
         <ConfirmDialog
           open

@@ -164,6 +164,48 @@ const STATEMENTS = [
     CONSTRAINT fk_client_notes_client FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE RESTRICT
   ) ${TABLE_OPTS}`,
 
+  /* Money Clix SPENDS. Deliberately a separate table from client_payments
+     (money received): the two are never mixed, and profit is derived from
+     both rather than stored. A project expense belongs to exactly one client
+     (optionally narrowed to one project or one CardHub event); a general
+     expense belongs to the business and carries no client link at all. */
+  `CREATE TABLE IF NOT EXISTS expenses (
+    id               INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title            VARCHAR(190) NOT NULL,
+    amount           DECIMAL(14,2) NOT NULL,
+    expense_type     VARCHAR(20)  NOT NULL,
+    category         VARCHAR(30)  NOT NULL,
+    expense_date     DATE NOT NULL,
+    payment_method   VARCHAR(30)  NULL,
+    vendor           VARCHAR(190) NULL,
+    reference        VARCHAR(100) NULL,
+    notes            VARCHAR(500) NULL,
+    client_id        INT UNSIGNED NULL,
+    project_id       INT UNSIGNED NULL,
+    cardhub_event_id INT UNSIGNED NULL,
+    voided_at        TIMESTAMP NULL,
+    void_reason      VARCHAR(255) NULL,
+    voided_by        VARCHAR(100) NULL,
+    recorded_by      VARCHAR(100) NULL,
+    created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_expenses_date (expense_date),
+    INDEX idx_expenses_type_date (expense_type, expense_date),
+    INDEX idx_expenses_category (category),
+    INDEX idx_expenses_client (client_id),
+    INDEX idx_expenses_project (project_id),
+    INDEX idx_expenses_event (cardhub_event_id),
+    CONSTRAINT fk_expenses_client  FOREIGN KEY (client_id)        REFERENCES clients (id)        ON DELETE RESTRICT,
+    CONSTRAINT fk_expenses_project FOREIGN KEY (project_id)       REFERENCES projects (id)       ON DELETE RESTRICT,
+    CONSTRAINT fk_expenses_event   FOREIGN KEY (cardhub_event_id) REFERENCES cardhub_events (id) ON DELETE RESTRICT,
+    CONSTRAINT chk_expenses_amount CHECK (amount > 0),
+    CONSTRAINT chk_expenses_one_parent CHECK (project_id IS NULL OR cardhub_event_id IS NULL),
+    CONSTRAINT chk_expenses_link CHECK (
+      (expense_type = 'general' AND client_id IS NULL AND project_id IS NULL AND cardhub_event_id IS NULL)
+      OR (expense_type = 'project' AND client_id IS NOT NULL)
+    )
+  ) ${TABLE_OPTS}`,
+
   `CREATE TABLE IF NOT EXISTS activity_log (
     id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     client_id   INT UNSIGNED NULL,

@@ -36,6 +36,7 @@ import AdminClientDetail       from './pages/admin/crm/AdminClientDetail';
 import AdminProjects           from './pages/admin/crm/AdminProjects';
 import AdminFollowUps          from './pages/admin/crm/AdminFollowUps';
 import AdminPayments           from './pages/admin/crm/AdminPayments';
+import AdminExpenses           from './pages/admin/crm/AdminExpenses';
 import AdminCardHubEvents      from './pages/admin/crm/AdminCardHubEvents';
 import AdminCardHubEventDetail from './pages/admin/crm/AdminCardHubEventDetail';
 
@@ -81,6 +82,7 @@ function AppRoutes() {
           <Route path="/admin/projects" element={<AdminGuard><AdminProjects /></AdminGuard>} />
           <Route path="/admin/follow-ups" element={<AdminGuard><AdminFollowUps /></AdminGuard>} />
           <Route path="/admin/payments" element={<AdminGuard><AdminPayments /></AdminGuard>} />
+          <Route path="/admin/expenses" element={<AdminGuard><AdminExpenses /></AdminGuard>} />
           <Route path="/admin/cardhub/upcoming" element={<AdminGuard><AdminCardHubEvents key="upcoming" defaultView="upcoming" /></AdminGuard>} />
           <Route path="/admin/cardhub/events" element={<AdminGuard><AdminCardHubEvents key="all" defaultView="all" /></AdminGuard>} />
           <Route path="/admin/cardhub/events/:id" element={<AdminGuard><AdminCardHubEventDetail /></AdminGuard>} />

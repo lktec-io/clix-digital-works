@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   FiArrowLeft, FiPhone, FiMail, FiMessageCircle, FiEdit2, FiCalendar, FiMessageSquare, FiPlus,
-  FiArchive, FiRotateCcw, FiGift, FiBriefcase,
+  FiArchive, FiRotateCcw, FiGift, FiBriefcase, FiTrendingDown,
 } from 'react-icons/fi';
 import AdminLayout from '../AdminLayout';
 import { API } from '../../../config/api';
@@ -14,9 +14,10 @@ import {
   Badge, ConfirmDialog, DataView, EmptyState, FormError, InfoList, MoreMenu, PanelHeader, SectionNav, Select,
 } from '../../../components/admin/crm/ui';
 import {
-  ActivityTimeline, EventRow, FollowUpDialogs, FollowUpRow, MoneySummary, PaymentRows, ProjectModal,
+  ActivityTimeline, EventRow, ExpenseRows, FollowUpDialogs, FollowUpRow, PaymentRows, ProfitSummary, ProjectModal,
 } from '../../../components/admin/crm/lists';
 import ClientForm from '../../../components/admin/crm/ClientForm';
+import ExpenseForm, { VoidExpenseForm } from '../../../components/admin/crm/ExpenseForm';
 import {
   CardHubEventForm, FollowUpForm, PaymentForm, ProjectForm, VoidPaymentForm,
 } from '../../../components/admin/crm/forms';
@@ -42,7 +43,7 @@ export default function AdminClientDetail() {
     { value: 'follow-ups', label: `Follow-ups (${openFollowUps.length})` },
     { value: 'projects', label: `Projects (${data.projects.length})` },
     { value: 'cardhub', label: `CardHub (${data.cardhub_events.length})` },
-    { value: 'payments', label: `Payments (${data.payments.length})` },
+    { value: 'payments', label: `Money (${data.payments.length + (data.expenses?.length || 0)})` },
     { value: 'notes', label: `Notes (${data.notes.length})` },
     { value: 'activity', label: 'History' },
   ] : [];
@@ -128,6 +129,7 @@ export default function AdminClientDetail() {
                 <MoreMenu items={[
                   !archived && { label: 'Edit client', icon: FiEdit2, onClick: () => open('edit') },
                   !archived && { label: 'Add CardHub event', icon: FiGift, onClick: () => open('newEvent') },
+                  !archived && { label: 'Add expense', icon: FiTrendingDown, onClick: () => open('expense') },
                   { label: archived ? 'Restore client' : 'Archive client', icon: archived ? FiRotateCcw : FiArchive, danger: !archived, onClick: () => open('archive') },
                 ]} />
                 {!archived && (
@@ -250,14 +252,42 @@ export default function AdminClientDetail() {
             )}
 
             {f.tab === 'payments' && (
-              <div className="crm-panel">
-                <PanelHeader title="Payments" />
-                {Number(data.summary.total_billed) > 0 && (
-                  <MoneySummary total={data.summary.total_billed} paid={data.summary.total_paid} balance={data.summary.balance} help />
-                )}
-                {data.payments.length
-                  ? <PaymentRows payments={data.payments} options={options} showParent onVoid={p => open('void', p)} />
-                  : <EmptyState sw="Malipo hurekodiwa kupitia project au tukio la CardHub.">No payments recorded yet.</EmptyState>}
+              <div className="crm-stack">
+                <div className="crm-panel">
+                  <PanelHeader title="Financial summary" />
+                  <ProfitSummary
+                    money={{
+                      contract_value: data.summary.total_billed,
+                      collected: data.summary.total_paid,
+                      outstanding: data.summary.balance,
+                      costs: data.summary.costs,
+                      collected_profit: data.summary.collected_profit,
+                      contract_margin: (Number(data.summary.total_billed) - Number(data.summary.costs)).toFixed(2),
+                    }}
+                    labels={{ contract: 'Total value' }}
+                  />
+                </div>
+
+                <div className="crm-panel">
+                  <PanelHeader title={`Payments in (${data.payments.length})`} />
+                  {data.payments.length
+                    ? <PaymentRows payments={data.payments} options={options} showParent onVoid={p => open('void', p)} />
+                    : <EmptyState sw="Malipo hurekodiwa kupitia project au tukio la CardHub.">No payments recorded yet.</EmptyState>}
+                </div>
+
+                <div className="crm-panel">
+                  <PanelHeader title={`Costs out (${data.expenses?.length || 0})`}>
+                    {!archived && (
+                      <button type="button" className="crm-btn crm-btn-ghost crm-btn-sm" onClick={() => open('expense')}>
+                        <FiPlus size={13} aria-hidden="true" /> Add Expense
+                      </button>
+                    )}
+                  </PanelHeader>
+                  {data.expenses?.length
+                    ? <ExpenseRows expenses={data.expenses} options={options} showTarget
+                        onEdit={x => open('editExpense', x)} onVoid={x => open('voidExpense', x)} />
+                    : <EmptyState sw={SW.projectCost}>No costs recorded for this client.</EmptyState>}
+                </div>
               </div>
             )}
 
@@ -293,6 +323,9 @@ export default function AdminClientDetail() {
               balance={dialog.item.balance} options={options} onClose={close} onSaved={done} />
           )}
           {dialog?.type === 'void' && <VoidPaymentForm payment={dialog.item} onClose={close} onSaved={done} />}
+          {dialog?.type === 'expense' && <ExpenseForm client={client} options={options} onClose={close} onSaved={done} />}
+          {dialog?.type === 'editExpense' && <ExpenseForm expense={dialog.item} client={client} options={options} onClose={close} onSaved={done} />}
+          {dialog?.type === 'voidExpense' && <VoidExpenseForm expense={dialog.item} onClose={close} onSaved={done} />}
           {dialog?.type === 'archive' && (
             <ConfirmDialog
               open

@@ -5,6 +5,7 @@ import { projectsRouter } from './projects.js';
 import { followUpsRouter } from './followUps.js';
 import { cardhubRouter } from './cardhub.js';
 import { paymentsRouter } from './payments.js';
+import { expensesRouter } from './expenses.js';
 import { dashboardRouter } from './dashboard.js';
 
 /**
@@ -22,3 +23,4 @@ crmRouter.use(projectsRouter);
 crmRouter.use(followUpsRouter);
 crmRouter.use(cardhubRouter);
 crmRouter.use(paymentsRouter);
+crmRouter.use(expensesRouter);

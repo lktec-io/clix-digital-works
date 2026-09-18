@@ -1,15 +1,139 @@
-/* ─── Admin radius scale ──────────────────────────────────────────────────
-   The admin uses a sharper, business-like shape than the public website.
-   The shared tokens are overridden ONLY inside admin scopes, so the public
-   site (which uses the same tokens from variables.css) is unaffected. */
+/* ─── Admin design tokens ─────────────────────────────────────────────────
+   Everything below is scoped to admin surfaces, so the public website (which
+   shares variables.css) is never affected. Dark is the default because it is
+   the admin's existing appearance; `html[data-admin-theme="light"]` swaps the
+   values. Components use these semantic tokens — not raw colours — so a theme
+   change never needs a second copy of a component.
+
+   Surfaces:  --admin-bg < --admin-surface < --admin-surface-2 < --admin-raised
+   Lines:     --admin-line (hairline)  --admin-line-strong (inputs, controls)
+   Tones:     --tone-<name> (text) / -bg (tint) / -border
+   ───────────────────────────────────────────────────────────────────────── */
 .admin-app,
-.admin-login-page {
+.admin-login-page,
+.crm-modal-backdrop {
+  /* Shape: sharper than the marketing site. */
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 4px;
   --radius-xl: 4px;
   --radius-full: 3px;
+
+  /* Dark theme (default) */
+  --admin-bg: #050816;
+  --admin-surface: rgba(10, 35, 66, 0.4);
+  --admin-surface-2: #0a1a33;
+  --admin-raised: #0b1d38;
+  --admin-sidebar-bg: rgba(10, 35, 66, 0.6);
+  --admin-topbar-bg: rgba(5, 8, 22, 0.8);
+  --admin-overlay: rgba(5, 8, 22, 0.75);
+  --admin-wash-1: rgba(255, 255, 255, 0.02);
+  --admin-wash-2: rgba(255, 255, 255, 0.045);
+  --admin-line: rgba(255, 255, 255, 0.06);
+  --admin-line-strong: rgba(255, 255, 255, 0.1);
+  --admin-text: #FFFFFF;
+  --admin-text-2: #B8C4D6;
+  --admin-text-muted: #6B7FA3;
+  --admin-blur: blur(20px);
+
+  --tone-green: #39FF14;
+  --tone-green-bg: rgba(57, 255, 20, 0.1);
+  --tone-green-border: rgba(57, 255, 20, 0.25);
+  --tone-cyan: #00E5FF;
+  --tone-cyan-bg: rgba(0, 229, 255, 0.1);
+  --tone-cyan-border: rgba(0, 229, 255, 0.25);
+  --tone-amber: #FFA500;
+  --tone-amber-bg: rgba(255, 165, 0, 0.1);
+  --tone-amber-border: rgba(255, 165, 0, 0.25);
+  --tone-red: #ff6b6b;
+  --tone-red-bg: rgba(255, 60, 60, 0.09);
+  --tone-red-bg-strong: rgba(255, 60, 60, 0.15);
+  --tone-red-border: rgba(255, 60, 60, 0.25);
+  --tone-muted-bg: rgba(255, 255, 255, 0.05);
+  --tone-muted-border: rgba(255, 255, 255, 0.08);
+
+  /* Map the shared variables.css names onto the theme so existing rules and
+     components follow the theme without being rewritten. */
+  --bg: var(--admin-bg);
+  --bg-card: var(--admin-surface);
+  --bg-card-hover: var(--admin-surface-2);
+  --glass-bg: var(--admin-surface);
+  --glass-border: var(--admin-line);
+  --text-primary: var(--admin-text);
+  --text-secondary: var(--admin-text-2);
+  --text-muted: var(--admin-text-muted);
+  --secondary: var(--tone-green);
+  --secondary-dim: var(--tone-green-bg);
+  --accent: var(--tone-cyan);
+
+  /* Native controls (date pickers, scrollbars, autofill) follow the theme. */
+  color-scheme: dark;
 }
+
+/* Light theme: neutral paper surfaces, navy text, darker brand green so the
+   accent stays readable on white. Not an inversion of the dark palette. */
+html[data-admin-theme="light"] :is(.admin-app, .admin-login-page, .crm-modal-backdrop) {
+  --admin-bg: #f4f6fa;
+  --admin-surface: #ffffff;
+  --admin-surface-2: #f7f9fc;
+  --admin-raised: #ffffff;
+  --admin-sidebar-bg: #ffffff;
+  --admin-topbar-bg: rgba(255, 255, 255, 0.92);
+  --admin-overlay: rgba(16, 24, 40, 0.45);
+  --admin-wash-1: #f7f9fc;
+  --admin-wash-2: #eef2f8;
+  --admin-line: #e4e8ef;
+  --admin-line-strong: #cbd4e1;
+  --admin-text: #0A2342;
+  --admin-text-2: #3c4d66;
+  --admin-text-muted: #667892;
+  --admin-blur: none;
+
+  --tone-green: #0f8a37;
+  --tone-green-bg: #e9f7ee;
+  --tone-green-border: #b6e0c4;
+  --tone-cyan: #0b6bcb;
+  --tone-cyan-bg: #e8f1fd;
+  --tone-cyan-border: #bcd7f7;
+  --tone-amber: #a15c07;
+  --tone-amber-bg: #fdf3e3;
+  --tone-amber-border: #f0d7a9;
+  --tone-red: #b42318;
+  --tone-red-bg: #fdecea;
+  --tone-red-bg-strong: #fbdcd8;
+  --tone-red-border: #f3c4bd;
+  --tone-muted-bg: #f1f4f9;
+  --tone-muted-border: #dfe4ec;
+
+  color-scheme: light;
+
+  /* Paper needs light, tight shadows rather than the dark theme's deep ones. */
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.08);
+  --shadow-lg: 0 12px 28px rgba(16, 24, 40, 0.14);
+}
+
+/* Loading skeletons are a light shimmer by default; invert on paper. */
+html[data-admin-theme="light"] .admin-app .skeleton,
+html[data-admin-theme="light"] .crm-modal-backdrop .skeleton {
+  background: linear-gradient(90deg, #eef1f6 25%, #e3e8f0 37%, #eef1f6 63%);
+}
+
+/* The public site's dark decorations sit behind the admin; hide them in light
+   mode, and give the pointer back (the neon custom cursor is meant for the
+   dark site). The attribute only exists while an admin screen is mounted. */
+html[data-admin-theme="light"] .noise-overlay,
+html[data-admin-theme="light"] canvas[aria-hidden="true"],
+html[data-admin-theme="light"] .cursor-dot,
+html[data-admin-theme="light"] .cursor-ring {
+  display: none;
+}
+html[data-admin-theme="light"] body {
+  background: #f4f6fa;
+  cursor: auto;
+}
+html[data-admin-theme="light"] button,
+html[data-admin-theme="light"] .btn { cursor: pointer; }
 
 /* Skeleton blocks set an inline 6px radius in the shared Skeleton component. */
 .admin-app .skeleton { border-radius: 2px !important; }
@@ -26,9 +150,9 @@
 /* Sidebar */
 .admin-sidebar {
   width: 240px;
-  background: rgba(10, 35, 66, 0.6);
-  border-right: 1px solid rgba(255,255,255,0.06);
-  backdrop-filter: blur(20px);
+  background: var(--admin-sidebar-bg);
+  border-right: 1px solid var(--admin-line);
+  backdrop-filter: var(--admin-blur);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -43,7 +167,7 @@
   align-items: center;
   gap: 10px;
   padding: var(--space-md) var(--space-lg);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid var(--admin-line);
   min-height: 60px; /* lines up with the topbar */
 }
 
@@ -56,13 +180,13 @@
   height: 40px;
   margin-left: auto;
   flex-shrink: 0;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid var(--admin-line-strong);
   border-radius: var(--radius-md);
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
 }
-.admin-sidebar-close:hover { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+.admin-sidebar-close:hover { color: var(--text-primary); background: var(--admin-line); }
 
 .admin-logo-mark {
   width: 32px;
@@ -138,12 +262,12 @@
 
 .admin-nav-link:hover {
   color: var(--text-primary);
-  background: rgba(255,255,255,0.05);
+  background: var(--admin-wash-2);
 }
 
 .admin-nav-link.active {
   color: var(--text-primary);
-  background: rgba(57, 255, 20, 0.08);
+  background: var(--tone-green-bg);
   font-weight: 700;
 }
 
@@ -178,7 +302,7 @@
 
 .admin-sidebar-footer {
   padding: 10px;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--admin-line);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -212,7 +336,7 @@
   height: 26px;
   flex-shrink: 0;
   border-radius: var(--radius-sm);
-  background: rgba(255,255,255,0.08);
+  background: var(--admin-line-strong);
   color: var(--text-primary);
   font-size: 11px;
   font-weight: 700;
@@ -229,16 +353,16 @@
   flex-shrink: 0;
   border-radius: var(--radius-md);
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--admin-line-strong);
   color: var(--text-muted);
   cursor: pointer;
   transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
 }
 
 .admin-logout-btn:hover {
-  color: #ff6b6b;
-  border-color: rgba(255,100,100,0.2);
-  background: rgba(255,100,100,0.05);
+  color: var(--tone-red);
+  border-color: var(--tone-red-border);
+  background: var(--tone-red-bg);
 }
 
 /* Main content */
@@ -255,9 +379,9 @@
 
 .admin-topbar {
   height: 60px;
-  background: rgba(5, 8, 22, 0.8);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  backdrop-filter: blur(20px);
+  background: var(--admin-topbar-bg);
+  border-bottom: 1px solid var(--admin-line);
+  backdrop-filter: var(--admin-blur);
   display: flex;
   align-items: center;
   padding: 0 var(--space-2xl);
@@ -286,6 +410,27 @@
   white-space: nowrap;
   flex-shrink: 0;
 }
+
+/* Theme switch — shows the theme it will switch TO. */
+.admin-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-height: 34px;
+  padding: 6px 10px;
+  margin-left: var(--space-sm);
+  border: 1px solid var(--admin-line-strong);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+.admin-theme-toggle:hover { color: var(--text-primary); background: var(--admin-wash-2); }
+.admin-theme-toggle svg { flex-shrink: 0; }
 
 .admin-content {
   padding: var(--space-2xl);
@@ -320,7 +465,7 @@
   align-items: center;
   gap: var(--space-md);
   padding: var(--space-lg) var(--space-xl);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid var(--admin-line);
   flex-wrap: wrap;
 }
 
@@ -342,8 +487,8 @@
 .admin-search input {
   width: 100%;
   padding: 8px 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--admin-wash-2);
+  border: 1px solid var(--admin-line-strong);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: var(--fs-sm);
@@ -362,8 +507,8 @@
 
 .admin-filter select {
   padding: 8px 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--admin-wash-2);
+  border: 1px solid var(--admin-line-strong);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: var(--fs-sm);
@@ -394,15 +539,15 @@ table.admin-table {
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  background: rgba(255,255,255,0.02);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: var(--admin-wash-1);
+  border-bottom: 1px solid var(--admin-line);
   white-space: nowrap;
 }
 
 .admin-table td {
   padding: 12px 16px;
   color: var(--text-secondary);
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--admin-wash-2);
   vertical-align: middle;
 }
 
@@ -411,7 +556,7 @@ table.admin-table {
 }
 
 .admin-table tr:hover td {
-  background: rgba(255,255,255,0.02);
+  background: var(--admin-wash-1);
   color: var(--text-primary);
 }
 
@@ -428,15 +573,15 @@ table.admin-table {
   white-space: nowrap;
 }
 
-.status-new      { background: rgba(57,255,20,0.1);  color: #39FF14; border: 1px solid rgba(57,255,20,0.2); }
-.status-contacted{ background: rgba(0,229,255,0.1);  color: #00E5FF; border: 1px solid rgba(0,229,255,0.2); }
-.status-closed   { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08); }
-.status-reviewing{ background: rgba(255,165,0,0.1);  color: #FFA500; border: 1px solid rgba(255,165,0,0.2); }
-.status-quoted   { background: rgba(0,229,255,0.1);  color: #00E5FF; border: 1px solid rgba(0,229,255,0.2); }
-.status-accepted { background: rgba(57,255,20,0.1);  color: #39FF14; border: 1px solid rgba(57,255,20,0.2); }
-.status-rejected { background: rgba(255,60,60,0.1);  color: #ff6b6b; border: 1px solid rgba(255,60,60,0.2); }
-.status-active   { background: rgba(57,255,20,0.1);  color: #39FF14; border: 1px solid rgba(57,255,20,0.2); }
-.status-unsubscribed { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08); }
+.status-new      { background: var(--tone-green-bg);  color: var(--tone-green); border: 1px solid var(--tone-green-border); }
+.status-contacted{ background: var(--tone-cyan-bg);  color: var(--tone-cyan); border: 1px solid var(--tone-cyan-border); }
+.status-closed   { background: var(--admin-wash-2); color: var(--text-muted); border: 1px solid var(--admin-line-strong); }
+.status-reviewing{ background: var(--tone-amber-bg);  color: var(--tone-amber); border: 1px solid var(--tone-amber-border); }
+.status-quoted   { background: var(--tone-cyan-bg);  color: var(--tone-cyan); border: 1px solid var(--tone-cyan-border); }
+.status-accepted { background: var(--tone-green-bg);  color: var(--tone-green); border: 1px solid var(--tone-green-border); }
+.status-rejected { background: var(--tone-red-bg);  color: var(--tone-red); border: 1px solid var(--tone-red-border); }
+.status-active   { background: var(--tone-green-bg);  color: var(--tone-green); border: 1px solid var(--tone-green-border); }
+.status-unsubscribed { background: var(--admin-wash-2); color: var(--text-muted); border: 1px solid var(--admin-line-strong); }
 
 /* Row actions */
 .row-actions {
@@ -459,8 +604,8 @@ table.admin-table {
 }
 
 .action-btn-status {
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.08);
+  background: var(--admin-wash-2);
+  border-color: var(--admin-line-strong);
   color: var(--text-secondary);
 }
 
@@ -470,13 +615,13 @@ table.admin-table {
 }
 
 .action-btn-delete {
-  background: rgba(255,60,60,0.06);
-  border-color: rgba(255,60,60,0.15);
-  color: #ff6b6b;
+  background: var(--tone-red-bg);
+  border-color: var(--tone-red-bg-strong);
+  color: var(--tone-red);
 }
 
 .action-btn-delete:hover {
-  background: rgba(255,60,60,0.12);
+  background: var(--tone-red-bg-strong);
 }
 
 /* Pagination */
@@ -485,7 +630,7 @@ table.admin-table {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md) var(--space-xl);
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--admin-line);
   font-size: var(--fs-sm);
   color: var(--text-muted);
   flex-wrap: wrap;
@@ -580,7 +725,7 @@ table.admin-table {
   flex-shrink: 0;
   border-radius: var(--radius-md);
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--admin-line-strong);
   color: var(--text-secondary);
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast);
@@ -589,7 +734,7 @@ table.admin-table {
 }
 
 .admin-hamburger:hover {
-  background: rgba(255,255,255,0.06);
+  background: var(--admin-line);
   color: var(--text-primary);
 }
 
@@ -597,8 +742,8 @@ table.admin-table {
 .admin-sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(5, 8, 22, 0.72);
-  backdrop-filter: blur(3px);
+  background: var(--admin-overlay);
+  backdrop-filter: var(--admin-blur);
   z-index: 9;
   touch-action: none;
 }
@@ -648,6 +793,8 @@ table.admin-table {
     display: none;
   }
 
+  .admin-theme-toggle { margin-left: auto; min-height: 40px; }
+
 
 
   .admin-table-header {
@@ -661,6 +808,9 @@ table.admin-table {
 }
 
 @media (max-width: 480px) {
+  /* Icon-only switch on small phones; the page title keeps the room it needs. */
+  .admin-theme-toggle span { display: none; }
+  .admin-theme-toggle { width: 40px; justify-content: center; padding: 6px; }
 
   .admin-grid-loading {
     grid-template-columns: 1fr 1fr;

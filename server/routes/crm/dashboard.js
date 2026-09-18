@@ -44,6 +44,7 @@ dashboardRouter.get('/crm/dashboard', route('crm dashboard', async (req, res) =>
 
   const [
     clientCounts, pipeline, projectCounts, followUpCounts, eventCounts, outstanding, monthPayments,
+    expenseTotals, expenseByCategory,
     todayList, overdueList, upcomingList, eventsList, projectsStarting, outstandingList,
   ] = await Promise.all([
     crmQueryOne(
@@ -81,10 +82,25 @@ dashboardRouter.get('/crm/dashboard', route('crm dashboard', async (req, res) =>
          SELECT balance FROM cardhub_events WHERE archived_at IS NULL AND status <> 'cancelled' AND balance > 0
        ) b`,
     ),
+    // Money IN: payments actually received (all time + this month).
     crmQueryOne(
-      `SELECT COALESCE(SUM(amount), 0) AS total FROM client_payments
-       WHERE voided_at IS NULL AND payment_date BETWEEN ? AND ?`,
+      `SELECT COALESCE(SUM(amount), 0) AS all_time,
+              COALESCE(SUM(CASE WHEN payment_date BETWEEN ? AND ? THEN amount END), 0) AS total
+       FROM client_payments WHERE voided_at IS NULL`,
       [`${today.slice(0, 7)}-01`, today],
+    ),
+    // Money OUT: recorded (non-voided) expenses, split project vs general.
+    crmQueryOne(
+      `SELECT COALESCE(SUM(amount), 0) AS all_time,
+              COALESCE(SUM(CASE WHEN expense_date BETWEEN ? AND ? THEN amount END), 0) AS this_month,
+              COALESCE(SUM(CASE WHEN expense_type = 'project' THEN amount END), 0) AS project_costs,
+              COALESCE(SUM(CASE WHEN expense_type = 'general' THEN amount END), 0) AS general_costs
+       FROM expenses WHERE voided_at IS NULL`,
+      [`${today.slice(0, 7)}-01`, today],
+    ),
+    crmQuery(
+      `SELECT category, COALESCE(SUM(amount), 0) AS total FROM expenses
+       WHERE voided_at IS NULL GROUP BY category ORDER BY total DESC LIMIT 5`,
     ),
     followUpList('f.due_date = ?', [today], "f.priority = 'high' DESC, f.id ASC"),
     followUpList('f.due_date < ?', [today], 'f.due_date ASC, f.id ASC'),
@@ -144,6 +160,21 @@ dashboardRouter.get('/crm/dashboard', route('crm dashboard', async (req, res) =>
       outstanding_balance:     outstanding.total,
       outstanding_items:       n(outstanding.items),
       collected_this_month:    monthPayments.total,
+    },
+    /* Cash view. revenue_collected is money received (never contract value);
+       profit_collected = revenue received − expenses recorded. General
+       business costs are reported separately so they are never charged to a
+       single client's profit. */
+    money: {
+      revenue_collected:     monthPayments.all_time,
+      revenue_this_month:    monthPayments.total,
+      expenses_total:        expenseTotals.all_time,
+      expenses_this_month:   expenseTotals.this_month,
+      expenses_project:      expenseTotals.project_costs,
+      expenses_general:      expenseTotals.general_costs,
+      outstanding:           outstanding.total,
+      profit_collected:      (Number(monthPayments.all_time) - Number(expenseTotals.all_time)).toFixed(2),
+      by_category:           expenseByCategory,
     },
     pipeline: pipelineCounts,
     follow_ups: { today: todayList, overdue: overdueList, upcoming: upcomingList },

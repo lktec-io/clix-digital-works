@@ -141,6 +141,12 @@ export const SW = {
   expectedGuests:  'Idadi ya wageni wanaotarajiwa.',
   reference:       'Namba au kumbukumbu ya malipo.',
   source:          'Mteja alitufahamu kupitia wapi.',
+  expense:         'Pesa ambayo biashara imetumia.',
+  projectCost:     'Pesa iliyotumika kukamilisha huduma au project ya mteja.',
+  generalExpense:  'Gharama ya biashara ambayo haihusiani moja kwa moja na mteja mmoja.',
+  revenue:         'Pesa ambayo tayari imelipwa na mteja.',
+  outstanding:     'Pesa ambayo bado mteja hajalipa.',
+  profit:          'Pesa inayobaki baada ya kutoa gharama.',
 };
 
 /** One-line plain explanations of statuses, shown for the currently selected value. */

@@ -104,6 +104,33 @@ export const CARDHUB_EVENT_STATUSES = [
 /** Events that should never appear in "upcoming" views or alerts. */
 export const CLOSED_EVENT_STATUSES = ['event_completed', 'cancelled'];
 
+/* ── Expenses (money Clix spends) ─────────────────────────────────────────
+   Kept completely separate from client_payments (money Clix receives).
+   A "project" expense is a fulfilment cost tied to one client; a "general"
+   expense is business overhead that belongs to no single client. */
+
+export const EXPENSE_TYPES = [
+  option('project', 'Project Expense'),
+  option('general', 'General Business Expense'),
+];
+
+export const EXPENSE_CATEGORIES = [
+  option('api_service', 'API / Service'),
+  option('sms', 'SMS'),
+  option('hosting', 'Hosting / Server'),
+  option('domain', 'Domain'),
+  option('software', 'Software / Tools'),
+  option('payment_fees', 'Payment Fees'),
+  option('cloud', 'Cloud Services'),
+  option('design', 'Design / Assets'),
+  option('printing', 'Printing'),
+  option('transport', 'Transport'),
+  option('marketing', 'Marketing'),
+  option('equipment', 'Equipment'),
+  option('internet', 'Internet'),
+  option('other', 'Other'),
+];
+
 export const V = {
   clientStatus:   values(CLIENT_STATUSES),
   clientSource:   values(CLIENT_SOURCES),
@@ -114,6 +141,8 @@ export const V = {
   followUpStatus: values(FOLLOW_UP_STATUSES),
   eventType:      values(CARDHUB_EVENT_TYPES),
   eventStatus:    values(CARDHUB_EVENT_STATUSES),
+  expenseType:    values(EXPENSE_TYPES),
+  expenseCategory: values(EXPENSE_CATEGORIES),
 };
 
 export const CRM_OPTIONS = {
@@ -126,4 +155,6 @@ export const CRM_OPTIONS = {
   follow_up_statuses:     FOLLOW_UP_STATUSES,
   cardhub_event_types:    CARDHUB_EVENT_TYPES,
   cardhub_event_statuses: CARDHUB_EVENT_STATUSES,
+  expense_types:          EXPENSE_TYPES,
+  expense_categories:     EXPENSE_CATEGORIES,
 };

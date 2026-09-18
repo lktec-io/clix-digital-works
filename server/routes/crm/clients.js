@@ -188,7 +188,7 @@ clientsRouter.get(
     delete client.phone_normalized;
 
     const DETAIL_LIMIT = 100;
-    const [projects, events, followUps, payments, notes, activity] = await Promise.all([
+    const [projects, events, followUps, payments, notes, activity, expenses] = await Promise.all([
       crmQuery(
         `SELECT p.id, p.project_name, p.service, p.status, ${MONEY_COLS('p')},
                 p.expected_start_date, p.expected_completion_date, p.description, p.archived_at, p.created_at
@@ -229,7 +229,28 @@ clientsRouter.get(
          WHERE client_id = ? ORDER BY created_at DESC, id DESC LIMIT ${DETAIL_LIMIT}`,
         [id],
       ),
+      // Costs Clix spent delivering this client's work (money out, never mixed
+      // with the payments above).
+      crmQuery(
+        `SELECT ex.id, ex.title, ex.amount, ex.category, ex.expense_date, ex.expense_type,
+                ex.project_id, ex.cardhub_event_id, ex.voided_at, ex.void_reason,
+                COALESCE(p.project_name, e.event_name) AS linked_name
+         FROM expenses ex
+         LEFT JOIN projects p ON p.id = ex.project_id
+         LEFT JOIN cardhub_events e ON e.id = ex.cardhub_event_id
+         WHERE ex.client_id = ?
+         ORDER BY ex.expense_date DESC, ex.id DESC LIMIT ${DETAIL_LIMIT}`,
+        [id],
+      ),
     ]);
+
+    // Money in (contract value, collected, outstanding) and money out (costs)
+    // are summed separately; profit is derived, never stored.
+    const costs = await crmQueryOne(
+      `SELECT COALESCE(SUM(amount), 0) AS total FROM expenses
+       WHERE client_id = ? AND voided_at IS NULL`,
+      [id],
+    );
 
     // Financial summary is computed in SQL from the stored DECIMAL columns,
     // excluding archived/cancelled work so "owes" means money genuinely due.
@@ -250,11 +271,17 @@ clientsRouter.get(
 
     res.json({
       data: client,
-      summary,
+      summary: {
+        ...summary,
+        // total_paid is money actually received; costs is money actually spent.
+        costs: costs.total,
+        collected_profit: (Number(summary.total_paid) - Number(costs.total)).toFixed(2),
+      },
       projects,
       cardhub_events: events,
       follow_ups: followUps,
       payments,
+      expenses,
       notes,
       activity,
       today: todayInTz(),

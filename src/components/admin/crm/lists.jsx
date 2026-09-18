@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import { FiCheck, FiClock, FiEdit2, FiPlus, FiRotateCcw, FiTrash2, FiArchive } from 'react-icons/fi';
+import { FiCheck, FiClock, FiEdit2, FiPlus, FiRotateCcw, FiTrash2, FiArchive, FiTrendingDown } from 'react-icons/fi';
 import { API } from '../../../config/api';
 import { useApi, useDialog, useMutation } from '../../../hooks/useCrm';
 import {
   daysUntil, dueInfo, eventCountdown, formatDate, formatDateTime, formatTZS, hasBalance, labelFor, SW,
 } from '../../../utils/crm';
+import ExpenseForm, { VoidExpenseForm } from './ExpenseForm';
 import { Badge, ConfirmDialog, DataView, InfoList, Modal, MoreMenu } from './ui';
 import {
   CompleteFollowUpForm, FollowUpForm, PaymentForm, ProjectForm, RescheduleForm, VoidPaymentForm,
@@ -128,6 +129,37 @@ export function PaymentRows({ payments, options, onVoid, showParent = false }) {
   );
 }
 
+/* ── Expenses (money out) ───────────────────────────────────────────────── */
+
+export function ExpenseRows({ expenses, options, onEdit, onVoid, showTarget = false }) {
+  return (
+    <ul className="crm-rows">
+      {expenses.map(x => (
+        <li key={x.id} className={`crm-row${x.voided_at ? ' is-voided' : ''}`}>
+          <div className="crm-row-main">
+            <span className="crm-row-title">{x.title}</span>
+            <div className="crm-row-sub">
+              {formatDate(x.expense_date)} · {labelFor(options?.expense_categories, x.category)}
+              {x.vendor ? ` · ${x.vendor}` : ''}
+              {showTarget && x.linked_name ? ` · ${x.linked_name}` : ''}
+            </div>
+            {x.voided_at && <div className="crm-row-sub crm-text-red">Voided: {x.void_reason}</div>}
+          </div>
+          <div className="crm-row-side">
+            <span className="crm-money crm-text-amber">{formatTZS(x.amount)}</span>
+            {x.voided_at ? <Badge value="cancelled" label="Voided" /> : (
+              <div className="crm-card-actions">
+                {onEdit && <button type="button" className="crm-btn crm-btn-ghost crm-btn-sm" onClick={() => onEdit(x)}>Edit</button>}
+                {onVoid && <button type="button" className="crm-btn crm-btn-ghost crm-btn-sm" onClick={() => onVoid(x)}>Void</button>}
+              </div>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /* ── Activity ───────────────────────────────────────────────────────────── */
 
 export function ActivityTimeline({ items }) {
@@ -162,6 +194,55 @@ export function MoneySummary({ total, paid, balance, labels = ['Total', 'Paid', 
         <strong className={hasBalance(balance) ? 'crm-text-amber' : ''}>{formatTZS(balance, 'TZS 0')}</strong>
       </div>
     </div>
+  );
+}
+
+/**
+ * Revenue → costs → profit for one project, event or client.
+ *
+ * Deliberate wording: "Paid" is money actually received, "Outstanding" is money
+ * still owed (never counted as profit), and profit is always labelled as being
+ * on collected revenue. The full-contract margin is shown separately and only
+ * when money is still outstanding, so the two can never be confused.
+ */
+export function ProfitSummary({ money, labels = {} }) {
+  const collectedProfit = Number(money.collected_profit);
+  const outstanding = Number(money.outstanding);
+  return (
+    <>
+      <dl className="crm-pl">
+        <div>
+          <dt>{labels.contract || 'Price'}</dt>
+          <dd>{formatTZS(money.contract_value, 'TZS 0')}</dd>
+        </div>
+        <div>
+          <dt>Paid</dt>
+          <dd className="crm-text-green">{formatTZS(money.collected, 'TZS 0')}</dd>
+          <span className="crm-sw">{SW.revenue}</span>
+        </div>
+        <div>
+          <dt>Outstanding</dt>
+          <dd className={hasBalance(money.outstanding) ? 'crm-text-amber' : ''}>{formatTZS(money.outstanding, 'TZS 0')}</dd>
+          <span className="crm-sw">{SW.outstanding}</span>
+        </div>
+        <div className="crm-pl-cost">
+          <dt>Costs</dt>
+          <dd>{formatTZS(money.costs, 'TZS 0')}</dd>
+          <span className="crm-sw">{SW.projectCost}</span>
+        </div>
+        <div className={`crm-pl-profit${collectedProfit < 0 ? ' is-negative' : ''}`}>
+          <dt>Profit so far</dt>
+          <dd>{formatTZS(money.collected_profit, 'TZS 0')}</dd>
+          <span className="crm-sw">{SW.profit}</span>
+        </div>
+      </dl>
+      {outstanding > 0 && (
+        <p className="crm-status-help">
+          Profit so far counts only money received (paid − costs).
+          If the full price is paid, the margin becomes {formatTZS(money.contract_margin)}.
+        </p>
+      )}
+    </>
   );
 }
 
@@ -238,6 +319,15 @@ export function ProjectModal({ projectId, options, onClose, onChanged }) {
   if (dialog?.type === 'void') {
     return <VoidPaymentForm payment={dialog.item} onClose={close} onSaved={changed} />;
   }
+  if (dialog?.type === 'expense') {
+    return <ExpenseForm project={project} options={options} onClose={close} onSaved={changed} />;
+  }
+  if (dialog?.type === 'editExpense') {
+    return <ExpenseForm expense={dialog.item} project={project} options={options} onClose={close} onSaved={changed} />;
+  }
+  if (dialog?.type === 'voidExpense') {
+    return <VoidExpenseForm expense={dialog.item} onClose={close} onSaved={changed} />;
+  }
   if (dialog?.type === 'archive') {
     const archived = Boolean(project.archived_at);
     return (
@@ -273,13 +363,20 @@ export function ProjectModal({ projectId, options, onClose, onChanged }) {
             </div>
 
             <div className="crm-panel">
-              <MoneySummary total={project.total_price} paid={project.amount_paid} balance={project.balance} help />
+              {data.money
+                ? <ProfitSummary money={data.money} />
+                : <MoneySummary total={project.total_price} paid={project.amount_paid} balance={project.balance} help />}
             </div>
 
             <div className="crm-card-actions">
               {!project.archived_at && hasBalance(project.balance) && (
                 <button type="button" className="crm-btn crm-btn-primary" onClick={() => open('pay')}>
                   <FiPlus size={14} aria-hidden="true" /> Record Payment
+                </button>
+              )}
+              {!project.archived_at && (
+                <button type="button" className="crm-btn crm-btn-ghost" onClick={() => open('expense')}>
+                  <FiTrendingDown size={13} aria-hidden="true" /> Add Expense
                 </button>
               )}
               {!project.archived_at && (
@@ -304,10 +401,20 @@ export function ProjectModal({ projectId, options, onClose, onChanged }) {
             {project.description && <p className="crm-note-body">{project.description}</p>}
 
             <div className="crm-panel">
-              <div className="crm-panel-head"><h3>Payments ({data.payments.length})</h3></div>
+              <div className="crm-panel-head"><h3>Payments in ({data.payments.length})</h3></div>
               {data.payments.length
                 ? <PaymentRows payments={data.payments} options={options} onVoid={p => open('void', p)} />
                 : <p className="crm-state crm-muted">No payments recorded yet.</p>}
+            </div>
+
+            <div className="crm-panel">
+              <div className="crm-panel-head">
+                <h3>Costs out ({data.expenses?.length || 0})</h3>
+              </div>
+              {data.expenses?.length
+                ? <ExpenseRows expenses={data.expenses} options={options}
+                    onEdit={x => open('editExpense', x)} onVoid={x => open('voidExpense', x)} />
+                : <p className="crm-state crm-muted">No costs recorded for this project.</p>}
             </div>
 
             {data.activity.length > 0 && (

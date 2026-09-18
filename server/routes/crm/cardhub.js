@@ -166,7 +166,7 @@ cardhubRouter.get(
   route('cardhub event detail', async (req, res) => {
     const event = await crmQueryOne(`${EVENT_SELECT} WHERE e.id = ?`, [req.params.id]);
     if (!event) throw notFound('CardHub event');
-    const [payments, activity] = await Promise.all([
+    const [payments, activity, expenses, costs] = await Promise.all([
       crmQuery(
         `SELECT id, amount, payment_method, payment_date, reference, notes, recorded_by, voided_at, void_reason, created_at
          FROM client_payments WHERE cardhub_event_id = ? ORDER BY payment_date DESC, id DESC`,
@@ -177,8 +177,28 @@ cardhubRouter.get(
          WHERE entity_type = 'cardhub_event' AND entity_id = ? ORDER BY created_at DESC, id DESC LIMIT 50`,
         [req.params.id],
       ),
+      crmQuery(
+        `SELECT id, title, amount, category, expense_date, vendor, reference, voided_at, void_reason
+         FROM expenses WHERE cardhub_event_id = ? ORDER BY expense_date DESC, id DESC`,
+        [req.params.id],
+      ),
+      crmQueryOne(
+        'SELECT COALESCE(SUM(amount), 0) AS total FROM expenses WHERE cardhub_event_id = ? AND voided_at IS NULL',
+        [req.params.id],
+      ),
     ]);
-    res.json({ data: event, payments, activity, today: todayInTz() });
+
+    // Clix's own cost tracking for this event — the CardHub product's own
+    // financial logic is untouched.
+    const money = {
+      contract_value: event.total_price,
+      collected: event.amount_paid,
+      outstanding: event.balance,
+      costs: costs.total,
+      collected_profit: (Number(event.amount_paid) - Number(costs.total)).toFixed(2),
+      contract_margin: (Number(event.total_price) - Number(costs.total)).toFixed(2),
+    };
+    res.json({ data: event, payments, expenses, money, activity, today: todayInTz() });
   }),
 );
 

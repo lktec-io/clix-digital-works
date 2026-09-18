@@ -119,7 +119,7 @@ projectsRouter.get(
   route('project detail', async (req, res) => {
     const project = await crmQueryOne(`${PROJECT_SELECT} WHERE p.id = ?`, [req.params.id]);
     if (!project) throw notFound('Project');
-    const [payments, activity] = await Promise.all([
+    const [payments, activity, expenses, costs] = await Promise.all([
       crmQuery(
         `SELECT id, amount, payment_method, payment_date, reference, notes, recorded_by, voided_at, void_reason, created_at
          FROM client_payments WHERE project_id = ? ORDER BY payment_date DESC, id DESC`,
@@ -130,8 +130,28 @@ projectsRouter.get(
          WHERE entity_type = 'project' AND entity_id = ? ORDER BY created_at DESC, id DESC LIMIT 50`,
         [req.params.id],
       ),
+      crmQuery(
+        `SELECT id, title, amount, category, expense_date, vendor, reference, voided_at, void_reason
+         FROM expenses WHERE project_id = ? ORDER BY expense_date DESC, id DESC`,
+        [req.params.id],
+      ),
+      crmQueryOne(
+        'SELECT COALESCE(SUM(amount), 0) AS total FROM expenses WHERE project_id = ? AND voided_at IS NULL',
+        [req.params.id],
+      ),
     ]);
-    res.json({ data: project, payments, activity });
+
+    // Revenue = money received (amount_paid). Profit is derived from money
+    // actually collected, never from the unpaid contract value.
+    const money = {
+      contract_value: project.total_price,
+      collected: project.amount_paid,
+      outstanding: project.balance,
+      costs: costs.total,
+      collected_profit: (Number(project.amount_paid) - Number(costs.total)).toFixed(2),
+      contract_margin: (Number(project.total_price) - Number(costs.total)).toFixed(2),
+    };
+    res.json({ data: project, payments, expenses, money, activity });
   }),
 );
 

@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiUsers, FiCalendar, FiGift, FiDollarSign, FiSearch, FiPlus, FiArrowRight } from 'react-icons/fi';
+import {
+  FiUsers, FiCalendar, FiGift, FiDollarSign, FiSearch, FiPlus, FiArrowRight,
+  FiTrendingUp, FiTrendingDown, FiClock, FiPieChart,
+} from 'react-icons/fi';
 import { API, apiFetch } from '../../../config/api';
 import { useApi, useCrmOptions, useDebounced, useDialog, useSessionGuard } from '../../../hooks/useCrm';
 import { CRM_TZ, formatDate, formatTZS, formatTZSCompact, labelFor, qs } from '../../../utils/crm';
@@ -281,7 +284,42 @@ export default function CrmDashboardSection() {
             </ul>
           ) : <EmptyState>No projects starting in the next {w.project_days} days.</EmptyState>}
         </div>
+      </div>
 
+      {data.money && (
+        <>
+          <div className="crm-section-heading">
+            <h3>Money</h3>
+            <Link className="crm-link" to="/admin/expenses">Expenses <FiArrowRight size={12} aria-hidden="true" /></Link>
+          </div>
+          <MetricBar items={[
+            {
+              to: '/admin/payments', label: 'Revenue received', icon: FiTrendingUp,
+              value: formatTZSCompact(data.money.revenue_collected), title: formatTZS(data.money.revenue_collected, 'TZS 0'),
+              sub: `${formatTZS(data.money.revenue_this_month, 'TZS 0')} this month`,
+            },
+            {
+              to: '/admin/expenses', label: 'Expenses', icon: FiTrendingDown,
+              value: formatTZSCompact(data.money.expenses_total), title: formatTZS(data.money.expenses_total, 'TZS 0'),
+              sub: `${formatTZS(data.money.expenses_project, 'TZS 0')} project · ${formatTZS(data.money.expenses_general, 'TZS 0')} general`,
+            },
+            {
+              to: '/admin/payments', label: 'Outstanding', icon: FiClock,
+              value: formatTZSCompact(data.money.outstanding), title: formatTZS(data.money.outstanding, 'TZS 0'),
+              sub: 'Billed but not yet received',
+              subTone: Number(data.money.outstanding) > 0 ? 'amber' : undefined,
+            },
+            {
+              label: 'Profit so far', icon: FiPieChart,
+              value: formatTZSCompact(data.money.profit_collected), title: formatTZS(data.money.profit_collected, 'TZS 0'),
+              sub: 'Revenue received − expenses',
+              subTone: Number(data.money.profit_collected) < 0 ? 'red' : 'green',
+            },
+          ]} />
+        </>
+      )}
+
+      <div className="crm-dash-grid">
         <div className="crm-panel crm-span-3">
           <PanelHeader title="Client pipeline" />
           <ul className="crm-pipeline">
