@@ -35,6 +35,11 @@ export default function CustomCursor() {
     const dot  = dotRef.current;
     const ring = ringRef.current;
 
+    // The native pointer is hidden only while this cursor is actually running
+    // (global.css keys `cursor: none` off this class). Pages that don't mount
+    // it — the whole admin — keep the browser's normal cursor.
+    document.body.classList.add('has-custom-cursor');
+
     // ── Track mouse position ────────────────────────────────────────────────
     const onMove = (e) => {
       posRef.current = { x: e.clientX, y: e.clientY };
@@ -99,6 +104,7 @@ export default function CustomCursor() {
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
+      document.body.classList.remove('has-custom-cursor');
       cancelAnimationFrame(rafRef.current);
       document.removeEventListener('mousemove',  onMove);
       document.removeEventListener('mouseover',  onOver);

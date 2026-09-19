@@ -1,9 +1,10 @@
 /* ─── Admin design tokens ─────────────────────────────────────────────────
    Everything below is scoped to admin surfaces, so the public website (which
-   shares variables.css) is never affected. Dark is the default because it is
-   the admin's existing appearance; `html[data-admin-theme="light"]` swaps the
-   values. Components use these semantic tokens — not raw colours — so a theme
-   change never needs a second copy of a component.
+   shares variables.css) is never affected. The dark values are the base set;
+   `html[data-admin-theme="light"]` swaps them. Light is what users get by
+   default (see hooks/useAdminTheme.js), dark is the selectable alternative.
+   Components use these semantic tokens — not raw colours — so a theme change
+   never needs a second copy of a component.
 
    Surfaces:  --admin-bg < --admin-surface < --admin-surface-2 < --admin-raised
    Lines:     --admin-line (hairline)  --admin-line-strong (inputs, controls)
@@ -119,21 +120,23 @@ html[data-admin-theme="light"] .crm-modal-backdrop .skeleton {
   background: linear-gradient(90deg, #eef1f6 25%, #e3e8f0 37%, #eef1f6 63%);
 }
 
-/* The public site's dark decorations sit behind the admin; hide them in light
-   mode, and give the pointer back (the neon custom cursor is meant for the
-   dark site). The attribute only exists while an admin screen is mounted. */
+/* The public site's dark background decorations sit behind the admin; hide
+   them in light mode. The attribute only exists while an admin screen is
+   mounted, so the public site is unaffected. */
 html[data-admin-theme="light"] .noise-overlay,
-html[data-admin-theme="light"] canvas[aria-hidden="true"],
-html[data-admin-theme="light"] .cursor-dot,
-html[data-admin-theme="light"] .cursor-ring {
+html[data-admin-theme="light"] canvas[aria-hidden="true"] {
   display: none;
 }
-html[data-admin-theme="light"] body {
-  background: #f4f6fa;
-  cursor: auto;
+html[data-admin-theme="light"] body { background: #f4f6fa; }
+
+/* The admin uses the browser's normal cursor everywhere; interactive
+   controls get the standard pointer. */
+:is(.admin-app, .admin-login-page, .crm-modal-backdrop) :is(button, a[href], select, label[for], [role="button"]) {
+  cursor: pointer;
 }
-html[data-admin-theme="light"] button,
-html[data-admin-theme="light"] .btn { cursor: pointer; }
+:is(.admin-app, .admin-login-page, .crm-modal-backdrop) :is(button, select):disabled {
+  cursor: not-allowed;
+}
 
 /* Skeleton blocks set an inline 6px radius in the shared Skeleton component. */
 .admin-app .skeleton { border-radius: 2px !important; }
@@ -746,6 +749,39 @@ table.admin-table {
   backdrop-filter: var(--admin-blur);
   z-index: 9;
   touch-action: none;
+}
+
+/* ─── Touch-friendly list controls (Contacts, Quotes, Newsletter) ──────────
+   Same comfort standard as the CRM on phones and touch screens: ~44px inputs
+   and selects, 40px+ row actions. Desktop with a mouse keeps the compact
+   sizes. 16px text in fields stops iOS zooming in on focus. */
+@media (max-width: 768px), (pointer: coarse) {
+  .admin-search input,
+  .admin-filter select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    min-width: 40px;
+    padding: 8px 12px;
+    font-size: var(--fs-xs);
+  }
+
+  select.action-btn { padding-right: 28px; }
+
+  .row-actions { gap: 8px; }
+
+  .page-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .admin-table-header .btn-sm { min-height: 44px; }
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */

@@ -193,3 +193,43 @@ UI only. No database, auth, route, payment, follow-up or CardHub logic changed; 
 - **Consistency:** the Payments page uses the same metric strip; dead `.admin-stat-*` / `.admin-grid-panels` CSS removed. Radius stays 2–4px admin-wide; the public site is unchanged (verified: 9999px buttons, 20px cards).
 
 Verification: lint back to the 52-problem baseline, build passes, API 86/86 unaffected; headless Chrome sweep over 14 routes at 320/360/375/390/412/430/768/1024/1280/1440 — body scroll width = viewport everywhere, no clipping, no small touch targets, no radius > 4px, no console errors; all five mobile flows still pass; mobile drawer opens/closes and fits at 320px.
+
+---
+
+## 12. Light/dark theme + expense & profit tracking (18–19 Sep 2026)
+
+### Theme
+- Topbar switch (Feather sun/moon icon + "Light"/"Dark" label; icon-only on phones). The button shows the theme it switches **to**.
+- **Default is dark** — the admin's existing look (the brief assumed the current look was light). One-line change: `DEFAULT_THEME` in `src/hooks/useAdminTheme.js`.
+- Persisted in `localStorage` as `clix_admin_theme` (no backend preference system existed). Survives refresh and sign-out/sign-in; the login screen follows it.
+- Implemented as semantic tokens in `admin.css` (`--admin-bg/surface/surface-2/raised/line/line-strong/text/text-2/text-muted`, `--tone-green|cyan|amber|red` + `-bg`/`-border`). Dark values are the defaults; `html[data-admin-theme="light"]` swaps them. 164 hard-coded colours in `admin.css`/`crm.css` were migrated to tokens; none remain. The shared variables.css names (`--bg`, `--text-primary`, …) are mapped onto the tokens **inside admin scopes only**, so the public site is untouched (verified). Light mode hides the public site's dark decorations and neon cursor while an admin screen is open; the attribute is removed when admin unmounts.
+
+### Expenses (money OUT — never mixed with client payments, money IN)
+- New table `expenses` (DECIMAL(14,2) amount; type `project`/`general`; category; date; optional method/vendor/reference/notes; optional client_id / project_id / cardhub_event_id with RESTRICT FKs; void fields; recorded_by). DB CHECKs: amount > 0; general ⇒ no links; project ⇒ client required; never both project and event. App also rejects a project/event belonging to a different client.
+- Categories: API / Service, SMS, Hosting / Server, Domain, Software / Tools, Payment Fees, Cloud Services, Design / Assets, Printing, Transport, Marketing, Equipment, Internet, Other.
+- Endpoints (admin auth): `GET/POST /api/admin/expenses`, `GET/PUT /api/admin/expenses/:id`, `POST /api/admin/expenses/:id/void`, `GET /api/admin/expenses-summary`. List supports type, category, client, project, event, date range, search, include_voided, pagination; returns headline totals + by-category totals.
+- Voids keep the record (reason, time, admin) and drop it from every total; voided expenses cannot be edited.
+- Existing detail endpoints gained additive fields only: client `summary.costs`, `summary.collected_profit`, `expenses[]`; project and CardHub event `money{contract_value, collected, outstanding, costs, collected_profit, contract_margin}` + `expenses[]`; dashboard `money{…}`.
+
+### Profit rules (as implemented)
+- Revenue = payments actually received. Outstanding = price − received (never profit).
+- Project/event/client **profit so far** = received − linked costs. **Contract margin** = price − costs, shown only as "if paid in full".
+- General business costs are never charged to a client; the dashboard reports project vs general costs separately and **Profit so far = all revenue received − all expenses**.
+- Verified with the brief's dataset: price 1,500,000 · paid 1,000,000 · project costs 250,000 · general 100,000 → outstanding 500,000, project profit 750,000, general kept out of the client's figures; business cash result = revenue − (250,000 + 100,000). CardHub: 500,000 paid − (80,000 + 30,000 + 20,000) = 370,000.
+
+### UI
+- Sidebar Finance: Payments, **Expenses**. New Expenses page: Total / This month / Project costs / General costs strip, "Where the money went" breakdown (click to filter), type tabs, filters behind [Filter] on phones, table on desktop / cards on mobile, Edit and Void.
+- Add Expense: what / amount / date / type / category; client + project/event only for project costs; method, vendor, reference, notes under "Add more details". Date defaults to today; amount, category and client are never guessed.
+- Project modal, CardHub event and client **Money** tab: Price · Paid · Outstanding · Costs · Profit so far, with Swahili helpers, plus "Costs out" lists and Add Expense. Dashboard gained a **Money** strip: Revenue received · Expenses · Outstanding · Profit so far.
+
+### Verification
+86/86 existing API tests + 45/45 new expense/profit tests; lint at the 52-problem baseline; build passes. Headless Chrome: theme toggles, persists across refresh and login, and leaves the public site unchanged; expense flows (general, project from project modal, void restores profit, client money summary, dashboard money) pass; both themes swept on 12 routes × 10 widths (320–1440) — no page overflow, clipping, radius > 4px, low-contrast text, or console errors on any CRM page. Only pre-existing Contacts/Quotes controls are under 40px on phones (not changed here).
+
+---
+
+## 13. Final polish (19 Sep 2026)
+
+- **Custom cursor removed from the admin.** `<CustomCursor />` is now mounted only in the public-site branch of `App.jsx`, so no admin screen (dashboard, CRM pages, login, modals, bottom sheets) creates the cursor dot/ring, the touch glow, or any `mousemove`/`mouseover` listener. The global `cursor: none` rules in `global.css` now apply only while the public cursor is actually running (`body.has-custom-cursor`), so the admin always shows the browser's normal cursor, with `pointer` on buttons, links and selects and a text cursor in inputs. The public website still has its custom cursor, unchanged.
+- **Light is the default theme** for anyone who has never chosen one (`DEFAULT_THEME = 'light'`). A saved `clix_admin_theme` choice always wins; the theme is applied before first paint, so there is no dark flash.
+- **Contacts / Quotes / Newsletter on phones and touch screens:** search and filter fields 44px (16px text, no iOS zoom), row actions at least 40×40px, pagination 44px. Mouse-driven desktop sizes are unchanged. Their tables still scroll inside their own card on phones, as before.
+- Verified: API 86/86 + 45/45; lint at the 52-problem baseline; build passes. In the browser: 12 admin pages + login + modals have 0 cursor elements, 0 `mousemove` listeners and `cursor: auto`; SPA navigation from the public site into the admin tears the cursor down completely; a first-time visitor gets Light; Dark persists across refresh and login; both themes swept on 13 pages × 10 widths with no page overflow, clipping, radius > 4px, low contrast or console errors.

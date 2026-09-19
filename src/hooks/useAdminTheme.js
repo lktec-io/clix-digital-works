@@ -1,18 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 
 /**
  * Admin light/dark theme.
  *
- * Dark is the default because it is the admin's existing appearance — change
- * DEFAULT_THEME to 'light' to flip that for new browsers.
- *
- * The choice lives in localStorage (no backend user-preference system exists,
- * and a theme is not worth creating one for) and is applied as
+ * Light is the default for anyone who has never chosen; a saved choice always
+ * wins. The choice lives in localStorage (no backend user-preference system
+ * exists, and a theme is not worth creating one for) and is applied as
  * `data-admin-theme` on <html>. The attribute is removed when the last admin
  * screen unmounts, so the public website is never restyled by it.
  */
 const STORAGE_KEY = 'clix_admin_theme';
-const DEFAULT_THEME = 'dark';
+const DEFAULT_THEME = 'light';
 const THEMES = ['dark', 'light'];
 
 export function readStoredTheme() {
@@ -31,7 +29,9 @@ function applyTheme(theme) {
 export function useAdminTheme() {
   const [theme, setTheme] = useState(readStoredTheme);
 
-  useEffect(() => {
+  // Layout effect: applied before paint, so a light-default page never
+  // flashes the dark palette first.
+  useLayoutEffect(() => {
     applyTheme(theme);
     return () => { delete document.documentElement.dataset.adminTheme; };
   }, [theme]);

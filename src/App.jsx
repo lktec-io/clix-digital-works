@@ -90,6 +90,8 @@ function AppRoutes() {
         </Routes>
       ) : (
         <>
+          {/* Public-site only: the admin always uses the browser's own cursor. */}
+          <CustomCursor />
           <a href="#main-content" className="skip-link">Skip to main content</a>
           <Navbar />
           <main id="main-content" tabIndex={-1}>
@@ -141,7 +143,6 @@ export default function App() {
           <Router>
             <div className="noise-overlay" aria-hidden="true" />
             <ParticleBackground />
-            <CustomCursor />
             <ScrollProgress />
             <AppRoutes />
           </Router>

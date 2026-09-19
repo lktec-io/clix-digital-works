@@ -40,8 +40,11 @@ body {
   max-width: 100%;
 }
 
+/* The native pointer is hidden only while the public site's custom cursor is
+   mounted (CustomCursor adds .has-custom-cursor). The admin never mounts it,
+   so it always keeps the browser's normal cursor. */
 @media (pointer: fine) {
-  body {
+  body.has-custom-cursor {
     cursor: none;
   }
 }
@@ -116,7 +119,7 @@ button {
 }
 
 @media (pointer: fine) {
-  button {
+  .has-custom-cursor button {
     cursor: none;
   }
 }
@@ -271,7 +274,7 @@ ul, ol {
 }
 
 @media (pointer: fine) {
-  .btn {
+  .has-custom-cursor .btn {
     cursor: none;
   }
 }
