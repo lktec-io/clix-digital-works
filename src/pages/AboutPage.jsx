@@ -20,7 +20,7 @@ const TEAM = [
     role: 'Founder & CEO',
     bio: 'Full-stack engineer and visionary behind Clix Digital Works. Passionate about leveraging technology to solve real African business problems.',
     Icon: FiCode,
-    color: '#39FF14',
+    color: '#19C39B',
     skills: ['React', 'Node.js', 'System Design'],
   },
   {
@@ -28,7 +28,7 @@ const TEAM = [
     role: 'Lead Backend Engineer',
     bio: 'Experienced in building scalable APIs, database architecture, and cloud infrastructure that power enterprise-grade applications.',
     Icon: FiServer,
-    color: '#00E5FF',
+    color: '#3B7DFF',
     skills: ['Node.js', 'MySQL', 'DevOps'],
   },
   {
@@ -36,7 +36,7 @@ const TEAM = [
     role: 'UI/UX & Frontend Lead',
     bio: 'Crafts pixel-perfect, accessible interfaces with a keen eye for design systems, user psychology, and modern web aesthetics.',
     Icon: FiMonitor,
-    color: '#39FF14',
+    color: '#19C39B',
     skills: ['React', 'Figma', 'CSS Architecture'],
   },
   {
@@ -44,7 +44,7 @@ const TEAM = [
     role: 'Mobile App Engineer',
     bio: 'Specialises in cross-platform mobile applications delivering native-quality experiences for Android and iOS users.',
     Icon: FiSmartphone,
-    color: '#00E5FF',
+    color: '#3B7DFF',
     skills: ['React Native', 'Flutter', 'API Integration'],
   },
   {
@@ -52,7 +52,7 @@ const TEAM = [
     role: 'AI & Data Engineer',
     bio: 'Builds machine learning pipelines, predictive models, and intelligent automation tools that give our clients a competitive edge.',
     Icon: FiCpu,
-    color: '#39FF14',
+    color: '#19C39B',
     skills: ['Python', 'TensorFlow', 'Data Analysis'],
   },
   {
@@ -60,7 +60,7 @@ const TEAM = [
     role: 'Project Manager & QA Lead',
     bio: 'Ensures every project is delivered on time, within scope, and exceeds quality standards through rigorous testing and clear communication.',
     Icon: FiCheckSquare,
-    color: '#00E5FF',
+    color: '#3B7DFF',
     skills: ['Agile', 'QA Testing', 'Client Relations'],
   },
 ];

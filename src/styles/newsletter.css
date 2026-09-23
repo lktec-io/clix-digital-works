@@ -11,7 +11,7 @@
   transform: translate(-50%, -50%);
   width: 600px;
   height: 200px;
-  background: radial-gradient(ellipse, rgba(57, 255, 20, 0.06) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(25, 195, 155, 0.06) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -27,7 +27,7 @@
   height: 56px;
   border-radius: var(--radius-md);
   background: var(--secondary-dim);
-  border: 1px solid rgba(57, 255, 20, 0.3);
+  border: 1px solid rgba(25, 195, 155, 0.3);
   color: var(--secondary);
   display: flex;
   align-items: center;
@@ -82,7 +82,7 @@
   gap: 8px;
   padding: 12px 20px;
   background: var(--secondary-dim);
-  border: 1px solid rgba(57, 255, 20, 0.3);
+  border: 1px solid rgba(25, 195, 155, 0.3);
   border-radius: var(--radius-md);
   color: var(--secondary);
   font-weight: 600;
@@ -148,5 +148,47 @@
 
   .newsletter-title {
     font-size: var(--fs-base);
+  }
+}
+
+/* ---- Redesign pass ---------------------------------------------------- */
+
+.newsletter-card {
+  border-radius: var(--radius-lg);
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+}
+
+.newsletter-glow {
+  display: none;
+}
+
+.newsletter-icon {
+  border-radius: var(--radius-md);
+}
+
+.newsletter-title {
+  letter-spacing: -0.025em;
+}
+
+.newsletter-input {
+  min-height: 48px;
+  border-radius: var(--radius-md);
+}
+
+.newsletter-btn {
+  min-height: 48px;
+  border-radius: var(--radius-md);
+}
+
+.newsletter-note {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+  .newsletter-input {
+    font-size: 16px;
   }
 }

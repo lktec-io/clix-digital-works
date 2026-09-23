@@ -4,11 +4,10 @@ import { AnimatePresence } from 'framer-motion';
 
 import ErrorBoundary          from './components/ErrorBoundary';
 import LoadingScreen          from './components/LoadingScreen';
-import CustomCursor           from './components/CustomCursor';
 import ScrollProgress         from './components/ScrollProgress';
 import ScrollToTop            from './components/ScrollToTop';
 import ScrollReset            from './components/ScrollReset';
-import ParticleBackground     from './components/ParticleBackground';
+import TechBackground         from './components/TechBackground';
 import Navbar                 from './components/Navbar';
 import Footer                 from './components/Footer';
 import QuoteModal             from './components/QuoteModal';
@@ -90,8 +89,6 @@ function AppRoutes() {
         </Routes>
       ) : (
         <>
-          {/* Public-site only: the admin always uses the browser's own cursor. */}
-          <CustomCursor />
           <a href="#main-content" className="skip-link">Skip to main content</a>
           <Navbar />
           <main id="main-content" tabIndex={-1}>
@@ -142,7 +139,7 @@ export default function App() {
         <QuoteModalProvider>
           <Router>
             <div className="noise-overlay" aria-hidden="true" />
-            <ParticleBackground />
+            <TechBackground />
             <ScrollProgress />
             <AppRoutes />
           </Router>

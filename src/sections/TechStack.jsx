@@ -12,7 +12,7 @@ const TECH_CATEGORIES = [
   {
     label: 'Client Interfaces',
     icon: FiMonitor,
-    color: '#00E5FF',
+    color: '#3B7DFF',
     items: [
       { name: 'React', detail: 'UI Framework', Icon: FiCode },
       { name: 'Vite', detail: 'Build Tool', Icon: FiZap },
@@ -23,7 +23,7 @@ const TECH_CATEGORIES = [
   {
     label: 'Server & Logic',
     icon: FiServer,
-    color: '#39FF14',
+    color: '#19C39B',
     items: [
       { name: 'Node.js', detail: 'Runtime', Icon: FiServer },
       { name: 'Express', detail: 'Framework', Icon: FiLayers },
@@ -34,7 +34,7 @@ const TECH_CATEGORIES = [
   {
     label: 'Data Layer',
     icon: FiDatabase,
-    color: '#00E5FF',
+    color: '#3B7DFF',
     items: [
       { name: 'MySQL', detail: 'Relational DB', Icon: FiDatabase },
       { name: 'Backups', detail: 'Data Safety', Icon: FiSave },
@@ -45,7 +45,7 @@ const TECH_CATEGORIES = [
   {
     label: 'Infrastructure',
     icon: FiGlobe,
-    color: '#39FF14',
+    color: '#19C39B',
     items: [
       { name: 'Contabo VPS', detail: 'Cloud Hosting', Icon: FiCloud },
       { name: 'Git', detail: 'Version Control', Icon: FiGitBranch },

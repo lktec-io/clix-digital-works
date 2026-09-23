@@ -1,119 +1,134 @@
+/* =============================================================
+   NAVBAR — fixed, flat, precise.
+   Transparent over the hero; on scroll it resolves into a solid
+   bar with a single hairline. No glow, no pill nav.
+   ============================================================= */
+
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: var(--z-navbar);
-  padding: 20px 0;
-  transition: all var(--transition-base);
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background var(--transition-base), border-color var(--transition-base),
+              backdrop-filter var(--transition-base);
 }
 
 .navbar-scrolled {
-  background: rgba(5, 8, 22, 0.85);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  padding: 14px 0;
-  border-bottom: 1px solid rgba(0, 229, 255, 0.08);
-  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+  background: rgba(6, 10, 20, 0.82);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom-color: var(--border);
 }
 
 .navbar-container {
+  width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--space-xl);
   display: flex;
   align-items: center;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
 
-/* Logo */
+/* ---- Logo ---- */
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 10px;
   text-decoration: none;
   flex-shrink: 0;
+  border-radius: var(--radius-md);
 }
 
 .logo-mark {
-  width: 40px;
-  height: 40px;
-  background: var(--gradient-accent);
-  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  background: var(--gradient-blue);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 900;
-  color: var(--bg);
-  box-shadow: 0 0 20px rgba(57, 255, 20, 0.35);
-  transition: box-shadow var(--transition-base), transform var(--transition-base);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .navbar-logo:hover .logo-mark {
-  box-shadow: 0 0 32px rgba(57, 255, 20, 0.6);
-  transform: scale(1.05);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-accent);
 }
 
 .logo-text {
   display: flex;
   align-items: baseline;
-  gap: 2px;
+  gap: 3px;
 }
 
 .logo-main {
-  font-size: var(--fs-xl);
-  font-weight: 900;
+  font-size: var(--fs-lg);
+  font-weight: 800;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .logo-dot {
-  font-size: var(--fs-sm);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   font-weight: 500;
   color: var(--text-muted);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
-/* Nav Links */
+/* ---- Links ---- */
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 2px;
   margin: 0 auto;
 }
 
 .nav-link {
   position: relative;
-  padding: 8px 14px;
+  display: block;
+  padding: 8px 12px;
   font-size: var(--fs-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-secondary);
   text-decoration: none;
-  border-radius: var(--radius-sm);
-  transition: color var(--transition-fast);
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background var(--transition-fast);
 }
 
 .nav-link:hover {
   color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .nav-link.active {
   color: var(--text-primary);
 }
 
+/* Active state is a measured rule under the label, aligned to the
+   text box rather than a floating dot. */
 .nav-link-indicator {
   position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
+  bottom: -2px;
+  left: 12px;
+  right: 12px;
   height: 2px;
-  background: var(--gradient-accent);
+  background: var(--accent);
   border-radius: 1px;
 }
 
-/* CTA */
+/* ---- CTA ---- */
 .navbar-cta {
   display: flex;
   align-items: center;
@@ -121,70 +136,73 @@
   flex-shrink: 0;
 }
 
-.btn-sm {
-  padding: 8px 20px;
+.navbar-cta .btn-sm {
+  padding: 9px 16px;
+  min-height: 38px;
   font-size: var(--fs-sm);
 }
 
-/* Hamburger */
+/* ---- Hamburger ---- */
 .navbar-hamburger {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-md);
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   color: var(--text-primary);
   margin-left: auto;
-  transition: all var(--transition-fast);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .navbar-hamburger:hover {
-  background: rgba(0, 229, 255, 0.1);
-  border-color: var(--accent);
+  background: var(--bg-card-hover);
+  border-color: var(--border-strong);
 }
 
 /* Mobile navigation lives in components/Sidebar.jsx + styles/sidebar.css */
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .navbar-links {
+/* ---- Responsive ---- */
+@media (max-width: 1080px) {
+  .navbar-links,
+  .navbar-cta {
     display: none;
   }
 
   .navbar-hamburger {
     display: flex;
   }
-
-  .navbar-cta {
-    display: none;
-  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .navbar-container {
     padding: 0 var(--space-md);
-  }
-
-  .logo-dot {
-    display: none;
   }
 }
 
 @media (max-width: 360px) {
   .navbar-container {
-    padding: 0 var(--space-sm);
+    padding: 0 14px;
+  }
+
+  .logo-dot {
+    display: none;
   }
 
   .logo-main {
-    font-size: var(--fs-lg);
+    font-size: var(--fs-base);
   }
 
   .logo-mark {
-    width: 36px;
-    height: 36px;
-    font-size: 17px;
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
   }
+}
+
+/* Logo is a link: give it a comfortable target without changing its look */
+.navbar-logo {
+  min-height: 44px;
 }

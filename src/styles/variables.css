@@ -1,42 +1,103 @@
+/* =============================================================
+   CLIX DIGITAL WORKS — PUBLIC DESIGN TOKENS
+   -------------------------------------------------------------
+   Engineering-studio palette: deep navy base, a single working
+   blue for interaction, a restrained green-teal for confirmation
+   and accent, neutral grays for structure.
+
+   The legacy token names (--secondary, --accent, --gradient-accent,
+   --radius-full …) are deliberately kept so that every existing
+   stylesheet inherits the new system without being rewritten.
+   Their VALUES changed; their meaning did not:
+     --primary    navy brand
+     --secondary  accent used for labels/confirmation (teal, was neon green)
+     --accent     interactive blue (was cyan)
+
+   Admin styles (admin.css / crm.css) define their own scoped
+   tokens and are unaffected by anything in this file.
+   ============================================================= */
+
 :root {
-  /* Colors */
+  /* ---- Navy scale: page + surfaces ---- */
+  --navy-950: #060A14;
+  --navy-900: #0A1020;
+  --navy-850: #0D1628;
+  --navy-800: #111C33;
+  --navy-700: #16243F;
+
+  /* ---- Brand ---- */
   --primary: #0A2342;
-  --primary-light: #0d2d56;
+  --primary-light: #14365F;
   --primary-dark: #061829;
-  --secondary: #39FF14;
-  --secondary-dim: rgba(57, 255, 20, 0.15);
-  --accent: #00E5FF;
-  --accent-dim: rgba(0, 229, 255, 0.15);
-  --bg: #050816;
-  --bg-card: rgba(10, 35, 66, 0.4);
-  --bg-card-hover: rgba(10, 35, 66, 0.7);
-  --text-primary: #FFFFFF;
-  --text-secondary: #B8C4D6;
-  --text-muted: #6B7FA3;
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #0A2342 0%, #050816 100%);
-  --gradient-accent: linear-gradient(135deg, #39FF14 0%, #00E5FF 100%);
-  --gradient-glow: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.15) 0%, transparent 70%);
-  --gradient-hero: radial-gradient(ellipse at 60% 50%, rgba(57, 255, 20, 0.08) 0%, transparent 60%),
-                   radial-gradient(ellipse at 20% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 60%);
+  /* Interaction blue — links, focus, primary action */
+  --accent: #3B7DFF;
+  --accent-bright: #6098FF;
+  --accent-deep: #1F5BE0;
+  --accent-dim: rgba(59, 125, 255, 0.12);
+  --accent-line: rgba(59, 125, 255, 0.28);
 
-  /* Glassmorphism */
-  --glass-bg: rgba(10, 35, 66, 0.3);
-  --glass-border: rgba(0, 229, 255, 0.15);
-  --glass-blur: blur(20px);
+  /* Green-teal — success, confirmation, secondary accent. Used
+     sparingly: eyebrow labels, status dots, positive metrics. */
+  --secondary: #19C39B;
+  --secondary-bright: #2FDCB2;
+  --secondary-dim: rgba(25, 195, 155, 0.12);
+  --secondary-line: rgba(25, 195, 155, 0.28);
 
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.5);
-  --shadow-glow-green: 0 0 30px rgba(57, 255, 20, 0.3);
-  --shadow-glow-cyan: 0 0 30px rgba(0, 229, 255, 0.3);
-  --shadow-glow-blue: 0 0 30px rgba(10, 35, 66, 0.6);
+  /* ---- Page + surfaces ---- */
+  --bg: var(--navy-950);
+  --bg-elevated: #0B1222;
+  --bg-card: rgba(255, 255, 255, 0.025);
+  --bg-card-hover: rgba(255, 255, 255, 0.05);
+  --bg-inset: rgba(4, 8, 16, 0.6);
 
-  /* Typography */
+  /* ---- Text ---- */
+  --text-primary: #EEF2F8;
+  --text-secondary: #A7B4C9;
+  --text-muted: #7E8DA6;
+
+  /* ---- Borders / hairlines ---- */
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-soft: rgba(255, 255, 255, 0.055);
+
+  /* ---- Gradients (restrained: two stops, low chroma travel) ---- */
+  --gradient-primary: linear-gradient(135deg, #0F1E38 0%, #060A14 100%);
+  --gradient-accent: linear-gradient(135deg, #3B7DFF 0%, #19C39B 100%);
+  --gradient-blue: linear-gradient(135deg, #4B87FF 0%, #1F5BE0 100%);
+  --gradient-glow: radial-gradient(ellipse at center, rgba(59, 125, 255, 0.14) 0%, transparent 70%);
+  --gradient-hero: radial-gradient(ellipse 60% 50% at 70% 35%, rgba(59, 125, 255, 0.10) 0%, transparent 65%),
+                   radial-gradient(ellipse 50% 45% at 15% 75%, rgba(25, 195, 155, 0.07) 0%, transparent 65%);
+  --gradient-hairline: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+
+  /* ---- Surface treatment (kept under the old --glass-* names) ---- */
+  --glass-bg: rgba(255, 255, 255, 0.025);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-blur: blur(12px);
+
+  /* ---- Technical background system ---- */
+  --grid-line: rgba(255, 255, 255, 0.032);
+  --grid-line-strong: rgba(255, 255, 255, 0.055);
+  --grid-size: 56px;
+
+  /* ---- Shadows: depth from darkness, not colour ---- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+  --shadow-accent: 0 6px 20px -6px rgba(31, 91, 224, 0.45);
+  /* legacy names still referenced by older stylesheets */
+  --shadow-glow-green: 0 0 0 1px var(--secondary-line);
+  --shadow-glow-cyan: 0 0 0 1px var(--accent-line);
+  --shadow-glow-blue: 0 8px 24px -8px rgba(0, 0, 0, 0.6);
+
+  /* ---- Typography ---- */
   --font-primary: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-display: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  /* Monospace carries the technical register: eyebrows, metadata,
+     stack labels, code. No extra webfont request — system stack. */
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', 'JetBrains Mono',
+               Consolas, 'Liberation Mono', monospace;
+
   --fs-xs: 0.75rem;
   --fs-sm: 0.875rem;
   --fs-base: 1rem;
@@ -49,7 +110,12 @@
   --fs-6xl: 3.75rem;
   --fs-7xl: 4.5rem;
 
-  /* Spacing */
+  --lh-tight: 1.12;
+  --lh-snug: 1.35;
+  --lh-base: 1.65;
+  --tracking-label: 0.14em;
+
+  /* ---- Spacing ---- */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
@@ -60,27 +126,39 @@
   --space-4xl: 6rem;
   --space-5xl: 8rem;
 
-  /* Border */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 32px;
-  --radius-full: 9999px;
+  /* ---- Radius: public site is 5–8px. 6px is the default.
+         --radius-full is intentionally NOT a pill: every legacy
+         pill in the codebase resolves to 6px through this token. */
+  --radius-sm: 5px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 8px;
+  --radius-full: 6px;
 
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.3s ease;
-  --transition-slow: 0.6s ease;
-  --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --transition-fast: 0.15s var(--ease-out);
+  --transition-base: 0.25s var(--ease-out);
+  --transition-slow: 0.5s var(--ease-out);
+  --transition-spring: 0.4s var(--ease-out);
 
-  /* Z-index */
+  /* ---- Z-index ---- */
+  --z-bg: 0;
   --z-base: 1;
   --z-card: 10;
   --z-navbar: 100;
   --z-modal: 200;
   --z-cursor: 9999;
 
-  /* Layout */
-  --max-width: 1280px;
-  --navbar-height: 80px;
+  /* ---- Layout ---- */
+  --max-width: 1200px;
+  --navbar-height: 72px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 64px;
+    --grid-size: 40px;
+  }
 }

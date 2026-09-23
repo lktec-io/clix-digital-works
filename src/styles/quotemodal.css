@@ -149,3 +149,42 @@
     gap: var(--space-md);
   }
 }
+
+/* ---- Redesign pass ---------------------------------------------------- */
+
+.qm-panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.qm-overlay {
+  background: rgba(3, 6, 14, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.qm-title {
+  letter-spacing: -0.025em;
+}
+
+.qm-close {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.qm-close:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
+}
+
+.qm-submit {
+  min-height: 50px;
+}
+
+.qm-success-icon {
+  border-radius: var(--radius-md);
+}

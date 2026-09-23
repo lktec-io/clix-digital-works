@@ -13,6 +13,11 @@
 .admin-app,
 .admin-login-page,
 .crm-modal-backdrop {
+  /* The public site's accent gradient was re-keyed during the public
+     redesign; the admin pins its own so its logo mark and nav badges keep
+     the appearance they were signed off with. */
+  --gradient-accent: linear-gradient(135deg, #39FF14 0%, #00E5FF 100%);
+
   /* Shape: sharper than the marketing site. */
   --radius-sm: 2px;
   --radius-md: 4px;

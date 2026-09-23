@@ -12,8 +12,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 20% 80%, rgba(57, 255, 20, 0.07) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(0, 229, 255, 0.07) 0%, transparent 50%);
+    radial-gradient(ellipse at 20% 80%, rgba(25, 195, 155, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(59, 125, 255, 0.07) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -25,7 +25,7 @@
   transform: translateX(-50%);
   width: 800px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(59, 125, 255, 0.3), transparent);
 }
 
 .page-hero-content {
@@ -102,5 +102,42 @@
 
   .page-hero-content {
     gap: var(--space-md);
+  }
+}
+
+/* ---- Redesign pass: inner-page headers --------------------------------
+   Tighter, left-aligned, with the same measured hairline the sections use. */
+
+.page-hero {
+  min-height: 0;
+  padding-top: calc(var(--navbar-height) + var(--space-3xl));
+  padding-bottom: var(--space-3xl);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.page-hero::before {
+  display: none;
+}
+
+.page-hero-content {
+  gap: var(--space-lg);
+  max-width: 760px;
+}
+
+.page-hero-title {
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.page-hero-subtitle {
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+@media (max-width: 480px) {
+  .page-hero {
+    padding-bottom: var(--space-2xl);
   }
 }

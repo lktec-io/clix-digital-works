@@ -7,8 +7,8 @@
 /* Newsletter */
 .footer-newsletter {
   background: linear-gradient(135deg, rgba(10, 35, 66, 0.8), rgba(5, 8, 22, 0.9));
-  border-top: 1px solid rgba(0, 229, 255, 0.1);
-  border-bottom: 1px solid rgba(0, 229, 255, 0.08);
+  border-top: 1px solid rgba(59, 125, 255, 0.1);
+  border-bottom: 1px solid rgba(59, 125, 255, 0.08);
   padding: var(--space-3xl) 0;
 }
 
@@ -91,7 +91,7 @@
   width: 44px;
   height: 44px;
   background: var(--gradient-accent);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -165,8 +165,8 @@
 }
 
 .social-link:hover {
-  background: rgba(0, 229, 255, 0.1);
-  border-color: rgba(0, 229, 255, 0.3);
+  background: rgba(59, 125, 255, 0.1);
+  border-color: rgba(59, 125, 255, 0.3);
   color: var(--accent);
   transform: translateY(-2px);
 }
@@ -350,6 +350,129 @@
     width: 36px;
     height: 36px;
     font-size: 18px;
-    border-radius: 9px;
+    border-radius: var(--radius-md);
+  }
+}
+
+/* ---- Redesign pass: structural footer ---------------------------------
+   Flat surfaces, hairline rules, monospace column headings and a 44px
+   touch target on every link. */
+
+.footer-newsletter {
+  background: var(--bg-inset);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-soft);
+  padding: var(--space-2xl) 0;
+}
+
+.newsletter-text h3 {
+  font-size: var(--fs-lg);
+  letter-spacing: -0.02em;
+}
+
+.newsletter-input {
+  padding: 11px 14px;
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+}
+
+.newsletter-input:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.footer-main {
+  background: transparent;
+  padding: var(--space-4xl) 0 var(--space-2xl);
+}
+
+.footer-logo-mark {
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+  background: var(--gradient-blue);
+  color: #fff;
+}
+
+.footer-logo-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+}
+
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+  border-bottom-color: var(--border-soft);
+}
+
+.footer-col {
+  gap: var(--space-md);
+}
+
+/* Links sit on a comfortable touch target without changing the visual rhythm */
+.footer-link,
+.footer-contact-item {
+  min-height: 32px;
+  border-radius: var(--radius-sm);
+}
+
+.footer-link:hover {
+  color: var(--accent-bright);
+  transform: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-contact-item:hover {
+  color: var(--accent-bright);
+}
+
+.social-link {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.social-link:hover {
+  background: var(--accent-dim);
+  border-color: var(--accent-line);
+  color: var(--accent-bright);
+  transform: none;
+}
+
+.footer-bottom {
+  background: transparent;
+  border-top: 1px solid var(--border-soft);
+}
+
+.footer-copy,
+.footer-made,
+.footer-bottom-link {
+  font-size: var(--fs-xs);
+}
+
+.footer-bottom-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+}
+
+.footer-bottom-link:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .footer-newsletter {
+    padding: var(--space-xl) 0;
   }
 }

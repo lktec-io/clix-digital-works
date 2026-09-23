@@ -12,7 +12,7 @@ const POSTS = [
     excerpt: 'In today\'s digital-first world, your website is your most powerful marketing tool. Discover why businesses without websites are losing customers daily.',
     readTime: '5 min read',
     date: 'June 2025',
-    color: '#39FF14',
+    color: '#19C39B',
     featured: true,
   },
   {
@@ -23,7 +23,7 @@ const POSTS = [
     excerpt: 'Manual bookkeeping is costing your business more than you think. Learn how automated accounting software transforms financial management.',
     readTime: '6 min read',
     date: 'May 2025',
-    color: '#00E5FF',
+    color: '#3B7DFF',
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ const POSTS = [
     excerpt: 'Artificial intelligence is no longer reserved for tech giants. Here\'s how small and medium businesses can leverage AI to automate, optimize, and grow.',
     readTime: '8 min read',
     date: 'May 2025',
-    color: '#39FF14',
+    color: '#19C39B',
   },
   {
     id: 4,
@@ -43,7 +43,7 @@ const POSTS = [
     excerpt: 'Cybercriminals are increasingly targeting small businesses. These actionable security tips will protect your business data and your reputation.',
     readTime: '7 min read',
     date: 'April 2025',
-    color: '#00E5FF',
+    color: '#3B7DFF',
   },
 ];
 

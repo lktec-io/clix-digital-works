@@ -6,5 +6,5 @@
   height: 3px;
   background: linear-gradient(90deg, var(--secondary), var(--accent));
   z-index: calc(var(--z-navbar) + 1);
-  box-shadow: 0 0 12px rgba(57, 255, 20, 0.6);
+  box-shadow: 0 0 12px rgba(25, 195, 155, 0.6);
 }

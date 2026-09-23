@@ -10,7 +10,7 @@ const TESTIMONIALS = [
     role: 'Executive Director',
     org: 'Mbeya Community Church',
     avatar: 'AR',
-    color: '#39FF14',
+    color: '#19C39B',
     rating: 5,
     metric: '70% admin time saved',
     text: 'Clix Digital Works transformed how we manage our 3,000+ member congregation. The church management system handles tithes, event scheduling, and SMS broadcasts in one place. Our staff were up and running within a week.',
@@ -21,7 +21,7 @@ const TESTIMONIALS = [
     role: 'Finance Manager',
     org: 'Mbeya Highlands SACCO',
     avatar: 'JM',
-    color: '#00E5FF',
+    color: '#3B7DFF',
     rating: 5,
     metric: 'Loan approvals: days → minutes',
     text: 'The SACCO management system is exceptional. Loan processing that used to take three working days now takes under ten minutes. Regulatory reports that once required a full week are generated at the click of a button.',
@@ -32,7 +32,7 @@ const TESTIMONIALS = [
     role: 'Medical Director',
     org: 'Highlands Medical Centre',
     avatar: 'FK',
-    color: '#39FF14',
+    color: '#19C39B',
     rating: 5,
     metric: '100% paperless records',
     text: 'Before Clix, our patient files were spread across six paper ledgers. Now every record, appointment, and billing entry is digital and searchable instantly. The system paid for itself in the first three months.',
@@ -43,7 +43,7 @@ const TESTIMONIALS = [
     role: 'CEO',
     org: 'Tanzanite Trading Co.',
     avatar: 'BN',
-    color: '#00E5FF',
+    color: '#3B7DFF',
     rating: 5,
     metric: '40% drop in inventory losses',
     text: 'The custom ERP gave us real-time visibility across procurement, production, and sales for the first time. Inventory losses fell by 40% in Q1 alone. The ROI exceeded our expectations and the team was professional throughout.',
@@ -54,7 +54,7 @@ const TESTIMONIALS = [
     role: 'Headmistress',
     org: 'Mbeya International School',
     avatar: 'GM',
-    color: '#39FF14',
+    color: '#19C39B',
     rating: 5,
     metric: 'Fee collection up 35%',
     text: 'The school management system changed everything. Parents check results online, fees are collected via M-Pesa and tracked automatically, and our admin team has halved the time they spend on paperwork. We\'ve already referred four other schools.',
@@ -65,7 +65,7 @@ const TESTIMONIALS = [
     role: 'Program Director',
     org: 'Tanzania Relief Foundation',
     avatar: 'PK',
-    color: '#00E5FF',
+    color: '#3B7DFF',
     rating: 5,
     metric: 'Donor reporting automated',
     text: 'Clix built us a donor management platform that professionalized our reporting overnight. Our international donors are impressed by the real-time impact dashboards. Securing our last funding round was significantly easier because of this system.',
@@ -140,7 +140,7 @@ export default function Testimonials() {
                 exit="exit"
                 transition={{ duration: 0.4, ease: 'easeInOut' }}
               >
-                <div className="testimonial-quote">"</div>
+                <div className="testimonial-quote" aria-hidden="true">"</div>
                 {TESTIMONIALS[current].metric && (
                   <div className="testimonial-metric" style={{ '--tc': TESTIMONIALS[current].color }}>
                     <span className="testimonial-metric-dot" aria-hidden="true" />

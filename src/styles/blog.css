@@ -231,3 +231,47 @@
     padding: var(--space-md);
   }
 }
+
+/* ---- Redesign pass ---------------------------------------------------- */
+
+.blog-card,
+.blog-featured {
+  border-radius: var(--radius-lg);
+}
+
+.blog-category-badge {
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.blog-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.blog-card-title,
+.featured-title {
+  letter-spacing: -0.02em;
+}
+
+.blog-read-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-weight: 700;
+  color: var(--accent-bright);
+}
+
+.blog-featured-img,
+.blog-card-left {
+  /* Schematic plate, consistent with the portfolio placeholders */
+  background-color: var(--bg-inset);
+  background-image:
+    linear-gradient(to right, var(--grid-line-strong) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-strong) 1px, transparent 1px);
+  background-size: 22px 22px;
+}

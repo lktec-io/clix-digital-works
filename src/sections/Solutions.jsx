@@ -17,7 +17,7 @@ const SOLUTIONS = [
     problem: 'Manual enrollment, scattered records, inefficient communication between staff, students, and parents.',
     solution: 'A complete school management system with student enrollment, grades tracking, attendance, fee management, and parent portals.',
     features: ['Student Information System', 'Online Fee Payment', 'Timetable Management', 'Parent Communication Portal', 'Exam & Results Management', 'Library System'],
-    color: '#39FF14',
+    color: '#19C39B',
   },
   {
     id: 'churches',
@@ -27,7 +27,7 @@ const SOLUTIONS = [
     problem: 'Poor member tracking, disorganized tithe/offering records, no communication system for congregation.',
     solution: 'A church management system for member registration, contribution tracking, event scheduling, and digital communication.',
     features: ['Member Registry', 'Tithe & Offering Tracking', 'Event Management', 'Group & Cell Management', 'SMS/Email Broadcasts', 'Financial Reports'],
-    color: '#00E5FF',
+    color: '#3B7DFF',
   },
   {
     id: 'hospitals',
@@ -37,7 +37,7 @@ const SOLUTIONS = [
     problem: 'Paper-based patient records, appointment chaos, billing errors, and no inventory control for medical supplies.',
     solution: 'An integrated hospital management platform covering patient records, appointments, billing, pharmacy, and lab management.',
     features: ['Electronic Patient Records', 'Appointment Booking', 'Pharmacy Management', 'Lab Result System', 'Billing & Insurance', 'Doctor Dashboard'],
-    color: '#39FF14',
+    color: '#19C39B',
   },
   {
     id: 'saccos',
@@ -47,7 +47,7 @@ const SOLUTIONS = [
     problem: 'Slow loan processing, manual savings records, no mobile access, difficult reporting for regulators.',
     solution: 'A full-featured SACCO management system with member savings, loans, shares, dividend computation, and regulatory reports.',
     features: ['Member Management', 'Savings & Deposits', 'Loan Processing', 'Share Capital', 'Dividend Computation', 'Regulatory Reporting'],
-    color: '#00E5FF',
+    color: '#3B7DFF',
   },
   {
     id: 'businesses',
@@ -57,7 +57,7 @@ const SOLUTIONS = [
     problem: 'Fragmented tools, no real-time data, poor inventory control, and disconnected departments.',
     solution: 'Custom ERP systems, POS solutions, and business automation tools that connect every part of your operation.',
     features: ['Inventory Management', 'POS System', 'HR & Payroll', 'CRM', 'Financial Accounting', 'Business Analytics'],
-    color: '#39FF14',
+    color: '#19C39B',
   },
   {
     id: 'ngos',
@@ -67,7 +67,7 @@ const SOLUTIONS = [
     problem: 'Difficulty tracking project impact, donor management, beneficiary records, and grant reporting.',
     solution: 'NGO management software for donor tracking, beneficiary management, project monitoring, and automated impact reports.',
     features: ['Donor Management', 'Project Tracking', 'Beneficiary Database', 'Grant Management', 'Impact Reporting', 'Volunteer Management'],
-    color: '#00E5FF',
+    color: '#3B7DFF',
   },
   {
     id: 'government',
@@ -77,7 +77,7 @@ const SOLUTIONS = [
     problem: 'Paper-based processes, citizen service delays, lack of transparency, and poor inter-department communication.',
     solution: 'E-government platforms, digital service portals, document management systems, and citizen engagement tools.',
     features: ['Citizen Service Portal', 'Document Management', 'Service Request Tracking', 'Inter-dept Communication', 'Public Records', 'Reporting & Analytics'],
-    color: '#39FF14',
+    color: '#19C39B',
   },
   {
     id: 'logistics',
@@ -87,7 +87,7 @@ const SOLUTIONS = [
     problem: 'No real-time tracking, manual dispatch, poor route optimization, and difficult customer updates.',
     solution: 'Fleet management, shipment tracking, route optimization, and customer notification systems for logistics businesses.',
     features: ['Fleet Tracking (GPS)', 'Shipment Management', 'Route Optimization', 'Customer Notifications', 'Driver Management', 'Delivery Analytics'],
-    color: '#00E5FF',
+    color: '#3B7DFF',
   },
 ];
 

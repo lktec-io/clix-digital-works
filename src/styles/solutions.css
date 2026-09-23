@@ -162,7 +162,7 @@
   justify-content: center;
   width: 20px;
   height: 20px;
-  background: rgba(57, 255, 20, 0.1);
+  background: rgba(25, 195, 155, 0.1);
   border-radius: 50%;
 }
 
@@ -258,4 +258,57 @@
     width: 100%;
     justify-content: center;
   }
+}
+
+/* ---- Redesign pass ---------------------------------------------------- */
+
+.sol-tab {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  min-height: 48px;
+}
+
+.sol-tab:hover {
+  border-color: var(--border-strong);
+}
+
+.sol-tab-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.sol-tab-indicator {
+  border-radius: var(--radius-md);
+}
+
+.solutions-panel,
+.panel-body {
+  border-radius: var(--radius-lg);
+}
+
+.panel-glow {
+  display: none;
+}
+
+.panel-section-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.panel-title {
+  letter-spacing: -0.025em;
+}
+
+.panel-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--secondary);
+}
+
+.feature-check {
+  color: var(--secondary);
 }

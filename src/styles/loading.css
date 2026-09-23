@@ -26,7 +26,7 @@
 .orb-1 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(0, 229, 255, 0.4), transparent);
+  background: radial-gradient(circle, rgba(59, 125, 255, 0.4), transparent);
   top: -100px;
   left: -100px;
   animation-delay: 0s;
@@ -35,7 +35,7 @@
 .orb-2 {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(57, 255, 20, 0.3), transparent);
+  background: radial-gradient(circle, rgba(25, 195, 155, 0.3), transparent);
   bottom: -50px;
   right: -50px;
   animation-delay: 2s;
@@ -90,11 +90,11 @@
   width: 56px;
   height: 56px;
   background: var(--gradient-accent);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 30px rgba(57, 255, 20, 0.4);
+  box-shadow: 0 0 30px rgba(25, 195, 155, 0.4);
 }
 
 .logo-letter {
@@ -145,7 +145,7 @@
   height: 100%;
   background: var(--gradient-accent);
   border-radius: 2px;
-  box-shadow: 0 0 12px rgba(57, 255, 20, 0.6);
+  box-shadow: 0 0 12px rgba(25, 195, 155, 0.6);
 }
 
 .loading-percent {
@@ -182,4 +182,35 @@
     font-size: var(--fs-xs);
     letter-spacing: 0.1em;
   }
+}
+
+/* ---- Redesign pass: first impression ---------------------------------- */
+
+.logo-inner {
+  background: var(--gradient-blue);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-accent);
+}
+
+.logo-letter {
+  color: #fff;
+}
+
+.logo-sub,
+.loading-tagline,
+.loading-percent {
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+}
+
+.loading-bar-wrap {
+  border-radius: var(--radius-sm);
+}
+
+.loading-bar-fill {
+  border-radius: var(--radius-sm);
+}
+
+.orb {
+  opacity: 0.35;
 }

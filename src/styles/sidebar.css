@@ -11,12 +11,6 @@
   -webkit-backdrop-filter: blur(14px) saturate(120%);
 }
 
-@media (pointer: fine) {
-  .sidebar-backdrop {
-    cursor: none;
-  }
-}
-
 .sidebar-panel {
   position: fixed;
   top: 0;
@@ -35,7 +29,7 @@
     linear-gradient(180deg, rgba(13, 45, 86, 0.96) 0%, rgba(10, 35, 66, 0.97) 42%, rgba(5, 8, 22, 0.99) 100%);
   backdrop-filter: blur(28px) saturate(140%);
   -webkit-backdrop-filter: blur(28px) saturate(140%);
-  border-left: 1px solid rgba(57, 255, 20, 0.16);
+  border-left: 1px solid rgba(25, 195, 155, 0.16);
   box-shadow:
     -32px 0 80px rgba(0, 0, 0, 0.55),
     -1px 0 0 rgba(255, 255, 255, 0.04) inset;
@@ -49,7 +43,7 @@
   width: 320px;
   height: 320px;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(57, 255, 20, 0.16) 0%, transparent 68%);
+  background: radial-gradient(circle, rgba(25, 195, 155, 0.16) 0%, transparent 68%);
   filter: blur(12px);
 }
 
@@ -90,7 +84,7 @@
 .sidebar-close:hover {
   color: var(--secondary);
   background: var(--secondary-dim);
-  border-color: rgba(57, 255, 20, 0.4);
+  border-color: rgba(25, 195, 155, 0.4);
   transform: rotate(90deg);
 }
 
@@ -141,7 +135,7 @@
   width: 3px;
   border-radius: 0 3px 3px 0;
   background: var(--gradient-accent);
-  box-shadow: 0 0 14px rgba(57, 255, 20, 0.65);
+  box-shadow: 0 0 14px rgba(25, 195, 155, 0.65);
 }
 
 .sidebar-link-icon {
@@ -151,7 +145,7 @@
   flex-shrink: 0;
   width: 38px;
   height: 38px;
-  border-radius: 11px;
+  border-radius: var(--radius-md);
   color: var(--text-muted);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.07);
@@ -198,7 +192,7 @@
 .sidebar-link:hover .sidebar-link-icon {
   color: var(--secondary);
   background: var(--secondary-dim);
-  border-color: rgba(57, 255, 20, 0.3);
+  border-color: rgba(25, 195, 155, 0.3);
 }
 
 .sidebar-link:hover .sidebar-link-chevron {
@@ -208,8 +202,8 @@
 
 .sidebar-link.is-active {
   color: var(--text-primary);
-  background: linear-gradient(90deg, rgba(57, 255, 20, 0.11) 0%, rgba(57, 255, 20, 0.02) 70%, transparent 100%);
-  border-color: rgba(57, 255, 20, 0.22);
+  background: linear-gradient(90deg, rgba(25, 195, 155, 0.11) 0%, rgba(25, 195, 155, 0.02) 70%, transparent 100%);
+  border-color: rgba(25, 195, 155, 0.22);
 }
 
 .sidebar-link.is-active .sidebar-link-icon {
@@ -280,7 +274,7 @@
 }
 
 .sidebar-panel::-webkit-scrollbar-thumb {
-  background: rgba(57, 255, 20, 0.35);
+  background: rgba(25, 195, 155, 0.35);
   border-radius: 2px;
 }
 
@@ -338,4 +332,81 @@
   .sidebar-link-icon {
     transition: none;
   }
+}
+
+/* ---- Redesign pass: align the drawer with the new palette -------------
+   The panel was built around the previous neon-green identity; it now uses
+   the same navy surface, hairline border and blue accent as the rest of
+   the public site. */
+
+.sidebar-backdrop {
+  background: rgba(3, 6, 14, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.sidebar-panel {
+  background: linear-gradient(180deg, #0D1526 0%, #080D1A 100%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-left: 1px solid var(--border);
+  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.55);
+}
+
+.sidebar-glow {
+  background: radial-gradient(circle, rgba(59, 125, 255, 0.14) 0%, transparent 68%);
+}
+
+.sidebar-eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+}
+
+.sidebar-link-icon {
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--border-soft);
+}
+
+.sidebar-link:hover .sidebar-link-icon {
+  color: var(--accent-bright);
+  background: var(--accent-dim);
+  border-color: var(--accent-line);
+}
+
+.sidebar-link.is-active {
+  background: linear-gradient(90deg, rgba(59, 125, 255, 0.12) 0%, rgba(59, 125, 255, 0.02) 70%, transparent 100%);
+  border-color: var(--accent-line);
+}
+
+.sidebar-link.is-active .sidebar-link-icon {
+  color: #fff;
+  background: var(--accent-deep);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.sidebar-link.is-active .sidebar-link-hint,
+.sidebar-link-chevron {
+  color: var(--accent-bright);
+}
+
+.sidebar-link-rail {
+  background: var(--accent);
+  box-shadow: none;
+}
+
+.sidebar-link-hint {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-contact-row:hover {
+  color: var(--accent-bright);
+}
+
+.sidebar-panel::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
 }

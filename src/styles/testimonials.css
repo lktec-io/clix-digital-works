@@ -7,8 +7,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 30% 50%, rgba(57, 255, 20, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 50%, rgba(0, 229, 255, 0.04) 0%, transparent 60%);
+    radial-gradient(ellipse at 30% 50%, rgba(25, 195, 155, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 50%, rgba(59, 125, 255, 0.04) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -221,7 +221,7 @@
 .control-btn:hover {
   color: var(--text-primary);
   border-color: var(--accent);
-  background: rgba(0, 229, 255, 0.08);
+  background: rgba(59, 125, 255, 0.08);
 }
 
 .testimonial-dots {
@@ -321,4 +321,82 @@
     width: 40px;
     height: 40px;
   }
+}
+
+/* ---- Redesign pass: restrained client quotes --------------------------
+   The 100px decorative quote glyph and the pill "metric" badge were the
+   loudest things on the page; both are toned down so the words carry it. */
+
+.testimonial-card {
+  padding: var(--space-2xl);
+  border-radius: var(--radius-lg);
+}
+
+.testimonial-quote {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 1;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  color: var(--border-strong);
+  margin-bottom: var(--space-sm);
+}
+
+.testimonial-metric {
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 5px 10px;
+}
+
+.testimonial-text {
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.testimonial-avatar,
+.side-avatar {
+  border-radius: var(--radius-md);
+  border-width: 1px;
+}
+
+.testimonial-role,
+.side-org {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.side-card {
+  border-radius: var(--radius-md);
+}
+
+.control-btn {
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+
+.control-btn:hover {
+  border-color: var(--accent-line);
+  background: var(--accent-dim);
+}
+
+.t-dot {
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border-strong);
+  /* Keep a finger-sized hit area around a deliberately small mark */
+  padding: 20px 0;
+  background-clip: content-box;
+  box-sizing: content-box;
+}
+
+.t-dot.active {
+  background: var(--accent);
+  background-clip: content-box;
+  width: 28px;
 }

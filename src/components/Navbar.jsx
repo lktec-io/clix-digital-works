@@ -76,10 +76,10 @@ export default function Navbar() {
           {/* CTA Buttons */}
           <div className="navbar-cta">
             <Link to="/contact" className="btn btn-ghost btn-sm">
-              Get Quote
+              Get a quote
             </Link>
             <Link to="/contact" className="btn btn-primary btn-sm">
-              Let's Talk <ArrowRight size={16} />
+              Start a project <ArrowRight size={16} />
             </Link>
           </div>
 

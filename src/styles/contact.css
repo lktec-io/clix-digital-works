@@ -7,8 +7,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 10% 80%, rgba(57, 255, 20, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 90% 20%, rgba(0, 229, 255, 0.05) 0%, transparent 50%);
+    radial-gradient(ellipse at 10% 80%, rgba(25, 195, 155, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 20%, rgba(59, 125, 255, 0.05) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -166,8 +166,8 @@
 
 .form-input:focus {
   border-color: var(--accent);
-  background: rgba(0, 229, 255, 0.04);
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+  background: rgba(59, 125, 255, 0.04);
+  box-shadow: 0 0 0 3px rgba(59, 125, 255, 0.1);
 }
 
 .form-select {
@@ -239,7 +239,7 @@
   align-items: center;
   justify-content: center;
   color: var(--secondary);
-  box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
+  box-shadow: 0 0 30px rgba(25, 195, 155, 0.3);
 }
 
 .form-success h3 {
@@ -337,5 +337,96 @@
 
   .form-submit {
     padding: 12px;
+  }
+}
+
+/* ---- Redesign pass: contact -------------------------------------------
+   Form controls get a 48px target, a 6px radius and a focus ring that
+   matches the site-wide accent. Cards lose their glow. */
+
+.contact-info-header h3 {
+  letter-spacing: -0.025em;
+}
+
+.contact-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.contact-card:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
+}
+
+.contact-card-icon {
+  border-radius: var(--radius-md);
+}
+
+.contact-card-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.promise-item {
+  font-size: var(--fs-sm);
+}
+
+.promise-check {
+  color: var(--secondary);
+}
+
+.contact-form-wrap {
+  border-radius: var(--radius-lg);
+}
+
+.form-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.form-input {
+  min-height: 48px;
+  padding: 13px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--border-strong);
+  font-size: var(--fs-base);
+  transition: border-color var(--transition-fast), background var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+.form-input:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.form-input:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: 0 0 0 3px rgba(59, 125, 255, 0.16);
+}
+
+.form-textarea {
+  min-height: 132px;
+}
+
+.form-submit {
+  padding: 14px;
+  min-height: 50px;
+}
+
+/* 16px inputs stop iOS Safari zooming on focus */
+@media (max-width: 480px) {
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 16px;
   }
 }

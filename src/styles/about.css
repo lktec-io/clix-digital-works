@@ -22,7 +22,7 @@
   width: 44px;
   height: 44px;
   background: var(--secondary-dim);
-  border: 1px solid rgba(57, 255, 20, 0.3);
+  border: 1px solid rgba(25, 195, 155, 0.3);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -181,4 +181,38 @@
     width: 36px;
     height: 36px;
   }
+}
+
+/* ---- Redesign pass ---------------------------------------------------- */
+
+.value-card,
+.team-card {
+  border-radius: var(--radius-lg);
+}
+
+.value-icon,
+.team-avatar {
+  border-radius: var(--radius-md);
+}
+
+.value-title,
+.team-name {
+  letter-spacing: -0.02em;
+}
+
+.team-role {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-bright);
+}
+
+.team-skill {
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted);
 }

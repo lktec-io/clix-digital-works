@@ -1,13 +1,17 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiArrowRight, FiPlay, FiCode, FiSmartphone, FiCpu, FiShield, FiCloud, FiDatabase, FiFileText, FiGlobe } from 'react-icons/fi';
+import { FiArrowRight, FiFileText, FiLayers, FiSmartphone, FiCpu, FiDatabase, FiGlobe, FiServer } from 'react-icons/fi';
 import { useCounter } from '../hooks/useCounter';
 import { useQuoteModal } from '../context/QuoteModalContext';
 import '../styles/hero.css';
 
-const TYPING_WORDS = ['Websites', 'Mobile Apps', 'AI Systems', 'ERP Solutions', 'Business Software'];
+const TYPING_WORDS = ['web platforms', 'mobile apps', 'AI systems', 'ERP solutions', 'business software'];
 
+/**
+ * The capability ticker. Deliberately kept OUT of the <h1>: the headline is
+ * the LCP element and must render once, immediately, with stable text.
+ */
 function TypingEffect() {
   const [wordIndex, setWordIndex] = useState(0);
   const [displayed, setDisplayed] = useState('');
@@ -20,18 +24,22 @@ function TypingEffect() {
       if (displayed.length < currentWord.length) {
         timeoutRef.current = setTimeout(() => {
           setDisplayed(currentWord.slice(0, displayed.length + 1));
-        }, 80);
+        }, 70);
       } else {
-        timeoutRef.current = setTimeout(() => setDeleting(true), 1800);
+        timeoutRef.current = setTimeout(() => setDeleting(true), 2000);
       }
     } else {
       if (displayed.length > 0) {
         timeoutRef.current = setTimeout(() => {
           setDisplayed(displayed.slice(0, -1));
-        }, 45);
+        }, 35);
       } else {
-        setDeleting(false);
-        setWordIndex(i => (i + 1) % TYPING_WORDS.length);
+        // Scheduled rather than set synchronously: the pause between words is
+        // part of the rhythm, and it keeps the effect free of cascading renders.
+        timeoutRef.current = setTimeout(() => {
+          setDeleting(false);
+          setWordIndex(i => (i + 1) % TYPING_WORDS.length);
+        }, 320);
       }
     }
     return () => clearTimeout(timeoutRef.current);
@@ -40,20 +48,20 @@ function TypingEffect() {
   return (
     <span className="typing-text">
       {displayed}
-      <span className="typing-cursor">|</span>
+      <span className="typing-cursor" aria-hidden="true" />
     </span>
   );
 }
 
 const STATS = [
-  { value: 50, suffix: '+', label: 'Projects' },
+  { value: 50, suffix: '+', label: 'Projects delivered' },
   { value: 10, suffix: '+', label: 'Technologies' },
   { value: 24, suffix: '/7', label: 'Support' },
-  { value: 100, suffix: '%', label: 'Client Focus' },
+  { value: 100, suffix: '%', label: 'Client focus' },
 ];
 
 function StatItem({ value, suffix, label, inView }) {
-  const count = useCounter(value, 2000, inView);
+  const count = useCounter(value, 1600, inView);
   return (
     <div className="stat-item">
       <div className="stat-value">
@@ -65,13 +73,35 @@ function StatItem({ value, suffix, label, inView }) {
   );
 }
 
-const FLOAT_ICONS = [
-  { Icon: FiCode, style: { top: '12%', left: '8%' }, delay: 0 },
-  { Icon: FiSmartphone, style: { top: '25%', right: '6%' }, delay: 0.5 },
-  { Icon: FiCpu, style: { bottom: '30%', left: '5%' }, delay: 1 },
-  { Icon: FiShield, style: { top: '60%', right: '8%' }, delay: 1.5 },
-  { Icon: FiCloud, style: { bottom: '15%', right: '20%' }, delay: 0.8 },
-  { Icon: FiDatabase, style: { top: '45%', left: '10%' }, delay: 0.3 },
+/* The architecture panel: the shape of a system we actually ship —
+   clients, an API layer, services, a database. No invented numbers. */
+const STACK_LAYERS = [
+  {
+    tier: 'Clients',
+    nodes: [
+      { label: 'Web app', Icon: FiGlobe },
+      { label: 'Mobile', Icon: FiSmartphone },
+    ],
+  },
+  {
+    tier: 'API layer',
+    nodes: [
+      { label: 'REST API · auth · validation', Icon: FiServer, wide: true },
+    ],
+  },
+  {
+    tier: 'Services',
+    nodes: [
+      { label: 'Business logic', Icon: FiLayers },
+      { label: 'Automation & AI', Icon: FiCpu },
+    ],
+  },
+  {
+    tier: 'Data',
+    nodes: [
+      { label: 'MySQL · backups · audit trail', Icon: FiDatabase, wide: true },
+    ],
+  },
 ];
 
 export default function Hero() {
@@ -89,89 +119,75 @@ export default function Hero() {
 
   return (
     <section className="hero" aria-label="Hero">
-      {/* BG Glows */}
-      <div className="hero-bg-glows" aria-hidden="true">
+      <div className="hero-ambient" aria-hidden="true">
         <div className="hero-glow hero-glow-1" />
         <div className="hero-glow hero-glow-2" />
-        <div className="hero-glow hero-glow-3" />
       </div>
-
-      {/* Floating Icons */}
-      {FLOAT_ICONS.map(({ Icon, style, delay }, i) => (
-        <motion.div
-          key={i}
-          className="hero-float-icon"
-          style={style}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: delay + 1, duration: 0.5 }}
-        >
-          <motion.div
-            animate={{ y: [0, -12, 0] }}
-            transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: 'easeInOut', delay: delay }}
-          >
-            <Icon size={22} />
-          </motion.div>
-        </motion.div>
-      ))}
 
       <div className="container">
         <div className="hero-inner">
-          {/* Left Content */}
+          {/* ---- Left: the proposition ---- */}
           <div className="hero-content">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
+            <motion.span
+              className="eyebrow"
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.4 }}
             >
-              <span className="section-label">
-                Mbeya, Tanzania · Est. 2024
-              </span>
-            </motion.div>
+              Mbeya, Tanzania · Software engineering
+            </motion.span>
 
             <motion.h1
               className="hero-headline"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.5, delay: 0.05 }}
             >
-              Transforming Ideas Into{' '}
-              <span className="gradient-text">Powerful</span>
-              <br />
-              <TypingEffect />
+              We build the software<br />
+              businesses <span className="gradient-text">actually run on</span>.
             </motion.h1>
 
             <motion.p
               className="hero-subheadline"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
             >
-              We build websites, mobile apps, AI systems, business software, cybersecurity
-              solutions and intelligent automation that help organizations grow.
+              Websites, mobile apps, AI systems, business software, cybersecurity and
+              intelligent automation — designed, engineered and maintained end to end.
             </motion.p>
 
             <motion.div
+              className="hero-ticker"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+            >
+              <span className="hero-ticker__key">building</span>
+              <span className="hero-ticker__sep">›</span>
+              <TypingEffect />
+            </motion.div>
+
+            <motion.div
               className="hero-actions"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
               <Link to="/contact" className="btn btn-primary btn-lg">
-                Start Your Project <FiArrowRight size={18} />
+                Start a project <FiArrowRight size={18} />
               </Link>
               <button className="btn btn-outline btn-lg" onClick={openModal}>
-                <FiFileText size={16} /> Get a Free Quote
+                <FiFileText size={16} /> Get a free quote
               </button>
             </motion.div>
 
-            {/* Stats */}
             <motion.div
               ref={statsRef}
               className="hero-stats"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.55 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
             >
               {STATS.map((s, i) => (
                 <StatItem key={i} {...s} inView={statsInView} />
@@ -179,94 +195,59 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Right Illustration */}
+          {/* ---- Right: how a Clix system is put together ---- */}
           <motion.div
             className="hero-visual"
-            initial={{ opacity: 0, x: 60 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            aria-hidden="true"
           >
-            <div className="hero-visual-inner">
-              {/* Central orb */}
-              <div className="visual-orb-wrap">
-                <motion.div
-                  className="visual-orb"
-                  animate={{ scale: [1, 1.04, 1] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  <div className="orb-core">
-                    <div className="orb-logo">
-                      <span>CDW</span>
-                    </div>
-                  </div>
-                  <div className="orb-ring orb-ring-1" />
-                  <div className="orb-ring orb-ring-2" />
-                  <div className="orb-ring orb-ring-3" />
-                </motion.div>
+            <div className="arch-panel">
+              <div className="arch-panel__bar">
+                <span className="arch-panel__dots">
+                  <i /><i /><i />
+                </span>
+                <span className="arch-panel__title">system architecture</span>
               </div>
 
-              {/* Orbit cards */}
-              {[
-                { label: 'Web Dev', Icon: FiGlobe, angle: 0 },
-                { label: 'Mobile', Icon: FiSmartphone, angle: 60 },
-                { label: 'AI / ML', Icon: FiCpu, angle: 120 },
-                { label: 'Cloud', Icon: FiCloud, angle: 180 },
-                { label: 'ERP', Icon: FiDatabase, angle: 240 },
-                { label: 'Security', Icon: FiShield, angle: 300 },
-              ].map(({ label, Icon, angle }, i) => {
-                const rad = (angle - 90) * (Math.PI / 180);
-                const r = 140;
-                const x = Math.cos(rad) * r;
-                const y = Math.sin(rad) * r;
-                return (
-                  <motion.div
-                    key={i}
-                    className="orbit-card"
-                    style={{ transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))` }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.8 + i * 0.1, type: 'spring' }}
-                    whileHover={{ scale: 1.15, zIndex: 10 }}
-                  >
-                    <span className="orbit-icon" aria-hidden="true"><Icon size={16} /></span>
-                    <span className="orbit-label">{label}</span>
-                  </motion.div>
-                );
-              })}
-
-              {/* Code lines decoration */}
-              <div className="code-lines" aria-hidden="true">
-                {['const solution = AI.build();', '> Deploying to Cloud...', '✓ System online', '> 100% uptime']}
-                {['const solution = AI.build();', '> Deploying to Cloud...', '✓ System online', '> 100% uptime'].map((line, i) => (
-                  <motion.div
-                    key={i}
-                    className="code-line"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1.4 + i * 0.2 }}
-                  >
-                    {line}
-                  </motion.div>
+              <div className="arch-panel__body">
+                {STACK_LAYERS.map((layer, li) => (
+                  <div className="arch-tier" key={layer.tier}>
+                    <span className="arch-tier__label">{layer.tier}</span>
+                    <div className="arch-tier__nodes">
+                      {layer.nodes.map(({ label, Icon, wide }) => (
+                        <motion.div
+                          key={label}
+                          className={`arch-node${wide ? ' arch-node--wide' : ''}`}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: 0.45 + li * 0.1 }}
+                        >
+                          <Icon size={14} />
+                          <span>{label}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                    {li < STACK_LAYERS.length - 1 && (
+                      <span className="arch-connector">
+                        <span className="arch-connector__pulse" style={{ animationDelay: `${li * 0.9}s` }} />
+                      </span>
+                    )}
+                  </div>
                 ))}
+              </div>
+
+              <div className="arch-panel__foot">
+                <span className="arch-chip">build</span>
+                <span className="arch-chip">test</span>
+                <span className="arch-chip">deploy</span>
+                <span className="arch-chip arch-chip--ok">maintain</span>
               </div>
             </div>
           </motion.div>
         </div>
       </div>
-
-      {/* Scroll cue */}
-      <motion.div
-        className="scroll-cue"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-      >
-        <motion.div
-          className="scroll-dot"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        />
-      </motion.div>
     </section>
   );
 }

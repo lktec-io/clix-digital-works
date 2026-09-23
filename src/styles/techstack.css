@@ -7,8 +7,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(0, 229, 255, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 50%, rgba(57, 255, 20, 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse at 20% 50%, rgba(59, 125, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(25, 195, 155, 0.04) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -190,4 +190,67 @@
   .tech-trust {
     padding: var(--space-md);
   }
+}
+
+/* ---- Redesign pass: technical register -------------------------------- */
+
+.tech-category {
+  padding: var(--space-lg);
+  gap: var(--space-md);
+}
+
+.tech-cat-header {
+  border-bottom-color: var(--border-soft);
+}
+
+.tech-cat-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.tech-cat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+}
+
+.tech-item {
+  border-radius: var(--radius-md);
+  border-color: var(--border-soft);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.tech-item-icon {
+  border-radius: var(--radius-sm);
+}
+
+.tech-item-detail {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+}
+
+/* The trust strip reads as a spec footer rather than a floating slab */
+.tech-trust {
+  gap: var(--space-lg) var(--space-2xl);
+  padding: var(--space-lg) var(--space-xl);
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: none;
+}
+
+.trust-item {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+.trust-dot {
+  color: var(--secondary);
 }

@@ -11,49 +11,49 @@ const STEPS = [
     icon: FiSearch,
     title: 'Discovery',
     description: 'We analyze your business needs, goals, and challenges through detailed consultations to define the perfect solution.',
-    color: '#39FF14',
+    output: 'Requirements brief',
   },
   {
     num: '02',
     icon: FiClipboard,
     title: 'Planning',
     description: 'Our team creates a detailed project roadmap with timelines, milestones, budget estimates, and technical architecture.',
-    color: '#00E5FF',
+    output: 'Roadmap & architecture',
   },
   {
     num: '03',
     icon: FiLayout,
     title: 'Design',
     description: 'We craft beautiful, intuitive UI/UX designs and interactive prototypes that align with your brand identity.',
-    color: '#39FF14',
+    output: 'Prototype',
   },
   {
     num: '04',
     icon: FiCode,
     title: 'Development',
     description: 'Our engineers build your solution using modern tech stacks, clean code practices, and agile development sprints.',
-    color: '#00E5FF',
+    output: 'Working increments',
   },
   {
     num: '05',
     icon: FiCheckCircle,
     title: 'Testing',
     description: 'Rigorous QA testing across all devices and scenarios ensures your product is bug-free and production-ready.',
-    color: '#39FF14',
+    output: 'QA sign-off',
   },
   {
     num: '06',
     icon: FiUploadCloud,
     title: 'Deployment',
     description: 'We deploy to your production environment with zero-downtime strategies and complete monitoring setup.',
-    color: '#00E5FF',
+    output: 'Live system',
   },
   {
     num: '07',
     icon: FiHeadphones,
     title: 'Support',
     description: 'Post-launch, we provide ongoing maintenance, updates, training, and 24/7 technical support for your team.',
-    color: '#39FF14',
+    output: 'Ongoing SLA',
   },
 ];
 
@@ -63,58 +63,52 @@ export default function Process() {
       <div className="container">
         <motion.div
           className="section-header"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
-          <span className="section-label">How We Work</span>
+          <span className="section-label">How we build</span>
           <h2 className="section-title">
-            Our Proven <span>Process</span>
+            A workflow you can <span>follow week by week</span>
           </h2>
           <p className="section-subtitle">
             A structured, transparent approach that ensures every project is delivered on time, on budget, and beyond expectations.
           </p>
         </motion.div>
 
-        <div className="process-timeline">
-          {/* Connecting line */}
-          <div className="process-line" aria-hidden="true" />
-
+        {/* A single rail, read top to bottom, with the deliverable of each
+            stage stated explicitly — the same shape on every screen size. */}
+        <ol className="process-rail">
           {STEPS.map((step, i) => (
-            <motion.div
+            <motion.li
               key={step.num}
-              className={`process-step ${i % 2 === 0 ? 'step-left' : 'step-right'}`}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="process-stage"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.4, delay: Math.min(i, 3) * 0.05 }}
             >
-              {/* Node */}
-              <div className="step-node" style={{ '--step-color': step.color }}>
-                <div className="step-node-inner">
-                  <step.icon size={20} />
-                </div>
-                <div className="step-node-pulse" />
+              <div className="stage-marker" aria-hidden="true">
+                <span className="stage-marker__box">
+                  <step.icon size={17} />
+                </span>
               </div>
 
-              {/* Card */}
-              <motion.div
-                className="step-card glass-card"
-                whileHover={{ scale: 1.02 }}
-                style={{ '--step-color': step.color }}
-              >
-                <div className="step-num">{step.num}</div>
-                <div className="step-icon-badge">
-                  <step.icon size={16} />
+              <div className="stage-body">
+                <div className="stage-head">
+                  <span className="stage-num">{step.num}</span>
+                  <h3 className="stage-title">{step.title}</h3>
                 </div>
-                <h3 className="step-title">{step.title}</h3>
-                <p className="step-desc">{step.description}</p>
-                <div className="step-accent-line" />
-              </motion.div>
-            </motion.div>
+                <p className="stage-desc">{step.description}</p>
+                <div className="stage-output">
+                  <span className="stage-output__key">output</span>
+                  <span className="stage-output__val">{step.output}</span>
+                </div>
+              </div>
+            </motion.li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );
