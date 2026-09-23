@@ -1,52 +1,33 @@
 import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Home,
-  LayoutGrid,
-  Boxes,
-  BriefcaseBusiness,
-  Users,
-  Newspaper,
-  MessageSquare,
-  ArrowRight,
-  X,
-  Phone,
-  Mail,
-} from 'lucide-react';
-import Logo from './Logo';
+import { ArrowRight, Phone, Mail } from 'lucide-react';
 import '../styles/sidebar.css';
 
+/* Same routes and labels as the desktop navbar — this is the same navigation,
+   laid out for a phone, not a second information architecture. */
 const navItems = [
-  { label: 'Home',      path: '/',          Icon: Home,              hint: 'Start here' },
-  { label: 'Services',  path: '/services',  Icon: LayoutGrid,        hint: 'What we build' },
-  { label: 'Solutions', path: '/solutions', Icon: Boxes,             hint: 'Ready-made systems' },
-  { label: 'Portfolio', path: '/portfolio', Icon: BriefcaseBusiness, hint: 'Our work' },
-  { label: 'About',     path: '/about',     Icon: Users,             hint: 'Who we are' },
-  { label: 'Blog',      path: '/blog',      Icon: Newspaper,         hint: 'Insights' },
-  { label: 'Contact',   path: '/contact',   Icon: MessageSquare,     hint: "Let's talk" },
+  { label: 'Home',      path: '/' },
+  { label: 'Services',  path: '/services' },
+  { label: 'Solutions', path: '/solutions' },
+  { label: 'Portfolio', path: '/portfolio' },
+  { label: 'About',     path: '/about' },
+  { label: 'Blog',      path: '/blog' },
+  { label: 'Contact',   path: '/contact' },
 ];
 
-/* Spring physics: weighted enough to feel like a real panel, damped enough
-   that it settles without wobble. */
-const panelSpring = { type: 'spring', stiffness: 320, damping: 34, mass: 0.9 };
-
-const backdropVariants = {
-  hidden:  { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.28, ease: 'easeOut' } },
-  exit:    { opacity: 0, transition: { duration: 0.22, ease: 'easeIn' } },
-};
-
+/* One short transition for the whole panel. No per-item stagger: at this size
+   the list is read in a glance, and staggering it only delays the tap. */
 const panelVariants = {
-  hidden:  { x: '100%' },
-  visible: { x: 0, transition: { ...panelSpring, when: 'beforeChildren', staggerChildren: 0.045, delayChildren: 0.08 } },
-  exit:    { x: '100%', transition: { type: 'spring', stiffness: 400, damping: 40, mass: 0.7 } },
+  hidden:  { opacity: 0, y: -6, scale: 0.985 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.18, ease: [0.22, 1, 0.36, 1] } },
+  exit:    { opacity: 0, y: -4, scale: 0.99, transition: { duration: 0.12, ease: 'easeIn' } },
 };
 
-const itemVariants = {
-  hidden:  { opacity: 0, x: 28 },
-  visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 420, damping: 32 } },
-  exit:    { opacity: 0, x: 20, transition: { duration: 0.12 } },
+const scrimVariants = {
+  hidden:  { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.18 } },
+  exit:    { opacity: 0, transition: { duration: 0.12 } },
 };
 
 export default function Sidebar({ open, onClose }) {
@@ -54,8 +35,8 @@ export default function Sidebar({ open, onClose }) {
   const panelRef = useRef(null);
   const restoreFocusRef = useRef(null);
 
-  /* Lock body scroll while open, and preserve the underlying scroll offset so
-     closing the drawer never jumps the page. */
+  /* Lock body scroll while open, preserving the underlying offset so closing
+     never jumps the page. */
   useEffect(() => {
     if (!open) return undefined;
 
@@ -82,7 +63,8 @@ export default function Sidebar({ open, onClose }) {
     };
   }, [open]);
 
-  /* Escape to close, and focus management for keyboard + screen-reader users. */
+  /* Escape to close, focus trapped inside the panel, focus returned to the
+     hamburger on close. */
   useEffect(() => {
     if (!open) return undefined;
 
@@ -112,15 +94,32 @@ export default function Sidebar({ open, onClose }) {
     };
 
     document.addEventListener('keydown', onKeyDown);
+    // Short: the panel settles in 180ms, so focus lands as it arrives.
     const focusTimer = window.setTimeout(() => {
       panelRef.current?.querySelector('a[href], button')?.focus();
-    }, 260);
+    }, 190);
 
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       window.clearTimeout(focusTimer);
-      restoreFocusRef.current?.focus?.();
+      // Prefer whatever had focus, but fall back to the trigger: a tap does
+      // not focus a button on iOS, so without this focus would land on <body>
+      // and a keyboard user would restart from the top of the document.
+      const previous = restoreFocusRef.current;
+      const usable = previous && previous !== document.body && document.contains(previous);
+      const target = usable ? previous : document.querySelector('[aria-controls="premium-sidebar"]');
+      target?.focus?.();
     };
+  }, [open, onClose]);
+
+  /* Rotating a phone into landscape can cross the desktop breakpoint, where the
+     full navbar takes over — the panel must not be left hanging over it. */
+  useEffect(() => {
+    if (!open) return undefined;
+    const mq = window.matchMedia('(min-width: 1081px)');
+    const onChange = (e) => { if (e.matches) onClose(); };
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
   }, [open, onClose]);
 
   return (
@@ -128,8 +127,8 @@ export default function Sidebar({ open, onClose }) {
       {open && (
         <>
           <motion.div
-            className="sidebar-backdrop"
-            variants={backdropVariants}
+            className="mnav-scrim"
+            variants={scrimVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -137,10 +136,10 @@ export default function Sidebar({ open, onClose }) {
             aria-hidden="true"
           />
 
-          <motion.aside
+          <motion.div
             ref={panelRef}
             id="premium-sidebar"
-            className="sidebar-panel"
+            className="mnav-panel"
             variants={panelVariants}
             initial="hidden"
             animate="visible"
@@ -149,78 +148,44 @@ export default function Sidebar({ open, onClose }) {
             aria-modal="true"
             aria-label="Site navigation"
           >
-            <div className="sidebar-glow" aria-hidden="true" />
-
-            <motion.header className="sidebar-head" variants={itemVariants}>
-              <Link to="/" className="sidebar-brand" onClick={onClose}>
-                <Logo variant="navbar" showText={true} />
-              </Link>
-              <button
-                type="button"
-                className="sidebar-close"
-                onClick={onClose}
-                aria-label="Close navigation"
-              >
-                <X size={20} strokeWidth={2.2} />
-              </button>
-            </motion.header>
-
-            <motion.p className="sidebar-eyebrow" variants={itemVariants}>
-              Navigation
-            </motion.p>
-
-            <nav className="sidebar-nav" aria-label="Primary">
+            <nav className="mnav-nav" aria-label="Primary">
               <ul role="list">
-                {navItems.map(({ label, path, Icon, hint }) => {
+                {navItems.map(({ label, path }) => {
                   const isActive = location.pathname === path;
                   return (
-                    <motion.li key={path} variants={itemVariants}>
+                    <li key={path}>
                       <Link
                         to={path}
-                        className={`sidebar-link ${isActive ? 'is-active' : ''}`}
+                        className={`mnav-link${isActive ? ' is-active' : ''}`}
                         onClick={onClose}
                         aria-current={isActive ? 'page' : undefined}
                       >
-                        {isActive && (
-                          <motion.span
-                            className="sidebar-link-rail"
-                            layoutId="sidebarRail"
-                            transition={panelSpring}
-                            aria-hidden="true"
-                          />
-                        )}
-                        <span className="sidebar-link-icon" aria-hidden="true">
-                          <Icon size={18} strokeWidth={2.1} />
-                        </span>
-                        <span className="sidebar-link-text">
-                          <span className="sidebar-link-label">{label}</span>
-                          <span className="sidebar-link-hint">{hint}</span>
-                        </span>
-                        <ArrowRight className="sidebar-link-chevron" size={16} aria-hidden="true" />
+                        <span className="mnav-link__label">{label}</span>
+                        <ArrowRight className="mnav-link__chevron" size={14} aria-hidden="true" />
                       </Link>
-                    </motion.li>
+                    </li>
                   );
                 })}
               </ul>
             </nav>
 
-            <motion.div className="sidebar-footer" variants={itemVariants}>
-              <Link to="/contact" className="btn btn-primary sidebar-cta" onClick={onClose}>
-                Let's Talk <ArrowRight size={16} />
+            <div className="mnav-foot">
+              <Link to="/contact" className="btn btn-primary mnav-cta" onClick={onClose}>
+                Start a project <ArrowRight size={15} />
               </Link>
 
-              <div className="sidebar-contact">
-                <a href="tel:+255674022265" className="sidebar-contact-row">
-                  <Phone size={14} aria-hidden="true" />
+              <div className="mnav-contact">
+                <a href="tel:+255674022265" className="mnav-contact__row">
+                  <Phone size={13} aria-hidden="true" />
                   <span>+255 674 022 265</span>
                 </a>
-                <a href="mailto:info@clixworks.co.tz" className="sidebar-contact-row">
-                  <Mail size={14} aria-hidden="true" />
+                <a href="mailto:info@clixworks.co.tz" className="mnav-contact__row">
+                  <Mail size={13} aria-hidden="true" />
                   <span>info@clixworks.co.tz</span>
                 </a>
               </div>
-            </motion.div>
-          </motion.aside>
+            </div>
+          </motion.div>
         </>
       )}
     </AnimatePresence>

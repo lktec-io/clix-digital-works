@@ -180,3 +180,22 @@ Your brief forbids fake testimonials and invented metrics. The following was **a
 1. Decide on the content flagged in §9.
 2. Send real project screenshots; the portfolio plates are built to receive them.
 3. The JS bundle is 677 kB (190 kB gzipped) in one chunk — route-level `React.lazy` would cut first load substantially. Out of scope here; say the word.
+
+---
+
+# Addendum — Mobile navigation refinement
+
+Scope: mobile header, hamburger and mobile navigation only. Nothing else was touched.
+Files: `src/components/Navbar.jsx`, `src/components/Sidebar.jsx`, `src/styles/navbar.css`, `src/styles/sidebar.css`. Not committed.
+
+**Hamburger.** Two lucide icons swapped by `AnimatePresence` → three CSS bars in a 38px square (36px ≤480px) that fold into a close mark in one 180ms transform. The mark itself is 17 × 1.5px — deliberately small, balanced against the 34px logo tile. An inset pseudo-element lifts the tap area to 44px without enlarging the visible control. Open state tints the square with the accent so "tap again to close" is obvious.
+
+**Panel.** The full-height right drawer (400px, icon tiles, per-item hints, spring + stagger) became a compact panel anchored 8px under the header: 288–300px wide, ~466px tall, 8px radius, hairline border, the site's grid texture at 3% and a single 180ms fade/slide. It occupies 29–86% of viewport width and 58–73% of height depending on device — never fullscreen. Icon tiles and hint text were dropped; the rows are typographic, with hairline separators, a 2px accent rail plus a faint tint on the current page, and 44px tap targets. CTA ("Start a project" → `/contact`, 6px radius, 42px) sits below a divider with the phone and email as small mono rows.
+
+**Header.** While the panel is open the bar resolves to its solid state and is raised above the scrim, so the panel reads as hanging off a real header and the hamburger stays tappable to close.
+
+**Behaviour.** Escape, outside click, toggle, link tap and CTA all close it; body scroll locks and the exact offset is restored on close; focus moves into the panel, is trapped, and returns to the hamburger — including after a tap, which on iOS does not focus a button (this fallback was added during QA). The panel also closes if the viewport crosses into desktop while open.
+
+**QA.** 207/207 automated checks pass across 320/360/375/390/412/430/768/1024 (mobile header) and 1100/1280/1440 (desktop), plus the 1080/1081 crossover. No horizontal overflow, no clipping, no label wrapping, no console errors, radius ≤ 6px throughout, one navigation shown at any width. Desktop navbar verified byte-for-byte unchanged in behaviour: 72px bar, 7 links, active indicator, both CTAs, no hamburger.
+
+**Known limitation.** In landscape on a short phone (e.g. 812×375) the panel caps at 279px and scrolls internally, so the CTA needs a short scroll inside the panel. No clipping and no page overflow — the alternative would be shrinking tap targets below 40px, which is the worse trade.

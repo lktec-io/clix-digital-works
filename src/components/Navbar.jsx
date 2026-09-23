@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import Logo from './Logo';
 import Sidebar from './Sidebar';
 import '../styles/navbar.css';
@@ -43,7 +43,7 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}
+        className={`navbar ${scrolled ? 'navbar-scrolled' : ''}${mobileOpen ? ' navbar-menu-open' : ''}`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -83,30 +83,27 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Hamburger */}
+          {/* Hamburger — three CSS bars that fold into a close mark. Drawn in
+              CSS rather than swapped between two icon components so the
+              transition is a single 180ms transform with nothing to mount. */}
           <button
-            className="navbar-hamburger"
+            type="button"
+            className={`navbar-hamburger${mobileOpen ? ' is-open' : ''}`}
             onClick={toggleMobile}
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
             aria-expanded={mobileOpen}
             aria-controls="premium-sidebar"
           >
-            <AnimatePresence mode="wait" initial={false}>
-              {mobileOpen ? (
-                <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                  <X size={24} />
-                </motion.span>
-              ) : (
-                <motion.span key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                  <Menu size={24} />
-                </motion.span>
-              )}
-            </AnimatePresence>
+            <span className="burger" aria-hidden="true">
+              <span className="burger__bar" />
+              <span className="burger__bar" />
+              <span className="burger__bar" />
+            </span>
           </button>
         </div>
       </motion.nav>
 
-      {/* Premium responsive navigation drawer */}
+      {/* Compact mobile navigation panel */}
       <Sidebar open={mobileOpen} onClose={closeMobile} />
     </>
   );
