@@ -89,6 +89,17 @@ function AppRoutes() {
         </Routes>
       ) : (
         <>
+          {/* Public-site chrome only.
+              These are fixed, full-viewport layers. `.tech-bg` in particular is
+              opaque and positioned (z-index 0), so anything static painted in
+              the same stacking context ends up underneath it. The admin's main
+              content and login card are static by design — mounting these on
+              /admin buried the CRM behind an opaque navy sheet while the fixed
+              sidebar (z-index 10) and sticky topbar (z-index 5) stayed visible.
+              They belong to the public branch and are mounted here only. */}
+          <div className="noise-overlay" aria-hidden="true" />
+          <TechBackground />
+          <ScrollProgress />
           <a href="#main-content" className="skip-link">Skip to main content</a>
           <Navbar />
           <main id="main-content" tabIndex={-1}>
@@ -119,32 +130,32 @@ function AppRoutes() {
 }
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
+  const [booting, setBooting] = useState(true);
 
   useEffect(() => {
     initAnalytics();
   }, []);
 
   useEffect(() => {
-    document.body.classList.toggle('loading', loading);
-  }, [loading]);
+    document.body.classList.toggle('loading', booting);
+  }, [booting]);
 
-  if (loading) {
-    return <LoadingScreen onComplete={() => setLoading(false)} />;
-  }
-
+  /* The app mounts immediately and the boot screen sits over it, rather than
+     the app being withheld until the screen finishes. That is what lets the
+     boot sequence report real readiness — the router, fonts and page assets
+     are genuinely loading underneath while it is on screen — and it means the
+     site is painted and interactive the instant the overlay lifts. */
   return (
     <ErrorBoundary>
       <AdminAuthProvider>
         <QuoteModalProvider>
           <Router>
-            <div className="noise-overlay" aria-hidden="true" />
-            <TechBackground />
-            <ScrollProgress />
             <AppRoutes />
           </Router>
         </QuoteModalProvider>
       </AdminAuthProvider>
+
+      {booting && <LoadingScreen onComplete={() => setBooting(false)} />}
     </ErrorBoundary>
   );
 }

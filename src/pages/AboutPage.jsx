@@ -142,6 +142,10 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* The mindset comes before the people: what we believe, then who holds
+          it. The team section reads as the answer to the videos above it. */}
+      <Mindset />
+
       {/* Team */}
       <section className="section" aria-labelledby="team-heading">
         <div className="container">
@@ -184,9 +188,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      {/* The people → the mindset → how we build → what we create */}
-      <Mindset />
 
       <WhyChooseUs />
       <TechStack />

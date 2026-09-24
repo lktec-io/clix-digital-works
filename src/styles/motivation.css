@@ -1,7 +1,7 @@
 /* =============================================================
-   THE MINDSET — culture videos.
+   THE MINDSET — culture videos, playing inline.
    Same surfaces, hairlines, radii and accents as the team section
-   directly above it: one continuous story, not a new visual world.
+   directly below it: one continuous story, not a new visual world.
    ============================================================= */
 
 .mindset-grid {
@@ -29,27 +29,10 @@
   box-shadow: var(--shadow-md);
 }
 
-/* ---- Poster ---- */
+/* ---- Media ---- */
 
-.mindset-card__trigger {
-  display: block;
-  width: 100%;
-  padding: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-}
-
-.mindset-card__trigger:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
-
-.mindset-poster {
+.mindset-media {
   position: relative;
-  display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
@@ -57,23 +40,21 @@
   border-bottom: 1px solid var(--border-soft);
 }
 
-/* Layered over the plate, not swapped with it. */
-.mindset-poster__img {
+.mindset-video {
   position: absolute;
   inset: 0;
   display: block;
   width: 100%;
   height: 100%;
+  /* Cover crops, never distorts. The control bar the browser draws sits
+     inside the same box. */
   object-fit: cover;
-  transition: transform var(--transition-slow), opacity var(--transition-base);
+  background: transparent;
 }
 
-.mindset-card:hover .mindset-poster__img {
-  transform: scale(1.03);
-}
-
-/* Shown when no poster file resolves: the site's own grid, a large muted
-   index, nothing invented. */
+/* The plate lives underneath the video at all times: it covers the moment
+   before the first frame decodes, and it is what remains if a file is
+   missing — never a broken media frame. */
 .mindset-poster__plate {
   position: absolute;
   inset: 0;
@@ -96,41 +77,6 @@
   color: rgba(255, 255, 255, 0.08);
 }
 
-/* ---- Play control ----
-   A 6px square, not a circle: the same shape language as the rest of the
-   site's controls. */
-.mindset-play {
-  position: absolute;
-  left: 14px;
-  bottom: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-strong);
-  background: rgba(6, 10, 20, 0.78);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  color: var(--text-primary);
-  transition: background var(--transition-base), border-color var(--transition-base),
-              color var(--transition-base);
-}
-
-/* The icon is a triangle with no optical centre; nudge it right. */
-.mindset-play svg {
-  margin-left: 2px;
-  fill: currentColor;
-}
-
-.mindset-card:hover .mindset-play,
-.mindset-card__trigger:focus-visible .mindset-play {
-  background: var(--accent-deep);
-  border-color: var(--accent-deep);
-  color: #fff;
-}
-
 /* ---- Body ---- */
 
 .mindset-card__body {
@@ -141,12 +87,30 @@
 }
 
 .mindset-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: 8px;
+}
+
+.mindset-card__index {
+  color: var(--secondary);
+  letter-spacing: 0.06em;
+}
+
+.mindset-card__index::after {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 1px;
+  margin-left: 8px;
+  vertical-align: middle;
+  background: var(--border-strong);
 }
 
 .mindset-card__title {
@@ -158,136 +122,6 @@
 }
 
 .mindset-card__desc {
-  font-size: var(--fs-sm);
-  line-height: 1.7;
-  color: var(--text-secondary);
-}
-
-/* =============================================================
-   PLAYER
-   ============================================================= */
-
-.vmodal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-modal);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-lg);
-  background: rgba(3, 6, 14, 0.82);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-.vmodal-panel {
-  width: min(900px, 100%);
-  max-height: calc(100dvh - 2 * var(--space-lg));
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-.vmodal-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-md);
-  padding: var(--space-md) var(--space-lg);
-  border-bottom: 1px solid var(--border-soft);
-}
-
-.vmodal-head__eyebrow {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--secondary);
-  margin-bottom: 4px;
-}
-
-.vmodal-head__title {
-  font-size: var(--fs-lg);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-}
-
-.vmodal-close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  flex-shrink: 0;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  transition: background var(--transition-fast), border-color var(--transition-fast),
-              color var(--transition-fast);
-}
-
-.vmodal-close:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-strong);
-  color: var(--text-primary);
-}
-
-.vmodal-stage {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #04070E;
-}
-
-.vmodal-video {
-  display: block;
-  width: 100%;
-  height: 100%;
-  /* contain, not cover: never crop the author's framing */
-  object-fit: contain;
-  background: #04070E;
-}
-
-/* Missing file — same footprint, no broken media icon. */
-.vmodal-missing {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: var(--space-lg);
-  text-align: center;
-  background-color: var(--bg-inset);
-  background-image:
-    linear-gradient(to right, var(--grid-line-strong) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-line-strong) 1px, transparent 1px);
-  background-size: 24px 24px;
-  color: var(--text-muted);
-}
-
-.vmodal-missing__title {
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.vmodal-missing__path {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  word-break: break-all;
-}
-
-.vmodal-desc {
-  padding: var(--space-md) var(--space-lg) var(--space-lg);
   font-size: var(--fs-sm);
   line-height: 1.7;
   color: var(--text-secondary);
@@ -312,70 +146,10 @@
   .mindset-card__body {
     padding: var(--space-md);
   }
-
-  .vmodal-backdrop {
-    padding: var(--space-md);
-    /* Sit the player near the top on a phone rather than centring it in a
-       viewport whose height keeps changing as the browser chrome moves. */
-    align-items: flex-start;
-    padding-top: calc(var(--navbar-height) - 8px);
-  }
-
-  .vmodal-head {
-    padding: var(--space-sm) var(--space-md);
-  }
-
-  .vmodal-desc {
-    padding: var(--space-sm) var(--space-md) var(--space-md);
-  }
 }
 
 @media (max-width: 480px) {
-  .mindset-play {
-    left: 10px;
-    bottom: 10px;
-    width: 36px;
-    height: 36px;
-  }
-
-  .vmodal-backdrop {
-    padding: var(--space-sm);
-    padding-top: calc(var(--navbar-height) - 12px);
-  }
-
-  .vmodal-head__title {
-    font-size: var(--fs-base);
-  }
-}
-
-/* Landscape on a phone: the player should use the height it has. */
-@media (max-height: 480px) and (orientation: landscape) {
-  .vmodal-backdrop {
-    align-items: center;
-    padding: var(--space-sm);
-  }
-
-  /* Title and description give way to the picture — but never the close
-     button, which stays the visible way out alongside Escape. */
-  .vmodal-head__text,
-  .vmodal-desc {
-    display: none;
-  }
-
-  .vmodal-head {
-    justify-content: flex-end;
-    padding: 6px 8px;
-    border-bottom: none;
-  }
-
-  .vmodal-panel {
-    width: auto;
-    max-width: 100%;
-  }
-
-  .vmodal-stage {
-    height: calc(100dvh - 2 * var(--space-sm));
-    aspect-ratio: auto;
-    width: min(calc((100dvh - 2 * var(--space-sm)) * 16 / 9), calc(100vw - 2 * var(--space-sm)));
+  .mindset-poster__index {
+    font-size: 2.2rem;
   }
 }

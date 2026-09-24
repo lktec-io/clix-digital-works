@@ -1,67 +1,96 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiPlay } from 'react-icons/fi';
-import { MOTIVATION_VIDEOS, POSTER_EXTENSIONS } from '../data/motivation';
-import VideoModal from '../components/VideoModal';
+import { MOTIVATION_VIDEOS } from '../data/motivation';
 import '../styles/motivation.css';
 
-/* Posters are optional. The configured path is tried first, then the same
-   basename with each supported extension; if none resolve the card falls back
-   to a technical plate drawn in CSS. No stock imagery, no generated frames. */
-function buildPosterCandidates(src) {
-  if (!src) return [];
-  const base = src.replace(/\.(jpe?g|png)$/i, '');
-  return [...new Set([src, ...POSTER_EXTENSIONS.map(ext => base + ext)])];
-}
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-function VideoCard({ item, index, onOpen }) {
-  const candidates = useMemo(() => buildPosterCandidates(item.poster), [item.poster]);
-  const [attempt, setAttempt] = useState(0);
-  const posterSrc = attempt < candidates.length ? candidates[attempt] : null;
+function VideoCard({ item, index }) {
+  const cardRef = useRef(null);
+  const videoRef = useRef(null);
+  // `armed` gates the src: nothing is fetched until the card nears the
+  // viewport. These files are 14–17 MB, so attaching all three on mount would
+  // cost the page far more than the section is worth.
+  const [armed, setArmed] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el || failed) return undefined;
+
+    const reduced = prefersReducedMotion();
+
+    const io = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.isIntersecting) setArmed(true);
+
+      const video = videoRef.current;
+      if (!video) return;
+
+      // Pause off-screen, resume on return. Never reset currentTime: the clip
+      // picks up where the viewer left it rather than restarting on every
+      // scroll past.
+      if (entry.intersectionRatio >= 0.3) {
+        if (reduced || !video.paused) return;
+        const attempt = video.play();
+        // Autoplay can still be refused (data saver, battery saver, policy).
+        // The native controls stay available, so refusal is a non-event.
+        if (attempt?.catch) attempt.catch(() => {});
+      } else if (!video.paused) {
+        video.pause();
+      }
+    }, { rootMargin: '200px 0px', threshold: [0, 0.3, 0.75] });
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, [failed, armed]);
 
   return (
     <motion.article
+      ref={cardRef}
       className="mindset-card"
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.4, delay: Math.min(index, 3) * 0.06, ease: [0.22, 1, 0.36, 1] }}
     >
-      <button
-        type="button"
-        className="mindset-card__trigger"
-        onClick={() => onOpen({ ...item, resolvedPoster: posterSrc })}
-        aria-label={`Play video: ${item.title}`}
-      >
-        <span className="mindset-poster">
-          {/* The plate is always present underneath. A poster simply covers it
-              once it decodes, so there is never a blank frame — including the
-              window where a lazy image has not been fetched yet, and on hosts
-              that answer a missing file with the SPA's index.html (200) rather
-              than a 404, where the error arrives late. */}
-          <span className="mindset-poster__plate" aria-hidden="true">
-            <span className="mindset-poster__index">{String(index + 1).padStart(2, '0')}</span>
-          </span>
+      <div className="mindset-media">
+        {/* The plate sits underneath at all times: the video covers it once it
+            has frames, so there is never a blank or broken frame — including
+            before the src is attached, and on hosts that answer a missing file
+            with the SPA's index.html instead of a 404. */}
+        <div className="mindset-poster__plate" aria-hidden="true">
+          <span className="mindset-poster__index">{String(index + 1).padStart(2, '0')}</span>
+        </div>
 
-          {posterSrc && (
-            <img
-              className="mindset-poster__img"
-              src={posterSrc}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              onError={() => setAttempt(i => i + 1)}
-            />
-          )}
+        {armed && !failed && (
+          <video
+            ref={videoRef}
+            className="mindset-video"
+            src={item.video}
+            /* Optional: shown only in the moment before the first frame
+               decodes. A missing poster is silently ignored by the browser —
+               the plate underneath covers that moment either way. */
+            poster={item.poster || undefined}
+            muted
+            loop
+            playsInline
+            controls
+            preload="metadata"
+            aria-label={`${item.title} — ${item.description}`}
+            onError={() => setFailed(true)}
+          />
+        )}
 
-          <span className="mindset-play" aria-hidden="true">
-            <FiPlay size={16} />
-          </span>
-        </span>
-      </button>
+      </div>
 
       <div className="mindset-card__body">
-        <span className="mindset-card__meta">{item.category}</span>
+        <span className="mindset-card__meta">
+          <span className="mindset-card__index">{String(index + 1).padStart(2, '0')}</span>
+          {item.category}
+        </span>
         <h3 className="mindset-card__title">{item.title}</h3>
         <p className="mindset-card__desc">{item.description}</p>
       </div>
@@ -70,9 +99,6 @@ function VideoCard({ item, index, onOpen }) {
 }
 
 export default function Mindset() {
-  // One open video at a time, by construction: a single piece of state.
-  const [active, setActive] = useState(null);
-
   return (
     <section className="section mindset-section" id="mindset" aria-labelledby="mindset-heading">
       <div className="container">
@@ -95,12 +121,10 @@ export default function Mindset() {
 
         <div className="mindset-grid">
           {MOTIVATION_VIDEOS.map((item, i) => (
-            <VideoCard key={item.id} item={item} index={i} onOpen={setActive} />
+            <VideoCard key={item.id} item={item} index={i} />
           ))}
         </div>
       </div>
-
-      <VideoModal item={active} onClose={() => setActive(null)} />
     </section>
   );
 }

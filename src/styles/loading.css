@@ -1,216 +1,363 @@
-.loading-screen {
+/* =============================================================
+   BOOT SCREEN
+   A system coming online: grid, a small wiring diagram, module
+   checks reporting in, one thin progress rule. Self-contained —
+   it must render correctly before any page stylesheet has been
+   needed, and on admin routes where the public CSS never mounts.
+   ============================================================= */
+
+.boot {
   position: fixed;
   inset: 0;
-  background: var(--bg);
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  padding: var(--space-lg);
+  background: #060A14;
   overflow: hidden;
 }
 
-.loading-bg-orbs {
+/* Engineering grid, faded out at the edges */
+.boot__grid {
   position: absolute;
   inset: 0;
-  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 20%, transparent 78%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 20%, transparent 78%);
 }
 
-.orb {
+.boot__glow {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.4;
-  animation: float 6s ease-in-out infinite;
-}
-
-.orb-1 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(59, 125, 255, 0.4), transparent);
-  top: -100px;
-  left: -100px;
-  animation-delay: 0s;
-}
-
-.orb-2 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(25, 195, 155, 0.3), transparent);
-  bottom: -50px;
-  right: -50px;
-  animation-delay: 2s;
-}
-
-.orb-3 {
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle, rgba(10, 35, 66, 0.8), transparent);
   top: 50%;
   left: 50%;
+  width: min(680px, 120vw);
+  height: min(520px, 90vh);
   transform: translate(-50%, -50%);
-  animation-delay: 1s;
+  background: radial-gradient(ellipse at center, rgba(59, 125, 255, 0.12) 0%, transparent 68%);
+  filter: blur(40px);
 }
 
-.loading-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-xl);
-  z-index: 1;
-}
-
-.loading-logo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-lg);
-}
-
-.logo-icon {
+.boot__inner {
   position: relative;
-  width: 72px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  background: var(--gradient-accent) border-box;
-  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: destination-out;
-  mask-composite: exclude;
-  animation: spin 3s linear infinite;
-}
-
-.logo-inner {
-  width: 56px;
-  height: 56px;
-  background: var(--gradient-accent);
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 30px rgba(25, 195, 155, 0.4);
-}
-
-.logo-letter {
-  font-size: 28px;
-  font-weight: 900;
-  color: var(--bg);
-  letter-spacing: -1px;
-}
-
-.logo-text-wrap {
+  width: 100%;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.logo-name {
-  font-size: var(--fs-3xl);
+/* ---- Brand ----
+   Self-contained copies of the mark and wordmark: the boot screen cannot
+   assume navbar.css has loaded. */
+
+.boot__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-lg);
+  animation: bootRise 0.5s var(--ease-out) both;
+}
+
+.boot__brand .logo-mark {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #4B87FF 0%, #1F5BE0 100%);
+  color: #fff;
+  font-size: 19px;
   font-weight: 900;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1;
+  box-shadow: 0 6px 20px -6px rgba(31, 91, 224, 0.55);
 }
 
-.logo-sub {
-  font-size: var(--fs-sm);
-  color: var(--text-secondary);
-  letter-spacing: 0.15em;
+.boot__brand .logo-text {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.boot__brand .logo-main {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #EEF2F8;
+}
+
+.boot__brand .logo-dot {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: #7E8DA6;
+}
+
+.boot__headline {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
+  color: #19C39B;
+  margin-bottom: var(--space-lg);
+  animation: bootRise 0.5s var(--ease-out) 0.06s both;
 }
 
-.loading-tagline {
-  font-size: var(--fs-sm);
-  color: var(--text-muted);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+/* ---- Wiring diagram ---- */
+
+.boot__diagram {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  overflow: visible;
 }
 
-.loading-bar-wrap {
-  width: min(320px, calc(100vw - 3rem));
-  height: 3px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 2px;
+.boot__wires path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1;
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: bootDraw 0.9s var(--ease-out) forwards;
+}
+
+.boot__wires path:nth-child(2) { animation-delay: 0.08s; }
+.boot__wires path:nth-child(3) { animation-delay: 0.16s; }
+.boot__wires path:nth-child(4) { animation-delay: 0.24s; }
+
+.boot__nodes circle {
+  fill: #3B7DFF;
+  opacity: 0;
+  animation: bootPop 0.4s var(--ease-out) forwards;
+}
+
+.boot__nodes circle:nth-child(1) { animation-delay: 0.30s; }
+.boot__nodes circle:nth-child(2) { animation-delay: 0.38s; }
+.boot__nodes circle:nth-child(3) { animation-delay: 0.46s; }
+.boot__nodes circle:nth-child(4) { animation-delay: 0.54s; }
+
+.boot__core {
+  fill: rgba(25, 195, 155, 0.12);
+  stroke: #19C39B;
+  stroke-width: 1;
+  opacity: 0;
+  animation: bootPop 0.45s var(--ease-out) 0.2s forwards;
+}
+
+/* A single restrained scan pass across the diagram — a soft gradient band,
+   not a hard-edged shape. */
+.boot__viz {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-lg);
   overflow: hidden;
 }
 
-.loading-bar-fill {
-  height: 100%;
-  background: var(--gradient-accent);
-  border-radius: 2px;
-  box-shadow: 0 0 12px rgba(25, 195, 155, 0.6);
+.boot__scan {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 90px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(91, 147, 255, 0.22), transparent);
+  animation: bootScan 2.2s var(--ease-in-out) 0.4s infinite;
 }
 
-.loading-percent {
-  font-size: var(--fs-sm);
-  color: var(--secondary);
-  font-weight: 600;
-  letter-spacing: 0.1em;
+/* ---- Module checks ---- */
+
+.boot__modules {
+  width: 100%;
+  list-style: none;
+  margin: 0 0 var(--space-lg);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
-@media (max-width: 400px) {
-  .loading-logo {
-    gap: var(--space-md);
-  }
-
-  .logo-name {
-    font-size: var(--fs-2xl);
-  }
-
-  .logo-icon {
-    width: 56px;
-    height: 56px;
-  }
-
-  .logo-inner {
-    width: 44px;
-    height: 44px;
-  }
-
-  .logo-letter {
-    font-size: 22px;
-  }
-
-  .loading-tagline {
-    font-size: var(--fs-xs);
-    letter-spacing: 0.1em;
-  }
-}
-
-/* ---- Redesign pass: first impression ---------------------------------- */
-
-.logo-inner {
-  background: var(--gradient-blue);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-accent);
-}
-
-.logo-letter {
-  color: #fff;
-}
-
-.logo-sub,
-.loading-tagline,
-.loading-percent {
+.boot__module {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
   font-family: var(--font-mono);
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: #7E8DA6;
+  animation: bootRise 0.4s var(--ease-out) both;
 }
 
-.loading-bar-wrap {
+.boot__module:nth-child(1) { animation-delay: 0.10s; }
+.boot__module:nth-child(2) { animation-delay: 0.16s; }
+.boot__module:nth-child(3) { animation-delay: 0.22s; }
+.boot__module:nth-child(4) { animation-delay: 0.28s; }
+.boot__module:nth-child(5) { animation-delay: 0.34s; }
+
+.boot__module-label {
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Dotted leader, the way a spec sheet lines up a value */
+.boot__leader {
+  flex: 1;
+  height: 1px;
+  min-width: 12px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 6px);
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+  transform: translateY(-3px);
+}
+
+.boot__module-state {
+  white-space: nowrap;
+  color: #64748B;
+  transition: color 0.25s ease;
+}
+
+.boot__module.is-ready {
+  color: #A7B4C9;
+}
+
+.boot__module.is-ready .boot__module-state {
+  color: #19C39B;
+}
+
+/* ---- Progress ---- */
+
+.boot__bar {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.09);
   border-radius: var(--radius-sm);
+  overflow: hidden;
 }
 
-.loading-bar-fill {
+.boot__bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3B7DFF, #19C39B);
   border-radius: var(--radius-sm);
+  transition: width 0.35s var(--ease-out);
 }
 
-.orb {
-  opacity: 0.35;
+.boot__foot {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.boot__pct {
+  color: #EEF2F8;
+  font-weight: 600;
+}
+
+.boot__verdict {
+  color: #7E8DA6;
+}
+
+/* ---- Animations ---- */
+
+@keyframes bootRise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes bootDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes bootPop {
+  from { opacity: 0; transform: scale(0.6); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bootScan {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateX(420px); opacity: 0; }
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 480px) {
+  .boot__inner {
+    max-width: 300px;
+  }
+
+  .boot__diagram {
+    max-width: 260px;
+  }
+
+  .boot__module {
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+  }
+}
+
+@media (max-width: 360px) {
+  .boot {
+    padding: var(--space-md);
+  }
+
+  .boot__inner {
+    max-width: 264px;
+  }
+
+  .boot__brand .logo-main {
+    font-size: 1.1rem;
+  }
+
+  .boot__module {
+    font-size: 0.62rem;
+  }
+
+  .boot__foot {
+    font-size: 0.62rem;
+  }
+}
+
+/* ---- Reduced motion ----
+   The information stays; the movement goes. The global contract in global.css
+   neutralises durations, and these rules make sure nothing is left mid-draw
+   or invisible as a result. */
+@media (prefers-reduced-motion: reduce) {
+  .boot__brand,
+  .boot__headline,
+  .boot__module {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .boot__wires path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .boot__nodes circle,
+  .boot__core {
+    animation: none;
+    opacity: 1;
+  }
+
+  .boot__scan {
+    display: none;
+  }
+
+  .boot__bar-fill {
+    transition: none;
+  }
 }
