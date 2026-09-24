@@ -78,24 +78,61 @@
   opacity: 1;
 }
 
-.team-avatar {
-  width: 80px;
-  height: 80px;
-  background: color-mix(in srgb, var(--tm-color, var(--secondary)) 12%, var(--glass-bg));
-  border: 1.5px solid color-mix(in srgb, var(--tm-color, var(--secondary)) 30%, transparent);
-  border-radius: 50%;
+/* ---- Portrait plate ------------------------------------------------------
+   Replaces the circular icon avatar. Fixed 4:5 ratio so every card is the
+   same height whether the photo has arrived or not, and so a missing file
+   causes no layout shift. Rectangular and quiet: a real team page, not an
+   avatar grid. */
+
+.team-photo {
+  width: 100%;
+  max-width: 168px;
+  aspect-ratio: 4 / 5;
+  margin-bottom: var(--space-xs);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-inset);
+  flex-shrink: 0;
+  transition: border-color var(--transition-base);
+}
+
+.team-card:hover .team-photo {
+  border-color: color-mix(in srgb, var(--tm-color, var(--accent)) 45%, transparent);
+}
+
+.team-photo__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Cover, never stretch. Biased above centre so faces sit in the upper
+     third the way a portrait crop should. */
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+/* Shown only when no file resolves. Neutral by design: initials on the site's
+   own grid texture — no stock photo, no generated face. */
+.team-photo__fallback {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  margin-bottom: var(--space-xs);
-  color: var(--tm-color, var(--secondary));
-  box-shadow: 0 0 20px color-mix(in srgb, var(--tm-color, var(--secondary)) 15%, transparent);
-  transition: box-shadow var(--transition-base);
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-inset);
+  background-image:
+    linear-gradient(to right, var(--grid-line-strong) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-strong) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-.team-card:hover .team-avatar {
-  box-shadow: 0 0 32px color-mix(in srgb, var(--tm-color, var(--secondary)) 30%, transparent);
+.team-photo__initials {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  opacity: 0.75;
 }
 
 .team-name {
@@ -172,9 +209,8 @@
     padding: var(--space-md);
   }
 
-  .team-avatar {
-    width: 64px;
-    height: 64px;
+  .team-photo {
+    max-width: 140px;
   }
 
   .value-icon {
@@ -188,11 +224,6 @@
 .value-card,
 .team-card {
   border-radius: var(--radius-lg);
-}
-
-.value-icon,
-.team-avatar {
-  border-radius: var(--radius-md);
 }
 
 .value-title,

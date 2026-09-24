@@ -5,65 +5,13 @@ import TechStack from '../sections/TechStack';
 import Process from '../sections/Process';
 import Testimonials from '../sections/Testimonials';
 import Contact from '../sections/Contact';
-import {
-  FiArrowRight, FiTarget, FiEye, FiHeart,
-  FiCode, FiServer, FiMonitor, FiSmartphone, FiCpu, FiCheckSquare
-} from 'react-icons/fi';
+import { FiArrowRight, FiTarget, FiEye, FiHeart } from 'react-icons/fi';
 import '../styles/pages.css';
 import '../styles/about.css';
 import SEO from '../components/SEO';
+import TeamPhoto from '../components/TeamPhoto';
+import { TEAM } from '../data/team';
 import { buildBreadcrumbs } from '../utils/seo';
-
-const TEAM = [
-  {
-    name: 'Leonard Nkosi',
-    role: 'Founder & CEO',
-    bio: 'Full-stack engineer and visionary behind Clix Digital Works. Passionate about leveraging technology to solve real African business problems.',
-    Icon: FiCode,
-    color: '#19C39B',
-    skills: ['React', 'Node.js', 'System Design'],
-  },
-  {
-    name: 'Amina Juma',
-    role: 'Lead Backend Engineer',
-    bio: 'Experienced in building scalable APIs, database architecture, and cloud infrastructure that power enterprise-grade applications.',
-    Icon: FiServer,
-    color: '#3B7DFF',
-    skills: ['Node.js', 'MySQL', 'DevOps'],
-  },
-  {
-    name: 'Baraka Mwenda',
-    role: 'UI/UX & Frontend Lead',
-    bio: 'Crafts pixel-perfect, accessible interfaces with a keen eye for design systems, user psychology, and modern web aesthetics.',
-    Icon: FiMonitor,
-    color: '#19C39B',
-    skills: ['React', 'Figma', 'CSS Architecture'],
-  },
-  {
-    name: 'Fatuma Rashid',
-    role: 'Mobile App Engineer',
-    bio: 'Specialises in cross-platform mobile applications delivering native-quality experiences for Android and iOS users.',
-    Icon: FiSmartphone,
-    color: '#3B7DFF',
-    skills: ['React Native', 'Flutter', 'API Integration'],
-  },
-  {
-    name: 'David Mwangi',
-    role: 'AI & Data Engineer',
-    bio: 'Builds machine learning pipelines, predictive models, and intelligent automation tools that give our clients a competitive edge.',
-    Icon: FiCpu,
-    color: '#19C39B',
-    skills: ['Python', 'TensorFlow', 'Data Analysis'],
-  },
-  {
-    name: 'Grace Luhanga',
-    role: 'Project Manager & QA Lead',
-    bio: 'Ensures every project is delivered on time, within scope, and exceeds quality standards through rigorous testing and clear communication.',
-    Icon: FiCheckSquare,
-    color: '#3B7DFF',
-    skills: ['Agile', 'QA Testing', 'Client Relations'],
-  },
-];
 
 const VALUES = [
   { icon: FiTarget, title: 'Excellence', desc: 'We set and maintain the highest standards in everything we build.' },
@@ -210,7 +158,9 @@ export default function AboutPage() {
           <div className="team-grid">
             {TEAM.map((member, i) => (
               <motion.div
-                key={member.name}
+                /* id, not name: the same person holds several roles, so names
+                   are not unique across cards. */
+                key={member.id}
                 className="team-card glass-card"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -219,9 +169,7 @@ export default function AboutPage() {
                 whileHover={{ y: -6 }}
                 style={{ '--tm-color': member.color }}
               >
-                <div className="team-avatar" aria-hidden="true">
-                  <member.Icon size={28} />
-                </div>
+                <TeamPhoto src={member.image} name={member.name} role={member.role} />
                 <h3 className="team-name">{member.name}</h3>
                 <p className="team-role" style={{ color: member.color }}>{member.role}</p>
                 <p className="team-bio">{member.bio}</p>
