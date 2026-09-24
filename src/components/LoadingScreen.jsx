@@ -15,9 +15,16 @@ import '../styles/loading.css';
  * withheld until it disappears, so the boot sequence overlaps real work
  * instead of standing in for it.
  */
-const MIN_VISIBLE_MS = 800;   // below this it reads as a flicker
-const MAX_VISIBLE_MS = 2200;  // hard ceiling: a slow asset must never trap anyone
-const REVEAL_SPACING_MS = 90; // resolved steps are released in sequence, never early
+/* Timings are measured from navigation start (performance.now()), so they
+   describe what the visitor actually experiences rather than when this
+   component happened to mount. Target: fully gone at roughly 2.6s. */
+const MIN_VISIBLE_MS = 2000;   // floor before dismissal may begin
+const SETTLE_MS = 200;         // beat on the completed state so it can be read
+const MAX_VISIBLE_MS = 3000;   // hard ceiling: a slow asset must never trap anyone
+/* Resolved steps are released in sequence and never early. With a 2s floor the
+   spacing is wider than before so the five checks report in across the window
+   instead of finishing in half a second and leaving a frozen 100%. */
+const REVEAL_SPACING_MS = 260;
 
 /** Each step resolves from an observable fact, not a timer. */
 function bootSteps() {
@@ -105,7 +112,7 @@ export default function LoadingScreen({ onComplete }) {
     if (!allDone) return undefined;
     const elapsed = performance.now();
     const wait = Math.max(0, MIN_VISIBLE_MS - elapsed);
-    const t = window.setTimeout(() => setVisible(false), wait + 260);
+    const t = window.setTimeout(() => setVisible(false), wait + SETTLE_MS);
     return () => clearTimeout(t);
   }, [allDone]);
 
