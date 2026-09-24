@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import Mindset from '../sections/Mindset';
 import WhyChooseUs from '../sections/WhyChooseUs';
 import TechStack from '../sections/TechStack';
 import Process from '../sections/Process';
@@ -183,6 +184,9 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* The people → the mindset → how we build → what we create */}
+      <Mindset />
 
       <WhyChooseUs />
       <TechStack />

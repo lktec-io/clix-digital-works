@@ -42,17 +42,21 @@ export default function TeamPhoto({ src, name, role }) {
 
   return (
     <div className="team-photo">
-      {exhausted ? (
-        <div
-          className="team-photo__fallback"
-          role="img"
-          aria-label={`${label}. Photo coming soon.`}
-        >
-          <span className="team-photo__initials" aria-hidden="true">
-            {initialsOf(name)}
-          </span>
-        </div>
-      ) : (
+      {/* The initials plate is always rendered underneath; a photo covers it
+          once it decodes. Layering rather than swapping means there is never a
+          blank frame — neither while a lazy image is still pending, nor on
+          hosts that answer a missing file with the SPA's index.html (200)
+          instead of a 404, where the error arrives late. */}
+      <div
+        className="team-photo__fallback"
+        {...(exhausted
+          ? { role: 'img', 'aria-label': `${label}. Photo coming soon.` }
+          : { 'aria-hidden': 'true' })}
+      >
+        <span className="team-photo__initials">{initialsOf(name)}</span>
+      </div>
+
+      {!exhausted && (
         <img
           className="team-photo__img"
           src={candidates[attempt]}
