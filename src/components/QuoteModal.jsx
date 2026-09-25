@@ -5,10 +5,22 @@ import { useQuoteModal } from '../context/QuoteModalContext';
 import { API } from '../config/api';
 import '../styles/quotemodal.css';
 
+/* The visitor reads `label`; `value` is what gets submitted, and it must stay
+   exactly as the server whitelists it (PROJECT_TYPES in server/routes/quotes.js
+   is enforced with isIn). Rewording the labels therefore changes nothing about
+   the request contract or the records already stored. */
 const PROJECT_TYPES = [
-  'Website Development', 'Mobile App', 'Custom Software', 'ERP System',
-  'AI / Machine Learning', 'Cybersecurity', 'Accounting System',
-  'Management System', 'Cloud & VPS Hosting', 'IoT & Automation', 'Other',
+  { value: 'Website Development',  label: 'Website or online platform' },
+  { value: 'Mobile App',           label: 'Mobile app' },
+  { value: 'Custom Software',      label: 'Custom business software' },
+  { value: 'ERP System',           label: 'Complete business platform' },
+  { value: 'AI / Machine Learning', label: 'AI & smart automation' },
+  { value: 'Cybersecurity',        label: 'Security & data protection' },
+  { value: 'Accounting System',    label: 'Accounting & finance system' },
+  { value: 'Management System',    label: 'Business management system' },
+  { value: 'Cloud & VPS Hosting',  label: 'Hosting & maintenance' },
+  { value: 'IoT & Automation',     label: 'Connected devices & automation' },
+  { value: 'Other',                label: 'Something else' },
 ];
 
 const BUDGETS = [
@@ -164,7 +176,7 @@ export default function QuoteModal() {
                   <select id="qm-project_type" name="project_type" className="form-input form-select"
                     value={form.project_type} onChange={onChange} required>
                     <option value="">Select project type…</option>
-                    {PROJECT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                    {PROJECT_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                   </select>
                 </div>
 

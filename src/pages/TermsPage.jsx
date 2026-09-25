@@ -20,7 +20,7 @@ const SECTIONS = [
       'AI and machine learning solutions',
       'ERP and accounting systems',
       'Cybersecurity solutions',
-      'Cloud and VPS hosting',
+      'Hosting and maintenance',
       'IT training and consultation',
       'Technical support and maintenance',
     ],

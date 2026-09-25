@@ -74,32 +74,33 @@ function StatItem({ value, suffix, label, inView }) {
 }
 
 /* The architecture panel: the shape of a system we actually ship —
-   clients, an API layer, services, a database. No invented numbers. */
+   the people using it, controlled access, the daily work, the records. No
+   invented numbers. */
 const STACK_LAYERS = [
   {
-    tier: 'Clients',
+    tier: 'Your team & customers',
     nodes: [
-      { label: 'Web app', Icon: FiGlobe },
-      { label: 'Mobile', Icon: FiSmartphone },
+      { label: 'Computer', Icon: FiGlobe },
+      { label: 'Phone', Icon: FiSmartphone },
     ],
   },
   {
-    tier: 'API layer',
+    tier: 'Secure access',
     nodes: [
-      { label: 'REST API · auth · validation', Icon: FiServer, wide: true },
+      { label: 'Sign-in · roles · permissions', Icon: FiServer, wide: true },
     ],
   },
   {
-    tier: 'Services',
+    tier: 'Daily operations',
     nodes: [
-      { label: 'Business logic', Icon: FiLayers },
-      { label: 'Automation & AI', Icon: FiCpu },
+      { label: 'Sales & customers', Icon: FiLayers },
+      { label: 'Automation', Icon: FiCpu },
     ],
   },
   {
-    tier: 'Data',
+    tier: 'Business records',
     nodes: [
-      { label: 'MySQL · backups · audit trail', Icon: FiDatabase, wide: true },
+      { label: 'Stored safely · backed up daily', Icon: FiDatabase, wide: true },
     ],
   },
 ];

@@ -17,8 +17,8 @@ const STEPS = [
     num: '02',
     icon: FiClipboard,
     title: 'Planning',
-    description: 'Our team creates a detailed project roadmap with timelines, milestones, budget estimates, and technical architecture.',
-    output: 'Roadmap & architecture',
+    description: 'We agree the plan up front: what gets built, in what order, by when, and what it will cost — before any work starts.',
+    output: 'Plan & timeline',
   },
   {
     num: '03',
@@ -31,21 +31,21 @@ const STEPS = [
     num: '04',
     icon: FiCode,
     title: 'Development',
-    description: 'Our engineers build your solution using modern tech stacks, clean code practices, and agile development sprints.',
-    output: 'Working increments',
+    description: 'Our engineers build your system in short cycles, so you see working software early and can steer it before it is finished.',
+    output: 'Working version to try',
   },
   {
     num: '05',
     icon: FiCheckCircle,
     title: 'Testing',
     description: 'Rigorous QA testing across all devices and scenarios ensures your product is bug-free and production-ready.',
-    output: 'QA sign-off',
+    output: 'Tested & approved',
   },
   {
     num: '06',
     icon: FiUploadCloud,
     title: 'Deployment',
-    description: 'We deploy to your production environment with zero-downtime strategies and complete monitoring setup.',
+    description: 'We put the system live without interrupting your work, and set up monitoring so problems are caught before you notice them.',
     output: 'Live system',
   },
   {
@@ -53,7 +53,7 @@ const STEPS = [
     icon: FiHeadphones,
     title: 'Support',
     description: 'Post-launch, we provide ongoing maintenance, updates, training, and 24/7 technical support for your team.',
-    output: 'Ongoing SLA',
+    output: 'Ongoing support',
   },
 ];
 

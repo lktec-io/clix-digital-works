@@ -19,7 +19,7 @@ const FAQ_SCHEMA = buildFAQ([
   },
   {
     q: 'How long does it take to build a mobile app?',
-    a: 'A standard cross-platform mobile app typically takes 6–12 weeks. We build iOS and Android apps with React Native, which significantly reduces both development time and cost without sacrificing quality.',
+    a: 'A standard mobile app typically takes 6–12 weeks. We build one app that runs on both Android and iPhone, which keeps the cost and the timeline well below commissioning two separate apps.',
   },
   {
     q: 'Do you integrate M-Pesa and other local payment methods?',
@@ -35,7 +35,7 @@ const FAQ_SCHEMA = buildFAQ([
   },
   {
     q: 'Do you offer cloud hosting and server management?',
-    a: 'Yes. We provide fully managed VPS hosting on enterprise-grade infrastructure with automated backups, SSL certificates, performance monitoring, and a 99.9% uptime SLA.',
+    a: 'Yes. We host and look after your system for you — daily automatic backups, a secure connection for your visitors, performance monitored around the clock, and a 99.9% uptime commitment.',
   },
 ]);
 

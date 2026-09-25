@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fi';
 import '../styles/portfolio.css';
 
-const CATEGORIES = ['All', 'Web', 'Mobile', 'ERP', 'AI', 'Management'];
+const CATEGORIES = ['All', 'Web', 'Mobile', 'Platforms', 'AI', 'Management'];
 
 const PROJECTS = [
   {
@@ -18,18 +18,18 @@ const PROJECTS = [
     tags: ['Web', 'Management'],
     description: 'A complete digital management platform for a congregation of 3 000+ members. Handles tithe tracking, member registration, event scheduling, cell groups, SMS/email broadcasts, and financial reporting.',
     impact: 'Reduced admin workload by 70%',
-    tech: ['React', 'Node.js', 'MySQL'],
+    capabilities: ['Member records', 'Contributions', 'Event planning'],
     Icon: FiUsers,
-    badge: 'Live System',
+    badge: 'Live system',
   },
   {
     id: 2,
     title: 'Accounting & Finance System',
-    category: 'ERP',
-    tags: ['Web', 'ERP'],
+    category: 'Business platform',
+    tags: ['Web', 'Platforms'],
     description: 'Full double-entry accounting platform with automated invoicing, multi-currency support, payroll processing, tax computation, and audit-ready financial statements.',
     impact: 'Eliminated manual bookkeeping errors',
-    tech: ['React', 'Express', 'MySQL'],
+    capabilities: ['Invoicing', 'Payroll', 'Financial statements'],
     Icon: FiDollarSign,
     badge: 'Enterprise',
   },
@@ -37,12 +37,12 @@ const PROJECTS = [
     id: 3,
     title: 'SACCO Contribution System',
     category: 'Management',
-    tags: ['Web', 'Management', 'ERP'],
+    tags: ['Web', 'Management', 'Platforms'],
     description: 'End-to-end SACCO management with member savings, loan applications, share capital tracking, automated dividend computation, and SACCOS regulatory compliance reporting.',
     impact: 'Loan processing time: days → minutes',
-    tech: ['React', 'Node.js', 'MySQL'],
+    capabilities: ['Savings & loans', 'Member accounts', 'Compliance reports'],
     Icon: FiCreditCard,
-    badge: 'FinTech',
+    badge: 'Finance',
   },
   {
     id: 4,
@@ -51,7 +51,7 @@ const PROJECTS = [
     tags: ['Web'],
     description: 'High-conversion corporate website with animated design system, integrated CRM lead capture, SEO optimisation, WhatsApp chat widget, and Google Analytics dashboard.',
     impact: '+200% organic enquiries in 3 months',
-    tech: ['React', 'Vite', 'CSS3'],
+    capabilities: ['Online presence', 'Enquiry capture', 'Found on Google'],
     Icon: FiGlobe,
     badge: 'Featured',
   },
@@ -62,9 +62,9 @@ const PROJECTS = [
     tags: ['Web', 'Mobile'],
     description: 'Full-featured online store with product catalogue, inventory management, shopping cart, M-Pesa & card payment integration, order tracking, and a seller analytics dashboard.',
     impact: '500+ orders processed at launch',
-    tech: ['React', 'Node.js', 'MySQL'],
+    capabilities: ['Online selling', 'Stock control', 'Order tracking'],
     Icon: FiShoppingCart,
-    badge: 'E-Commerce',
+    badge: 'Online store',
   },
   {
     id: 6,
@@ -73,9 +73,9 @@ const PROJECTS = [
     tags: ['Web', 'Management'],
     description: 'Comprehensive school ERP covering student enrollment, academic records, attendance tracking, fee collection with M-Pesa integration, exam results, and a parent self-service portal.',
     impact: '4 schools onboarded in year one',
-    tech: ['React', 'Express', 'MySQL'],
+    capabilities: ['Student records', 'Fee collection', 'Parent portal'],
     Icon: FiBook,
-    badge: 'EdTech',
+    badge: 'Education',
   },
   {
     id: 7,
@@ -84,18 +84,18 @@ const PROJECTS = [
     tags: ['Web', 'Mobile'],
     description: 'Real-time appointment and reservation platform for clinics, salons, and hospitality businesses. Features calendar management, SMS reminders, prepayment, and staff scheduling.',
     impact: 'No-show rate reduced by 55%',
-    tech: ['React', 'Node.js', 'MySQL'],
+    capabilities: ['Appointments', 'Reminders', 'Prepayment'],
     Icon: FiCalendar,
-    badge: 'SaaS',
+    badge: 'Online service',
   },
   {
     id: 8,
-    title: 'Manufacturing ERP',
-    category: 'ERP',
-    tags: ['Web', 'ERP'],
-    description: 'Enterprise Resource Planning system integrating procurement, production planning, inventory, quality control, HR & payroll, and financial accounting for a mid-size manufacturer.',
+    title: 'Manufacturing Management System',
+    category: 'Business platform',
+    tags: ['Web', 'Platforms'],
+    description: 'One system joining up procurement, production planning, inventory, quality control, HR & payroll, and financial accounting for a mid-size manufacturer.',
     impact: '40% reduction in inventory losses',
-    tech: ['React', 'Express', 'MySQL'],
+    capabilities: ['Production planning', 'Stock control', 'Staff & payroll'],
     Icon: FiSettings,
     badge: 'Enterprise',
   },
@@ -106,9 +106,9 @@ const PROJECTS = [
     tags: ['AI', 'Web'],
     description: 'Intelligent OCR and natural language processing system that automatically extracts, classifies, and routes data from invoices, forms, and official documents — eliminating manual data entry.',
     impact: '90% faster document processing',
-    tech: ['Python', 'React', 'TensorFlow'],
+    capabilities: ['Document reading', 'Automatic filing', 'No manual entry'],
     Icon: FiCpu,
-    badge: 'AI / ML',
+    badge: 'Smart automation',
   },
 ];
 
@@ -191,7 +191,7 @@ export default function Portfolio() {
                   </div>
 
                   <div className="portfolio-tech">
-                    {project.tech.map(t => (
+                    {project.capabilities.map(t => (
                       <span key={t} className="portfolio-tech-tag">{t}</span>
                     ))}
                   </div>

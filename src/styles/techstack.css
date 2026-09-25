@@ -254,3 +254,27 @@
 .trust-dot {
   color: var(--secondary);
 }
+
+/* Capability names run to two lines where a product name used to be one
+   word, so the row icon aligns to the first line instead of floating in the
+   middle of the block. */
+.tech-item {
+  align-items: flex-start;
+}
+
+.tech-item-icon {
+  margin-top: 1px;
+}
+
+.tech-item-name {
+  line-height: 1.35;
+}
+
+.tech-item-detail {
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+.tech-item-dot {
+  margin-top: 7px;
+}

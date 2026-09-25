@@ -42,8 +42,8 @@ export const TEAM = [
     name: 'Leonard Kusekwa',
     role: 'Founder & CEO',
     image: '/images/team/leonard-kusekwa-founder-ceo.jpeg',
-    bio: 'Full-stack engineer and visionary behind Clix Digital Works. Passionate about leveraging technology to solve real African business problems.',
-    skills: ['React', 'Node.js', 'System Design'],
+    bio: 'Founder of Clix Digital Works, working directly with owners to turn everyday business problems into software that fits how they actually operate.',
+    skills: ['Business systems', 'Product direction', 'Delivery'],
     color: '#19C39B',
   },
   {
@@ -52,7 +52,7 @@ export const TEAM = [
     role: 'Project Manager & QA Lead',
     image: '/images/team/christina-francis-project-manager-qa.jpg',
     bio: 'Ensures every project is delivered on time, within scope, and exceeds quality standards through rigorous testing and clear communication.',
-    skills: ['Agile', 'QA Testing', 'Client Relations'],
+    skills: ['Delivery planning', 'Quality checks', 'Client communication'],
     color: '#3B7DFF',
   },
   {
@@ -60,8 +60,8 @@ export const TEAM = [
     name: 'Leonard Kusekwa',
     role: 'Lead Backend Engineer',
     image: '/images/team/leonard-kusekwa-lead-backend.jpeg',
-    bio: 'Experienced in building scalable APIs, database architecture, and cloud infrastructure that power enterprise-grade applications.',
-    skills: ['Node.js', 'MySQL', 'DevOps'],
+    bio: 'Builds the systems that hold a business together — keeping records accurate, information secure, and everything running as the organization grows.',
+    skills: ['Business systems', 'Data & records', 'Reliable hosting'],
     color: '#19C39B',
   },
   {
@@ -69,8 +69,8 @@ export const TEAM = [
     name: 'Christina Fransic',
     role: 'UI/UX & Frontend Lead',
     image: '/images/team/christina-fransic-uiux-frontend.jpg',
-    bio: 'Crafts pixel-perfect, accessible interfaces with a keen eye for design systems, user psychology, and modern web aesthetics.',
-    skills: ['React', 'Figma', 'CSS Architecture'],
+    bio: 'Designs the screens people use every day, so staff can learn a new system quickly and customers never feel lost.',
+    skills: ['Interface design', 'Ease of use', 'Accessibility'],
     color: '#3B7DFF',
   },
   {
@@ -78,8 +78,8 @@ export const TEAM = [
     name: 'Festo Chambika',
     role: 'Mobile App Engineer',
     image: '/images/team/festo-chambika-mobile-engineer.jpg',
-    bio: 'Specialises in cross-platform mobile applications delivering native-quality experiences for Android and iOS users.',
-    skills: ['React Native', 'Flutter', 'API Integration'],
+    bio: 'Builds mobile apps that work on both Android and iPhone, including where the network is slow or drops out entirely.',
+    skills: ['Android & iPhone apps', 'Offline use', 'Connected systems'],
     color: '#19C39B',
   },
   {
@@ -87,8 +87,8 @@ export const TEAM = [
     name: 'Leonard Kusekwa',
     role: 'AI & Data Engineer',
     image: '/images/team/leonard-kusekwa-ai-data.jpeg',
-    bio: 'Builds machine learning pipelines, predictive models, and intelligent automation tools that give our clients a competitive edge.',
-    skills: ['Python', 'TensorFlow', 'Data Analysis'],
+    bio: 'Turns the information a business already collects into forecasts, early warnings and automation that removes repetitive work.',
+    skills: ['Data analysis', 'Smart automation', 'Forecasting'],
     color: '#3B7DFF',
   },
 ];

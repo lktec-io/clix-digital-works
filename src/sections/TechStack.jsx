@@ -1,56 +1,60 @@
 import { motion } from 'framer-motion';
 import {
-  FiCode, FiDatabase, FiServer, FiGitBranch,
-  FiMonitor, FiZap, FiLayers, FiGlobe,
-  FiSliders, FiLink, FiTerminal, FiSave,
-  FiLock, FiActivity, FiCloud, FiUploadCloud, FiShield
+  FiMonitor, FiZap, FiLayers, FiGlobe, FiLink, FiSave,
+  FiActivity, FiUsers, FiBarChart2, FiDollarSign, FiFileText,
+  FiShoppingCart, FiCalendar, FiSmartphone, FiCpu, FiRadio
 } from 'react-icons/fi';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import '../styles/techstack.css';
 
-const TECH_CATEGORIES = [
+/**
+ * What we build, described by the work it does rather than the tools used to
+ * do it. Every entry here corresponds to something already offered in the
+ * services list or shipped in the portfolio — nothing new is promised.
+ */
+const CAPABILITY_GROUPS = [
   {
-    label: 'Client Interfaces',
-    icon: FiMonitor,
+    label: 'Running the business',
+    icon: FiLayers,
     color: '#3B7DFF',
     items: [
-      { name: 'React', detail: 'UI Framework', Icon: FiCode },
-      { name: 'Vite', detail: 'Build Tool', Icon: FiZap },
-      { name: 'HTML5', detail: 'Markup', Icon: FiGlobe },
-      { name: 'CSS3', detail: 'Styling', Icon: FiSliders },
+      { name: 'Business management systems', detail: 'Daily operations in one place', Icon: FiMonitor },
+      { name: 'Sales & stock', detail: 'Products, purchases, stock levels', Icon: FiActivity },
+      { name: 'Customer management', detail: 'Contacts, follow-ups, service history', Icon: FiUsers },
+      { name: 'Business reports', detail: 'Clear numbers owners can act on', Icon: FiBarChart2 },
     ],
   },
   {
-    label: 'Server & Logic',
-    icon: FiServer,
+    label: 'Money & records',
+    icon: FiDollarSign,
     color: '#19C39B',
     items: [
-      { name: 'Node.js', detail: 'Runtime', Icon: FiServer },
-      { name: 'Express', detail: 'Framework', Icon: FiLayers },
-      { name: 'REST APIs', detail: 'Integration', Icon: FiLink },
-      { name: 'Linux', detail: 'Server OS', Icon: FiTerminal },
+      { name: 'Accounting & finance', detail: 'Income, expenses and balances', Icon: FiDollarSign },
+      { name: 'Invoicing & payments', detail: 'Bills issued, payments recorded', Icon: FiFileText },
+      { name: 'Payroll', detail: 'Staff pay and records', Icon: FiUsers },
+      { name: 'Business information', detail: 'Organised, secure and backed up', Icon: FiSave },
     ],
   },
   {
-    label: 'Data Layer',
-    icon: FiDatabase,
-    color: '#3B7DFF',
-    items: [
-      { name: 'MySQL', detail: 'Relational DB', Icon: FiDatabase },
-      { name: 'Backups', detail: 'Data Safety', Icon: FiSave },
-      { name: 'Encryption', detail: 'Data Security', Icon: FiLock },
-      { name: 'Analytics', detail: 'Insights', Icon: FiActivity },
-    ],
-  },
-  {
-    label: 'Infrastructure',
+    label: 'Reaching customers',
     icon: FiGlobe,
+    color: '#3B7DFF',
+    items: [
+      { name: 'Websites & online platforms', detail: 'Present your services and get found', Icon: FiGlobe },
+      { name: 'Online stores', detail: 'Sell, take payment, track orders', Icon: FiShoppingCart },
+      { name: 'Booking & appointments', detail: 'Schedules, reminders, prepayment', Icon: FiCalendar },
+      { name: 'Mobile applications', detail: 'For customers, staff or field teams', Icon: FiSmartphone },
+    ],
+  },
+  {
+    label: 'Working smarter',
+    icon: FiZap,
     color: '#19C39B',
     items: [
-      { name: 'Contabo VPS', detail: 'Cloud Hosting', Icon: FiCloud },
-      { name: 'Git', detail: 'Version Control', Icon: FiGitBranch },
-      { name: 'CI/CD', detail: 'Deployment', Icon: FiUploadCloud },
-      { name: 'SSL/TLS', detail: 'Security', Icon: FiShield },
+      { name: 'Process automation', detail: 'Less repetitive manual work', Icon: FiZap },
+      { name: 'Connected business systems', detail: 'Your tools sharing the same information', Icon: FiLink },
+      { name: 'Intelligent data solutions', detail: 'Patterns and forecasts from your records', Icon: FiCpu },
+      { name: 'Connected devices', detail: 'Monitor equipment and activity remotely', Icon: FiRadio },
     ],
   },
 ];
@@ -70,17 +74,18 @@ export default function TechStack() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="section-label">Technology Foundation</span>
+          <span className="section-label">What we build</span>
           <h2 className="section-title">
-            Built on <span>Proven Technology</span>
+            Software for the <span>work you do every day</span>
           </h2>
           <p className="section-subtitle">
-            We use industry-standard, battle-tested technologies to deliver solutions that perform reliably at any scale.
+            Whatever your organization runs on today — paperwork, spreadsheets or a system that has
+            outgrown you — these are the kinds of solutions we build to replace it.
           </p>
         </motion.div>
 
         <div className="tech-grid">
-          {TECH_CATEGORIES.map((cat, i) => (
+          {CAPABILITY_GROUPS.map((cat, i) => (
             <motion.div
               key={cat.label}
               className="tech-category glass-card"
@@ -127,9 +132,9 @@ export default function TechStack() {
           ref={trustRef}
           className={`tech-trust sa-hidden sa-scale ${trustVisible ? 'sa-visible' : ''}`}
           role="list"
-          aria-label="Technology trust indicators"
+          aria-label="What every Clix system includes"
         >
-          {['Enterprise-Grade Security', 'High Performance', '99.9% Uptime SLA', 'Scalable Architecture', 'Modern Standards', 'Regular Updates'].map(item => (
+          {['Secure staff access', 'Works on phone and computer', 'Daily backups', 'Fast on slow connections', 'Room to grow', 'Supported after launch'].map(item => (
             <div key={item} className="trust-item" role="listitem">
               <span className="trust-dot" aria-hidden="true">✦</span>
               <span>{item}</span>

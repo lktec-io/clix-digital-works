@@ -9,12 +9,12 @@ const REASONS = [
   {
     icon: FiAward,
     title: 'Expert Software Engineering',
-    description: 'Our team brings deep expertise in modern software architecture, design patterns, and best practices to deliver enterprise-grade solutions.',
+    description: 'Our engineers have built systems that organizations depend on daily, and they apply that same standard to every project — large or small.',
   },
   {
     icon: FiCpu,
-    title: 'Modern Technologies',
-    description: 'We use cutting-edge technologies and frameworks to build fast, scalable, and future-proof digital solutions.',
+    title: 'Built to Last',
+    description: 'We build on current, well-supported foundations, so your system stays fast today and can still be extended in five years.',
   },
   {
     icon: FiHeadphones,

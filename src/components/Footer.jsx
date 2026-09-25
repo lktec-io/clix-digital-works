@@ -18,12 +18,12 @@ const SERVICE_LINKS = [
   'Website Development',
   'Mobile App Development',
   'Custom Software',
-  'AI & ML Solutions',
+  'AI & Smart Automation',
   'Cybersecurity',
-  'Cloud & VPS Hosting',
-  'ERP Systems',
+  'Hosting & Uptime',
+  'Complete Business Platforms',
   'Accounting Systems',
-  'IoT & Automation',
+  'Connected Devices & Automation',
 ];
 
 const SOLUTION_LINKS = ['Schools', 'Churches', 'Hospitals', 'SACCOs', 'Businesses', 'NGOs', 'Government', 'Logistics'];

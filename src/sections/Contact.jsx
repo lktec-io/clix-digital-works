@@ -5,19 +5,21 @@ import COMPANY from '../config/company';
 import { API } from '../config/api';
 import '../styles/contact.css';
 
+/* `value` is what gets stored and shown in the admin CRM, so it is left
+   untouched; only the wording the visitor reads has changed. */
 const PROJECT_TYPES = [
-  'Website Development',
-  'Mobile App',
-  'Custom Software',
-  'AI / ML Solution',
-  'ERP System',
-  'Accounting System',
-  'Church Management',
-  'School Management',
-  'SACCO System',
-  'Cybersecurity',
-  'Cloud & Hosting',
-  'Other',
+  { value: 'Website Development', label: 'Website or online platform' },
+  { value: 'Mobile App',          label: 'Mobile app' },
+  { value: 'Custom Software',     label: 'Custom business software' },
+  { value: 'AI / ML Solution',    label: 'AI & smart automation' },
+  { value: 'ERP System',          label: 'Complete business platform' },
+  { value: 'Accounting System',   label: 'Accounting & finance system' },
+  { value: 'Church Management',   label: 'Church management' },
+  { value: 'School Management',   label: 'School management' },
+  { value: 'SACCO System',        label: 'SACCO & member savings' },
+  { value: 'Cybersecurity',       label: 'Security & data protection' },
+  { value: 'Cloud & Hosting',     label: 'Hosting & maintenance' },
+  { value: 'Other',               label: 'Something else' },
 ];
 
 const CONTACT_INFO = [
@@ -288,7 +290,7 @@ export default function Contact() {
                   >
                     <option value="">Select project type…</option>
                     {PROJECT_TYPES.map(pt => (
-                      <option key={pt} value={pt}>{pt}</option>
+                      <option key={pt.value} value={pt.value}>{pt.label}</option>
                     ))}
                   </select>
                 </div>
